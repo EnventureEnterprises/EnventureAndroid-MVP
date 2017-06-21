@@ -1,0 +1,89 @@
+
+apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+apply from: '../config/quality/quality.gradle'
+apply plugin: 'com.github.triplet.play'
+apply plugin: 'realm-android'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'findbugs'
+apply plugin: 'com.github.triplet.play'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "26.0.0"
+    compileOptions.incremental = false
+    def versionMajor = 3
+    def versionMinor = 0
+    def versionPatch = 1
+    def versionBuild = 1
+
+    def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
+    def date = new Date();
+    def buildDate = date.format("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC"))
+
+
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    defaultConfig {
+        applicationId "org.enventureenterprises.enventure"
+        minSdkVersion 19
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
+
+        versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}.${versionBuild}"
+
+        buildConfigField "String", "GIT_SHA", "\"${gitSha}\""
+        buildConfigField "String", "BUILD_DATE", "\"${buildDate}\""
+    }
+
+    signingConfigs {
+        release {
+            //storeFile file('keystore/urb-release-key.jks')
+            storeFile file("$System.env.ENVENTURE_RELEASE_KEY")
+
+            keyAlias "$System.env.ENVENTURE_KEY_ALIAS"
+            storePassword "$System.env.STORE_PASS"
+            keyPassword "$System.env.KEY_PASS"
+
+        }
+
+        debug {
+            storeFile file("$System.env.ENVENTURE_DEBUG_KEY")
+            keyAlias "$System.env.ENVENTURE_DEBUG_KEY_ALIAS"
+            storePassword "$System.env.ENVENTURE_STORE_PASS"
+            keyPassword "$System.env.KEY_PASS"
+            storePassword "$System.env.STORE_PASS"
+            keyPassword "$System.env.KEY_PASS"
+        }
+
+    }
+
+    buildTypes {
+        def BOOLEAN = "boolean"
+        def TRUE = "true"
+        def FALSE = "false"
+        def LOG_HTTP_REQUESTS = "LOG_HTTP_REQUESTS"
+        def REPORT_CRASHES = "REPORT_CRASHES"
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    testCompile 'junit:junit:4.12'
+}
