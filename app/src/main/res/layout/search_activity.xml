@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:onClick="dismiss"
+    >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <android.support.v7.widget.SearchView
+        android:id="@+id/search_view_toolbar"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="40dp"
+
+        app:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
+        android:layout_height="?attr/actionBarSize">
+
+    </android.support.v7.widget.SearchView>
+
+    <!-- <co.moonmonkeylabs.realmsearchview.RealmSearchView
+         android:id="@+id/search_view"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:theme="@style/Urb"
+         android:padding="5dp"
+         app:rsvHint="@string/search_hint"
+         app:rsvClearDrawable="@drawable/ic_cancel_black_18dp"
+         app:paddingStart="@dimen/activity_vertical_margin"/>-->
+    <android.support.v7.widget.RecyclerView
+        android:layout_marginTop="?attr/actionBarSize"
+        android:id="@+id/search_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        app:rrvEmptyLayoutId="@layout/search_no_results" />
+
+</FrameLayout>
+

@@ -28,6 +28,9 @@ import android.widget.TextView;
 import com.tonicartos.superslim.GridSLM;
 import com.tonicartos.superslim.LinearSLM;
 
+import org.enventureenterprises.enventure.R;
+import org.enventureenterprises.enventure.lib.LoadMoreListItemView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,8 +41,7 @@ import difflib.Patch;
 import io.realm.internal.RealmObjectProxy;
 import io.realm.internal.Row;
 import io.realm.internal.Table;
-import ug.sparkpl.urb.R;
-import ug.sparkpl.urb.lib.LoadMoreListItemView;
+
 
 /**
  * The base {@link RecyclerView.Adapter} that includes custom functionality to be used with the

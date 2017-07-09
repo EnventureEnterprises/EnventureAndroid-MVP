@@ -1,12 +1,102 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="org.enventureenterprises.enventure">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+
+
+
+
     <application
+        android:name=".BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <activity android:name=".ui.general.HomeActivity"
+
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        >
+
+        <meta-data android:name="com.facebook.accountkit.ApplicationName"
+            android:value="@string/app_name" />
+        <meta-data android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/FACEBOOK_APP_ID" />
+        <meta-data android:name="com.facebook.accountkit.ClientToken"
+            android:value="@string/ACCOUNT_KIT_CLIENT_TOKEN" />
+
+        <activity
+            android:name="com.facebook.accountkit.ui.AccountKitActivity" />
+
+        <activity
+            android:theme="@style/SplashTheme"
+            android:name=".ui.signin.LoginActivity"
+            />
+
+
+        <activity
+            android:name=".ui.general.DispatchActivity"
+            android:label="dispatch" />
+        <activity
+            android:name=".ui.addEntry.NewEntryActivity"
+            android:label="addEntry" />
+
+        <activity
+            android:name=".ui.addEntry.SearchItemActivity"
+            android:label="addEntry" />
+
+        <activity
+            android:name=".ui.addItem.AddItemActivity"
+            android:label="addItem" />
+
+
+
+
+        <activity
+            android:name=".ui.addEntry.SearchItemActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:parentActivityName=".ui.general.HomeActivity"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+                <!--
+                     Intent filter does not need a category = default, since the system delivers
+                     the ACTION_SEARCH intent explicitly to the searcheable activity,
+                     using component name.
+                -->
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+
+
+
+
 
     </application>
 

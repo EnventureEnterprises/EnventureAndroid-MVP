@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">EnVenture</string>
+    <string name="facebook_app_id">1612589265442252</string>
+    <string name="general_alert_buttons_ok">Ok</string>
+    <string name="FACEBOOK_APP_ID">1612589265442252</string>
+    <string name="ACCOUNT_KIT_CLIENT_TOKEN">07e679a894a71ee2bfe9098dddf20fbd</string>
+    <string name="device_offline_message">Your device is offline</string>
+    <string name="add_sale">Add Sale</string>
+    <string name="google_play_services_error">Google Play Services Error</string>
+    <string formatted="false" name="login_buttons_log_in_with_facebook">Log in with Facebook</string>
+       <string name="navdrawer_description_a11y">Navigation Drawer used to switch between major
+        features of the application</string>
+    <string name="dialog_action_ok">OK</string>
+    <string name="dialog_action_cancel">Cancel</string>
+    <string name="dialog_error_title">Sorry</string>
+    <string name="rsv_default_search_hint">Search</string>
 </resources>

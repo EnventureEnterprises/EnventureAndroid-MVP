@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/black"
+    app:bbn_badgeColor="#FFFF0000"
+	app:bbn_rippleColor="#33ffffff">
+    <item
+	    android:id="@+id/inventory"
+    	android:color="@color/colorPrimary"
+        android:icon="@drawable/ic_lens_black_24dp"
+	    android:title="Inventory" />
+    <item
+	    android:id="@+id/sales"
+		android:color="@color/colorPrimary"
+	    android:icon="@drawable/ic_lens_black_24dp"
+        android:title="Sales" />
+	<item
+        android:id="@+id/reports"
+		android:color="@color/colorPrimary"
+        android:icon="@drawable/ic_lens_black_24dp"
+	    android:title="Reports" />
+    <item
+	    android:id="@+id/profile"
+		android:color="@color/colorPrimary"
+        android:icon="@drawable/ic_lens_black_24dp"
+	    android:title="Profile" />
+</menu>

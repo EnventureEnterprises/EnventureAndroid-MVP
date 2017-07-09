@@ -1,6 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#61dac3</color>
+    <color name="colorPrimaryDark">#4cae9b</color>
+    <color name="colorAccent">#fcd95a</color>
+    <color name="card_background">#4dbcd4</color>
+    <color name="text_color_light">#9c9c9c</color>
+    <color name="text_color_dark">#696969</color>
+
+
+
+    <!-- search -->
+    <color name="dialog_background">#7f000000</color>
+    <color name="app_body_text_1">#de000000</color>
+    <color name="app_body_text_2">#8a000000</color>
+
+    <color name="theme_accent_1">#00b0ff</color>
+    <color name="theme_accent_1_light">#8ad4fa</color>
+
+
+    <color name="navigationBarColor">#0175Bf</color>
+
+    <color name="text_light">@android:color/white</color>
+    <color name="text_dark">#616161</color>
+
+
+
+    <color name="black_overlay">#66000000</color>
+    <color name="text_blue">#1183DE</color>
+    <color name="background_blue">#E7F2FC</color>
+    <color name="strong_blue">#0071D4</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="text_gray">#7C858D</color>
+    <color name="accent_yellow">#FEE7A4</color>
+
+    <color name="full_transparent">#00000000</color>
+    <color name="not_so_transparent">#44000000</color>
+    <color name="even_less_transparent">#66000000</color>
+
+
+    <color name="transparent">#00000000</color>
+    <color name="background">#f5f5f5</color>
+
+    <color name="grey">#FF607D8B</color>
+    <color name="light_grey">#FF90A4AE</color>
+    <color name="aqua_dark">#FF4DD0E1</color>
+    <color name="aqua_light">#FF80DEEA</color>
+    <color name="blue_grey_100">#ffcfd8dc</color>
+    <color name="card">#fff</color>
+    <color name="cyan_a700_plus">#ff006574</color>
+
+    <color name="fab_not_in_schedule">#ffeeff21</color>
+    <color name="fab_press_ripple">#1a000000</color>
+    <color name="fab_icon_color">#ffffff</color>
+
+
+    <color name="grey_background">#f5f5f5</color>
+    <color name="dark_divider">#32000000</color>
+
+    <color name="more_button_background">#ffcfd8dc</color>
+    <color name="more_button_text">@color/cyan_a700_plus</color>
+
+    <color name="navdrawer_background">#ffffffff</color>
+    <color name="navdrawer_text_color_selected">@color/cyan_a700_plus</color>
+    <color name="navdrawer_icon_tint">#444</color>
+    <color name="navdrawer_icon_tint_selected">@color/cyan_a700_plus</color>
+    <color name="navdrawer_selected_item_background">#1a000000</color>
+
+    <color name="card_action_inverted">@android:color/white</color>
+    <color name="card_content_textcolor">#444</color>
+    <color name="card_action_bg">#DDD</color>
+    <color name="card_action_item_bg">#F4F4F4</color>
+
+    <!-- Neutral Actions -->
+    <color name="card_action_focused">#FFE3F4FC</color>
+    <color name="card_action">#FF47B4EA</color>
+    <color name="card_action_ripple">#CC47B4EA</color>
+
+    <!-- Negative Actions -->
+    <color name="card_action_negative_focused">#FFFBCBCA</color>
+    <color name="card_action_negative">#FFF64940</color>
+    <color name="card_action_negative_ripple">#CCF64940</color>
+
+    <!-- Positive Actions -->
+    <color name="card_action_positive_focused">#FFE4F0AF</color>
+    <color name="card_action_positive">#FFA0CC00</color>
+    <color name="card_action_positive_ripple">#CCA0CC00</color>
+
+
+    <color name="blue_grey_900">#263238</color>
+    <color name="blue_grey_800">#37474F</color>
+    <color name="blue_grey_600">#59737F</color>
+    <color name="status_bar_color">#3C263238</color>
+    <color name="foreground">#F5F5F5</color>
+    <color name="theme_accent">#FF3D00</color>
+    <color name="ripple">#33FFFFFF</color>
+
+    <color name="dark_grey">#424242</color>
+    <color name="medium_grey">#9E9E9E</color>
+    <color name="button_grey">#757575</color>
+
+
+
+    <color name="azulBrillante">#fde0dc</color>
+    <color name="azulado">#ffb2a7</color>
+    <color name="blanco">#6c3932</color>
+    <color name="botonesD">#ba5e51</color>
+    <color name="botones">#e77a6b</color>
+
+    <color name="facebook_blue">#3b5998</color>
+
+    <color name="second_slide_background">#9C27B0</color>
+    <color name="second_slide_buttons">#4A148C</color>
+
+    <color name="fourth_slide_background">#795548</color>
+    <color name="fourth_slide_buttons">#3E2723</color>
+
+    <color name="first_slide_background">#E91E63</color>
+    <color name="first_slide_buttons">#880E4F</color>
 </resources>

@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:layout_gravity="center"
+
+    android:layout_marginLeft="@dimen/md_keylines"
+    android:layout_marginRight="@dimen/md_keylines"
+    android:layout_marginTop="8dp"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground"
+    android:stateListAnimator="@anim/selector_raise"
+    app:cardCornerRadius="4dp" >
+
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+
+
+            <ImageView
+                android:id="@+id/post_image"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/card_image_height"
+                android:adjustViewBounds="true"
+                tools:src="@color/colorPrimary"
+                android:scaleType="centerCrop" />
+
+            <ProgressBar
+                android:id="@+id/progress"
+                android:visibility="visible"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                style="?android:attr/progressBarStyleSmall"
+                />
+
+
+
+            <ImageButton
+                android:id="@+id/popup_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:background="?attr/selectableItemBackground"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:visibility="gone"
+                />
+
+    <ImageView
+        android:id="@+id/post_author_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="@dimen/margin_small"
+        android:layout_marginRight="@dimen/margin_small"
+
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/lay_icons"
+        />
+
+
+    <RelativeLayout
+        android:id="@+id/lay_icons"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/post_image"
+        android:layout_toRightOf="@+id/post_author_image"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start">
+
+        <RelativeLayout
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_weight="2"
+            >
+
+            <ImageButton
+                android:id="@+id/fav_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="@dimen/social_icon_size"
+                android:layout_height="@dimen/social_icon_size"
+                android:scaleType="centerInside"
+                android:layout_marginTop="@dimen/margin_tiny"
+                android:padding="0dp"
+                android:gravity="start"
+                android:layout_marginRight="@dimen/icon_buffer"
+
+                />
+
+            <TextView
+                android:id="@+id/fav_count"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_toRightOf="@+id/fav_button"
+                android:gravity="center|start"
+                android:textColor="@color/black_overlay"
+                android:text="0"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                android:textSize="12sp"
+                tools:text="100" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_weight="2"
+            >
+
+
+            <ImageButton
+                android:id="@+id/comment_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="@dimen/social_icon_size"
+                android:layout_height="@dimen/social_icon_size"
+                android:scaleType="centerInside"
+                android:padding="0dp"
+                android:layout_marginRight="@dimen/icon_buffer"
+                android:layout_marginTop="@dimen/margin_tiny"
+                android:layout_marginLeft="@dimen/margin_small"
+
+                />
+
+
+
+
+            <TextView
+                android:id="@+id/comment_count"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_toRightOf="@+id/comment_button"
+                android:textColor="@color/black_overlay"
+                android:gravity="center|start"
+                android:text="0"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                android:textSize="12sp"
+                tools:text="100" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_weight="2"
+            >
+
+            <ImageButton
+                android:id="@+id/views_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="@dimen/social_icon_size"
+                android:layout_height="@dimen/social_icon_size"
+                android:layout_marginTop="@dimen/margin_tiny"
+                android:layout_marginRight="@dimen/icon_buffer"
+                android:padding="0dp"
+                android:scaleType="centerInside"
+
+
+                />
+
+
+            <TextView
+                android:id="@+id/views_count"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_toRightOf="@+id/views_button"
+                android:gravity="center|start"
+                android:textColor="@color/black_overlay"
+                android:text="0"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                android:textSize="12sp"
+                tools:text="100" />
+
+
+        </RelativeLayout>
+
+        </LinearLayout>
+
+
+        </RelativeLayout>
+
+
+
+            <TextView
+                android:id="@+id/post_author_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lay_icons"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                android:textSize="16sp"
+                android:layout_toEndOf="@+id/post_author_image"
+                android:layout_margin="@dimen/margin_tiny"
+                tools:text="Moses Mugisha @mossplix" />
+
+            <TextView
+                android:id="@+id/post_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Three Days Of Power Blackout In Kansanga"
+                android:layout_below="@+id/post_author_name"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:layout_toRightOf="@+id/post_author_image"
+                android:textSize="@dimen/text_body"
+                android:layout_margin="@dimen/margin_tiny"
+                />
+
+            <TextView
+                android:id="@+id/post_description"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/card_title_height"
+                android:layout_below="@+id/post_title"
+                android:layout_toRightOf="@+id/post_author_image"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textSize="@dimen/text_small_body"
+                android:layout_margin="@dimen/margin_tiny"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/app_body_text_2"
+                tools:text="This is really crap. Three days of power outage? really?? Seriously?? wtf?? when will this end? Why are we even having" />
+
+
+    <RelativeLayout
+        android:id="@+id/post_tags"
+        android:layout_height="@dimen/social_icon_size"
+        android:layout_toRightOf="@+id/post_author_image"
+        android:layout_below="@+id/post_description"
+        android:layout_width="wrap_content">
+
+
+
+
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/tags"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/cards_button_height"
+                />
+
+
+
+
+
+        </RelativeLayout>
+
+
+
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/post_tags"
+            android:layout_toRightOf="@+id/post_author_image"
+            android:layout_marginBottom="@dimen/margin_small"
+            >
+
+            <ImageButton
+                android:id="@+id/post_time_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:padding="0dp"
+                android:layout_width="@dimen/social_icon_size"
+                android:layout_height="@dimen/social_icon_size"
+                android:layout_marginEnd="@dimen/icon_buffer"
+                android:scaleType="centerInside"
+               />
+
+
+            <TextView
+                android:id="@+id/post_time"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/social_icon_size"
+                android:layout_toRightOf="@+id/post_time_button"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                android:textSize="10sp"
+                android:textColor="@color/black_overlay"
+                android:gravity="center|start"
+
+                tools:text="16 Minutes Ago" />
+
+
+            <ImageButton
+                android:id="@+id/post_location_btn"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="@dimen/social_icon_size"
+                android:layout_height="@dimen/social_icon_size"
+                android:scaleType="centerInside"
+                android:layout_marginEnd="@dimen/icon_buffer"
+                android:padding="0dp"
+                android:layout_toLeftOf="@+id/post_location"
+               />
+
+
+            <TextView
+                android:id="@+id/post_location"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/social_icon_size"
+                android:gravity="center|start"
+                tools:text="200 Km away"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                android:textSize="10sp"
+                android:textColor="@color/black_overlay"
+                android:layout_alignParentRight="true"
+
+                android:layout_marginRight="@dimen/margin_medium"
+
+                />
+
+        </RelativeLayout>
+
+
+
+
+
+        </RelativeLayout>
+
+
+
+</android.support.v7.widget.CardView>

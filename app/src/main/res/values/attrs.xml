@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="CardStream">
+        <attr name="animationDuration2" format="enum">
+            <enum name="slow" value="1001"/>
+            <enum name="normal" value="1002"/>
+            <enum name="fast" value="1003"/>
+        </attr>
+        <attr name="animators" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="CustomBottomSheetBehavior">
+        <attr name="anchorPoint" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="RealmRecyclerView">
+        <attr name="rrvIsRefreshable" format="boolean"/>
+        <attr name="rrvEmptyLayoutId" format="reference"/>
+        <attr name="rrvLayoutType">
+            <enum name="LinearLayout" value="0"/>
+            <enum name="Grid" value="1"/>
+            <enum name="LinearLayoutWithHeaders" value="2"/>
+            <enum name="StaggeredGridLayout" value="3"/>
+        </attr>
+        <attr name="rrvGridLayoutSpanCount" format="integer"/>
+        <attr name="rrvGridLayoutItemWidth" format="dimension"/>
+        <attr name="rrvHeaderColumnName" format="string"/>
+        <attr name="rrvSwipeToDelete" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="RealmSearchView">
+        <attr name="rsvHint" format="reference"/>
+        <attr name="rsvClearDrawable" format="reference"/>
+        <attr name="rsvAddFooter" format="boolean"/>
+        <attr name="rsvAddFooterText" format="reference"/>
+    </declare-styleable>
+
+
+    <declare-styleable name="BottomNavigationMenu">
+    <!-- menu default background color -->
+    <attr name="android:background" />
+    
+    <!-- default badge color -->
+    <attr name="bbn_badgeColor" format="color" />
+
+    <!-- animation duration for the menu items -->
+    <attr name="bbn_itemAnimationDuration" format="integer" />
+
+    <!-- ripple selector color -->
+    <attr name="bbn_rippleColor" format="color" />
+
+    <!-- menu item active color -->
+    <attr name="bbn_itemColorActive" format="color" />
+
+    <!-- menu item inactive color -->
+    <attr name="bbn_itemColorInactive" format="color" />
+
+    <!-- menu item disabled color -->
+    <attr name="bbn_itemColorDisabled" format="color" />
+
+    <!-- force fixed behavior and always display item labels -->
+    <!-- default implementation is false and the labels are -->
+    <!-- shown only if there are less than 4 items in the menu -->
+    <attr name="bbn_alwaysShowLabels" format="boolean" />
+</declare-styleable>
+
+
+</resources>
