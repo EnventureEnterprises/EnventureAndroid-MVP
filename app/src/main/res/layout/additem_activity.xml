@@ -24,19 +24,7 @@
         app:headerLayout="@layout/home_nav_header"
         app:menu="@menu/home">
 
-        <LinearLayout
-            android:id="@+id/action_contact_us"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="bottom"
-            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="Contact Us" />
-        </LinearLayout>
     </android.support.design.widget.NavigationView>
 
 

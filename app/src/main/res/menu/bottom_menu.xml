@@ -3,7 +3,8 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/black"
     app:bbn_badgeColor="#FFFF0000"
-	app:bbn_rippleColor="#33ffffff">
+	app:bbn_alwaysShowLabels="true"
+	app:bbn_rippleColor="@color/colorAccent">
     <item
 	    android:id="@+id/inventory"
     	android:color="@color/colorPrimary"

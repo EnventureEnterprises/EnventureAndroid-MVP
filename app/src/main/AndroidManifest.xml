@@ -63,9 +63,7 @@
             android:name=".ui.addEntry.NewEntryActivity"
             android:label="addEntry" />
 
-        <activity
-            android:name=".ui.addEntry.SearchItemActivity"
-            android:label="addEntry" />
+
 
         <activity
             android:name=".ui.addItem.AddItemActivity"

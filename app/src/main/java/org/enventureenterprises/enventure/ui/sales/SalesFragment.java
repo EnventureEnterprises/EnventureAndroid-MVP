@@ -25,6 +25,7 @@ public class SalesFragment extends BaseFragment {
     Realm realm;
     SalesAdapter  mSalesAdapter;
 
+
     @BindView(R.id.recycler_view)
     RealmRecyclerView mRecyclerView;
 

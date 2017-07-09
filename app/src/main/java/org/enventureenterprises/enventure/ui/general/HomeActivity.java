@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import org.enventureenterprises.enventure.R;
@@ -34,6 +36,7 @@ public class HomeActivity extends BaseActivity implements BottomNavigation.OnMen
     private static final int REPORTS = 2;
     private static final int PROFILE = 3;
     private int navType =SALES;
+    private int currentSelected = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +94,7 @@ public class HomeActivity extends BaseActivity implements BottomNavigation.OnMen
 
         switch (type) {
             case SALES:
+                currentSelected =SALES;
                 if (salesFrag== null) {
                     onAddAndHide(fragmentManager, SalesFragment.newInstance(), currentVisible);
                 } else {
@@ -98,6 +102,7 @@ public class HomeActivity extends BaseActivity implements BottomNavigation.OnMen
                 }
                 break;
             case INVENTORY:
+                currentSelected = INVENTORY;
                 if (inventoryFrag == null) {
                     onAddAndHide(fragmentManager, InventoryFragment.newInstance(), currentVisible);
                 } else {
@@ -105,6 +110,7 @@ public class HomeActivity extends BaseActivity implements BottomNavigation.OnMen
                 }
                 break;
             case REPORTS:
+                currentSelected = REPORTS;
                 if (reportsFrag == null) {
                     onAddAndHide(fragmentManager, ReportsFragment.newInstance(), currentVisible);
                 } else {
@@ -113,6 +119,7 @@ public class HomeActivity extends BaseActivity implements BottomNavigation.OnMen
                 break;
 
             case PROFILE:
+                currentSelected = PROFILE;
 
 
 
@@ -154,6 +161,13 @@ public class HomeActivity extends BaseActivity implements BottomNavigation.OnMen
 
     @Override public void onMenuItemReselect(@IdRes int id, int position, boolean fromUser) {}
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.home2, menu);
+        return true;
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -165,19 +179,16 @@ public class HomeActivity extends BaseActivity implements BottomNavigation.OnMen
         //noinspection SimplifiableIfStatement
         switch(id){
             case R.id.add_entry:
-                String tag ="";
-                Fragment currentVisible = getVisibleFragment(getSupportFragmentManager());
-                if(currentVisible != null) {
-                    tag = currentVisible.getTag();
-                }
-                if (tag ==SalesFragment.TAG)
+
+
+                if (currentSelected == SALES)
                 {
-                    startActivityWithTransition(new Intent(this, SearchItemActivity.class), R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
+                    startActivityWithTransition(new Intent(HomeActivity.this, SearchItemActivity.class), R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
 
                 }
-                else if(tag == InventoryFragment.TAG)
+                else if(currentSelected == INVENTORY)
                 {
-                    startActivityWithTransition(new Intent(this, AddItemActivity.class), R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
+                    startActivityWithTransition(new Intent(HomeActivity.this, AddItemActivity.class), R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
                 }
 
 

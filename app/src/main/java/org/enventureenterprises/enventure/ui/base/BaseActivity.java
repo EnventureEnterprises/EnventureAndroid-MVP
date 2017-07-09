@@ -30,7 +30,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Pair;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -47,7 +46,6 @@ import org.enventureenterprises.enventure.BaseApplication;
 import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.data.Environment;
 import org.enventureenterprises.enventure.data.local.SectionsPagerAdapter;
-import org.enventureenterprises.enventure.ui.addEntry.SearchItemActivity;
 import org.enventureenterprises.enventure.ui.general.HomeActivity;
 
 import rx.Observable;
@@ -231,39 +229,6 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
 
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home, menu);
-        return true;
-    }
-
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        switch(id){
-            case R.id.add_entry:
-                startActivityWithTransition(new Intent(this, SearchItemActivity.class), R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
-                break;
-            case android.R.id.home:
-                // this takes the user 'back', as if they pressed the left-facing triangle icon on the main android toolbar.
-                // if this doesn't work as desired, another possibility is to call `finish()` here.
-                this.onBackPressed();
-                break;
-
-
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
 
     @SuppressWarnings("StatementWithEmptyBody")
