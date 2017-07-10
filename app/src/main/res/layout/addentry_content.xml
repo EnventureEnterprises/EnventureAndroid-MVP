@@ -52,24 +52,11 @@
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp">
 
-
-
-            <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            <Spinner
+                android:id="@+id/cash_spinner"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <RadioButton android:id="@+id/cash"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cash"
-                    />
-                <RadioButton android:id="@+id/installement"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Installment"
-                    />
+                android:layout_height="wrap_content" />
 
-            </RadioGroup>
 
 
         </android.support.design.widget.TextInputLayout>

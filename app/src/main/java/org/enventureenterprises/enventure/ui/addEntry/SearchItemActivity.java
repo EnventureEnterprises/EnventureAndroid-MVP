@@ -47,7 +47,7 @@ public class SearchItemActivity extends BaseActivity implements SearchView.OnQue
 
         adapter = new SearchAdapter(SearchItemActivity.this, realm,"name");
         recyclerView.setAdapter(adapter);
-        adapter.filter("!@#()%43()random_result");
+        adapter.filter("");
 
 
 

@@ -83,8 +83,7 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
         holder.quantityTextView.setText(String.format("%s",
                 item.getQuantity()));
 
-        holder.amountTextView.setText(String.format("%s",
-                item.getAmount()));
+
 
 
         Glide.with(mContext).load(item.getImage()).asBitmap().placeholder(new ColorDrawable(Color.GRAY)).transform(new CircleTransform(mContext)).into(holder.itemImage);
@@ -106,8 +105,7 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
         TextView itemTextView;
 
 
-        @BindView(R.id.amount)
-        TextView amountTextView;
+
 
         @BindView(R.id.quantity)
         TextView quantityTextView;

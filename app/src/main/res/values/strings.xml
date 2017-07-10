@@ -15,4 +15,12 @@
     <string name="dialog_error_title">Sorry</string>
     <string name="rsv_default_search_hint">Search</string>
     <string name="search_hint">Find Item</string>
+    <string name="save">Save</string>
+
+
+        <string-array name="entry_array">
+            <item>Credit</item>
+            <item>Installment</item>
+        </string-array>
+
 </resources>

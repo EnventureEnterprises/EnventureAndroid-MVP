@@ -60,8 +60,12 @@
             android:name=".ui.general.DispatchActivity"
             android:label="dispatch" />
         <activity
+            android:name=".ui.addItem.ItemDetail"
+            android:label="Item Detail" />
+
+        <activity
             android:name=".ui.addEntry.NewEntryActivity"
-            android:label="addEntry" />
+            android:label="Add Sale" />
 
 
 

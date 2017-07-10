@@ -88,7 +88,7 @@ public class BaseApplication extends MultiDexApplication {
 
 
         RealmConfiguration realmConfig = new RealmConfiguration.Builder()
-                .name("urb.realm")
+                .name("enventure.realm")
                 .schemaVersion(4)
                 .build();
 

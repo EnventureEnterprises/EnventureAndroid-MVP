@@ -1,5 +1,6 @@
 package org.enventureenterprises.enventure.ui.addItem;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,11 +11,18 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.AppCompatImageView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import org.enventureenterprises.enventure.R;
+import org.enventureenterprises.enventure.data.model.Item;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
 import org.enventureenterprises.enventure.util.Config;
 import org.enventureenterprises.enventure.util.GeneralUtils;
@@ -24,7 +32,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.realm.Realm;
 import timber.log.Timber;
 
@@ -34,6 +44,22 @@ import timber.log.Timber;
 
 public class AddItemActivity extends BaseActivity {
     private Realm realm;
+
+
+    @BindView(R.id.camera)
+    AppCompatImageView cameraImageView;
+
+    @BindView(R.id.gallery)
+    AppCompatImageView galleryImageView;
+
+    @BindView(R.id.quantity)
+    TextInputEditText quantityEditText;
+
+    @BindView(R.id.name)
+    TextInputEditText nameEditText;
+
+    @BindView(R.id.totalcost)
+    TextInputEditText totalCostEditText;
 
 
     private Bitmap mImageBitmap;
@@ -54,10 +80,6 @@ public class AddItemActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActivityComponent().inject(this);
-        ButterKnife.bind(this);
-
-
-
 
         setContentView(R.layout.additem_activity);
         ButterKnife.bind(this);
@@ -253,12 +275,77 @@ public class AddItemActivity extends BaseActivity {
 
     }
 
-
-
-
-
-    //@OnClick(R.id.submit)
-    public void submitItem() {
+    @OnClick(R.id.gallery)
+    public void chooseGallery(){
+        Intent intent=new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, Config.ACTIVITY_SELECT_IMAGE);
 
     }
+
+    @OnClick(R.id.camera)
+    public void takePhoto(){
+
+        int hasPermission = ActivityCompat.checkSelfPermission(AddItemActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (android.content.pm.PackageManager.PERMISSION_GRANTED == hasPermission) {
+            dispatchTakePictureIntent();
+        }
+        else {
+            ActivityCompat.requestPermissions(AddItemActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE);
+        }
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_save, menu);
+        return true;
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        switch(id){
+            case R.id.save:
+                realm = Realm.getDefaultInstance ();
+                realm.beginTransaction();
+                Item inventoryItem = new Item ();
+                inventoryItem.setName(nameEditText.getText().toString());
+                inventoryItem.setQuantity(Integer.parseInt(quantityEditText.getText().toString()));
+                inventoryItem.setTotalCost(Double.parseDouble(totalCostEditText.getText().toString()));
+                inventoryItem.setImage(photo.toString());
+
+                realm.copyToRealmOrUpdate (inventoryItem);
+                realm.commitTransaction();
+
+                Intent intent = new Intent(AddItemActivity.this, ItemDetail.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("item",inventoryItem.getId());
+                startActivityWithTransition(intent, R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
+
+                break;
+            case android.R.id.home:
+                // this takes the user 'back', as if they pressed the left-facing triangle icon on the main android toolbar.
+                // if this doesn't work as desired, another possibility is to call `finish()` here.
+                this.onBackPressed();
+                break;
+
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+
+
 }

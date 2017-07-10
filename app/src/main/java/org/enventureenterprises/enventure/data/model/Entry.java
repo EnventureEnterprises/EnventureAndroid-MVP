@@ -17,6 +17,7 @@ public class Entry extends RealmObject {
     private Date created;
     private Integer quantity;
     private String type;
+    private String name;
     private Integer entry_year;
     private Integer entry_month;
     private Integer entry_week;
@@ -28,6 +29,20 @@ public class Entry extends RealmObject {
     }
     public void setId(Long id){
         this.id=id;
+    }
+
+    public String getName(){
+        return this.name;
+    }
+    public void setName(String name){
+        this.name=name;
+    }
+
+    public String getType(){
+        return this.type;
+    }
+    public void setType(String type){
+        this.type=type;
     }
 
     public Item getItem(){
