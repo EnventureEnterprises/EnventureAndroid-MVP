@@ -12,6 +12,7 @@ import android.widget.Spinner;
 
 import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.data.model.Entry;
+import org.enventureenterprises.enventure.data.model.Item;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
 
 import butterknife.BindView;
@@ -27,16 +28,19 @@ public class NewEntryActivity extends BaseActivity implements AdapterView.OnItem
     private Long item_id;
     private String item_name;
     private String paymentType;
+    private Item item;
     
 
     @BindView(R.id.quantity)
     EditText quantityEditText;
 
-    @BindView(R.id.amount)
+    @BindView(R.id.totalcost)
     EditText amountEditText;
 
-    @BindView(R.id.name)
+    @BindView(R.id.product)
     EditText nameEditText;
+
+
 
 
     @Override
@@ -68,6 +72,8 @@ public class NewEntryActivity extends BaseActivity implements AdapterView.OnItem
             item_name = savedInstanceState.getString("name");
         }
 
+        nameEditText.setText(item_name);
+
         Spinner spinner = (Spinner) findViewById(R.id.cash_spinner);
 
 
@@ -78,6 +84,8 @@ public class NewEntryActivity extends BaseActivity implements AdapterView.OnItem
 
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(NewEntryActivity.this);
+
+        item = realm.where(Item.class).equalTo ("id",item_id).findFirst ();
 
     }
 
@@ -93,11 +101,11 @@ public class NewEntryActivity extends BaseActivity implements AdapterView.OnItem
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem nItem) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        int id = nItem.getItemId();
 
         //noinspection SimplifiableIfStatement
         switch(id){
@@ -107,6 +115,7 @@ public class NewEntryActivity extends BaseActivity implements AdapterView.OnItem
                 Entry entry = new Entry ();
                 entry.setName(nameEditText.getText().toString());
                 entry.setType(paymentType);
+                entry.setItem(item);
                 entry.setQuantity(Integer.parseInt(quantityEditText.getText().toString()));
                 entry.setAmount(Double.parseDouble(amountEditText.getText().toString()));
                 realm.copyToRealmOrUpdate (entry);
@@ -122,7 +131,7 @@ public class NewEntryActivity extends BaseActivity implements AdapterView.OnItem
 
         }
 
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(nItem);
     }
 
 

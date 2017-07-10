@@ -5,12 +5,19 @@ import android.widget.ListView;
 import org.enventureenterprises.enventure.data.Environment;
 import org.enventureenterprises.enventure.data.Logout;
 import org.enventureenterprises.enventure.data.remote.EnventureApi;
+import org.enventureenterprises.enventure.ui.addEntry.NewEntryActivity;
+import org.enventureenterprises.enventure.ui.addEntry.SearchItemActivity;
+import org.enventureenterprises.enventure.ui.addItem.AddItemActivity;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
 import org.enventureenterprises.enventure.ui.general.DispatchActivity;
 import org.enventureenterprises.enventure.ui.general.HomeActivity;
+import org.enventureenterprises.enventure.ui.general.ProfileFragment;
+import org.enventureenterprises.enventure.ui.inventory.InventoryFragment;
 import org.enventureenterprises.enventure.ui.reports.DailyReportFragment;
 import org.enventureenterprises.enventure.ui.reports.MonthlyReportFragment;
+import org.enventureenterprises.enventure.ui.reports.ReportsFragment;
 import org.enventureenterprises.enventure.ui.reports.WeeklyReportFragment;
+import org.enventureenterprises.enventure.ui.sales.SalesFragment;
 import org.enventureenterprises.enventure.ui.signin.LoginActivity;
 import org.enventureenterprises.enventure.util.ApplicationLifecycleUtil;
 
@@ -37,5 +44,12 @@ public interface ApplicationGraph {
     void inject( MonthlyReportFragment __);
     void inject( WeeklyReportFragment __);
     void inject( DispatchActivity __);
+    void inject( NewEntryActivity __);
+    void inject( SearchItemActivity __);
+    void inject( ProfileFragment __);
+    void inject( InventoryFragment __);
+    void inject( ReportsFragment __);
+    void inject( AddItemActivity __);
+    void inject( SalesFragment __);
 
 }

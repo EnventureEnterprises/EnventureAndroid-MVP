@@ -44,7 +44,7 @@ public class MonthlyReportFragment extends  BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.reports_fragment, container, false);
+        View view = inflater.inflate(R.layout.monthly_report_fragment, container, false);
         ButterKnife.bind(this, view);
 
 

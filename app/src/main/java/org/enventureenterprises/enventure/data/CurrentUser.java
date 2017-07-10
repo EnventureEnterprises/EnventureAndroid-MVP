@@ -57,6 +57,21 @@ public class CurrentUser extends CurrentUserType {
     public void login(final @NonNull String accessToken) {
           accessTokenPreference.set(accessToken);
 
+          Realm realm2 = Realm.getDefaultInstance ();
+
+          User newUser = new User();
+
+          realm2.beginTransaction();
+
+
+
+          realm2.copyToRealmOrUpdate (newUser);
+
+          realm2.commitTransaction();
+          realm2.close();
+          user.onNext(newUser);
+
+
     }
 
     @Override

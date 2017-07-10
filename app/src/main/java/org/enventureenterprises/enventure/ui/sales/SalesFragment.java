@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.data.model.Entry;
 import org.enventureenterprises.enventure.lib.RealmRecyclerView;
+import org.enventureenterprises.enventure.ui.base.BaseActivity;
 import org.enventureenterprises.enventure.ui.reports.BaseFragment;
 
 import butterknife.BindView;
@@ -45,6 +46,7 @@ public class SalesFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.sales_fragment, container, false);
         ButterKnife.bind(this, view);
+        ((BaseActivity) getActivity()).getActivityComponent().inject(this);
 
         realm = Realm.getDefaultInstance ();
         RealmResults<Entry> mEntries =
