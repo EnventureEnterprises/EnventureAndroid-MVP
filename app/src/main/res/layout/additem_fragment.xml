@@ -31,6 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Product Name"
+                android:textSize="20sp"
                 android:inputType="text"
                 android:nextFocusDown="@+id/quantity"
                 android:maxLines="1" />
@@ -51,6 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Quantity"
+                android:textSize="20sp"
                 android:inputType="text"
                 android:nextFocusDown="@+id/type_layout"
                 android:maxLines="1" />
@@ -70,6 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Total Cost"
+                android:textSize="20sp"
                 android:inputType="text"
                 android:nextFocusDown="@+id/type_layout"
                 android:maxLines="1" />
@@ -82,7 +85,10 @@
     <LinearLayout android:id="@+id/top_row"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:orientation="vertical" android:layout_centerHorizontal="true" android:layout_width="wrap_content" android:layout_marginTop="25dip">
+        android:orientation="vertical"
+
+        android:layout_width="match_parent"
+        android:layout_marginTop="25dip">
 
         <TextView
             android:id="@+id/textView"
@@ -96,8 +102,7 @@
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:weightSum="4"
-            android:gravity="center">
+            android:weightSum="4">
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/gallery"
                 android:layout_weight="1"
@@ -115,8 +120,9 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="3"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_centerVertical="true"
-                android:gravity="center"
                 android:textSize="20sp" />
 
 
@@ -127,8 +133,7 @@
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:weightSum="4"
-            android:gravity="center">
+            android:weightSum="4">
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/camera"
                 android:layout_width="50dp"
@@ -145,11 +150,12 @@
             <TextView
                 android:id="@+id/text_cam"
                 android:text="Use camera"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="3"
                 android:layout_centerVertical="true"
-                android:gravity="center"
                 android:textSize="20sp" />
         </LinearLayout>
 
