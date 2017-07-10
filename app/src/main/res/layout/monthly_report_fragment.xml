@@ -1,15 +1,451 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/list_view_frag"
+    android:layout_marginTop="250dp"
+    android:layout_height="match_parent" tools:context=".ui.reports.MonthlyReportFragment">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_weight="2"
+        android:layout_height="match_parent"
+        >
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/header_container"
+            android:layout_width="match_parent"
+            android:weightSum="4"
+            android:background="@color/colorPrimaryDark"
+            android:layout_height="@dimen/grid_7"
+            android:orientation="horizontal">
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/gallery"
+                android:layout_weight="1"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="end"
+                app:srcCompat="@drawable/ic_arrow_back_black_24dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+
+
+                />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_weight="2"
+                android:layout_height="match_parent"
+                >
+
+                <TextView
+                    android:id="@+id/whyUrb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:keepScreenOn="true"
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:text="Today"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp" />
+
+
+
+
+            </RelativeLayout>
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/gallery2"
+                android:layout_weight="1"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:srcCompat="@drawable/ic_arrow_forward_black_24dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+
+
+                />
+
+
+
+
+        </LinearLayout>
+
+
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/profit_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_gravity="center"
+            android:layout_below="@+id/header_container"
+
+            android:layout_marginLeft="@dimen/md_keylines"
+            android:layout_marginRight="@dimen/md_keylines"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+
+
+            android:foreground="?attr/selectableItemBackground"
+            android:stateListAnimator="@anim/selector_raise"
+            app:cardCornerRadius="4dp" >
+
+
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rect"
+                >
 
 
 
 
 
-</RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="@dimen/grid_4"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content">
+
+
+
+                    <TextView
+                        android:id="@+id/profit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_gravity="center"
+                        android:gravity="center_horizontal"
+
+                        tools:text="Profit"
+                        android:textSize="20sp"
+                        android:maxLines="1"
+                        android:paddingBottom="@dimen/grid_3"
+                        android:paddingTop="@dimen/grid_3"
+                        android:textColor="@color/white"
+                        android:layout_marginLeft="@dimen/grid_6"
+
+
+
+                        />
+
+                    <View
+                        android:id="@+id/view1"
+                        android:layout_width="fill_parent"
+                        android:layout_height="2dp"
+
+                        android:layout_below="@+id/profit"
+                        android:layout_marginLeft="0dp"
+
+                        android:background="#ccc" />
+
+
+
+                    <TextView
+                        android:id="@+id/quantity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="4 items"
+                        android:layout_below="@+id/view1"
+                        android:paddingBottom="@dimen/grid_3"
+                        android:paddingTop="@dimen/grid_3"
+                        android:layout_marginLeft="@dimen/grid_6"
+                        android:layout_gravity="center"
+
+
+                        android:maxLines="1"
+
+                        android:gravity="center_horizontal"
+                        android:textColor="@color/white"
+                        android:textSize="40sp"
+
+
+                        />
+                </RelativeLayout>
+
+
+
+
+
+            </RelativeLayout>
+
+
+
+        </android.support.v7.widget.CardView>
+
+
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/report_details_container"
+            android:layout_width="match_parent"
+            android:weightSum="4"
+            android:layout_below="@id/profit_card"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/total_earned_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_gravity="center"
+                android:layout_weight="2"
+
+
+                android:layout_marginLeft="@dimen/md_keylines"
+                android:layout_marginRight="@dimen/md_keylines"
+                android:layout_marginTop="8dp"
+                android:clickable="true"
+
+                android:foreground="?attr/selectableItemBackground"
+                android:stateListAnimator="@anim/selector_raise"
+                app:cardCornerRadius="4dp" >
+
+
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rect"
+                    >
+
+
+
+
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="@dimen/grid_4"
+                        android:layout_gravity="center"
+                        android:layout_height="wrap_content">
+
+
+
+                        <TextView
+                            android:id="@+id/total_earned"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:layout_gravity="center"
+                            android:gravity="center_horizontal"
+
+                            tools:text="Total Earned"
+                            android:textSize="20sp"
+                            android:maxLines="1"
+                            android:paddingBottom="@dimen/grid_1"
+                            android:paddingTop="@dimen/grid_1"
+                            android:textColor="@color/white"
+
+
+
+
+                            />
+
+                        <View
+                            android:id="@+id/view2"
+                            android:layout_width="fill_parent"
+                            android:layout_height="2dp"
+
+                            android:layout_below="@+id/total_earned"
+
+                            android:background="#ccc" />
+
+
+
+                        <TextView
+                            android:id="@+id/quantity_erned"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="4 items"
+                            android:layout_below="@+id/view2"
+                            android:paddingBottom="@dimen/grid_1"
+                            android:paddingTop="@dimen/grid_1"
+
+                            android:layout_gravity="center"
+
+
+                            android:maxLines="1"
+
+                            android:gravity="center_horizontal"
+                            android:textColor="@color/white"
+                            android:textSize="30sp"
+
+
+                            />
+                    </RelativeLayout>
+
+
+
+
+
+                </RelativeLayout>
+
+
+
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/total_spent_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_gravity="center"
+                android:layout_weight="2"
+
+
+                android:layout_marginLeft="@dimen/md_keylines"
+                android:layout_marginRight="@dimen/md_keylines"
+                android:layout_marginTop="8dp"
+                android:clickable="true"
+
+                android:foreground="?attr/selectableItemBackground"
+                android:stateListAnimator="@anim/selector_raise"
+                app:cardCornerRadius="4dp" >
+
+
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rect2"
+                    >
+
+
+
+
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="@dimen/grid_4"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="@dimen/grid_1"
+                        android:layout_height="wrap_content">
+
+
+
+                        <TextView
+                            android:id="@+id/total_spent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:layout_gravity="center"
+                            android:gravity="center_horizontal"
+
+                            tools:text="Total Spent"
+                            android:textSize="20sp"
+                            android:maxLines="1"
+                            android:paddingBottom="@dimen/grid_1"
+                            android:paddingTop="@dimen/grid_1"
+                            android:textColor="@color/white"
+
+
+
+
+                            />
+
+                        <View
+                            android:id="@+id/view3"
+                            android:layout_width="fill_parent"
+                            android:layout_height="2dp"
+
+                            android:layout_below="@+id/total_spent"
+
+                            android:background="#ccc" />
+
+
+
+                        <TextView
+                            android:id="@+id/quantity_spent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="4 items"
+                            android:layout_below="@+id/view3"
+                            android:paddingBottom="@dimen/grid_1"
+                            android:paddingTop="@dimen/grid_1"
+                            android:layout_gravity="center"
+
+
+                            android:maxLines="1"
+
+                            android:gravity="center_horizontal"
+                            android:textColor="@color/white"
+                            android:textSize="30sp"
+
+
+                            />
+                    </RelativeLayout>
+
+
+
+
+
+                </RelativeLayout>
+
+
+
+            </android.support.v7.widget.CardView>
+
+
+
+
+
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/top_items"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/report_details_container"
+
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="@dimen/grid_3"
+            android:layout_marginLeft="@dimen/grid_3"
+
+            tools:text="Top Selling Items"
+            android:textSize="20sp"
+            android:maxLines="1"
+            android:paddingBottom="@dimen/grid_1"
+            android:paddingTop="@dimen/grid_1"
+            android:textColor="@color/black"/>
+
+
+
+
+
+    </RelativeLayout>
+
+    <org.enventureenterprises.enventure.lib.RealmRecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        app:rrvLayoutType="LinearLayout"
+        app:rrvIsRefreshable="false"
+        app:rrvEmptyLayoutId="@layout/empty_iventory"
+        android:paddingTop="6dp"
+        android:scrollbars="vertical" />
+
+</FrameLayout>

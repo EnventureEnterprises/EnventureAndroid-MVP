@@ -77,7 +77,7 @@ public class SalesAdapter extends RealmBasedRecyclerViewAdapter<Entry, SalesAdap
 
 
         holder.itemTextView.setText(String.format("%s",
-                entry.getItem()));
+                entry.getItem().getName()));
 
         holder.quantityTextView.setText(String.format("%s",
                 entry.getQuantity()));

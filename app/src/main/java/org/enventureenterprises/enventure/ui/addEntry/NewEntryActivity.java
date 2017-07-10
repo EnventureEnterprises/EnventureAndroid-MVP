@@ -1,5 +1,6 @@
 package org.enventureenterprises.enventure.ui.addEntry;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -9,11 +10,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.data.model.Entry;
 import org.enventureenterprises.enventure.data.model.Item;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
+import org.joda.time.DateTime;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -116,10 +119,24 @@ public class NewEntryActivity extends BaseActivity implements AdapterView.OnItem
                 entry.setName(nameEditText.getText().toString());
                 entry.setType(paymentType);
                 entry.setItem(item);
+
+                DateTime d = new DateTime();
+
+                entry.setCreated(d.toDate());
+                entry.setEntryMonth(d.getDayOfMonth());
+                entry.setEntryYear(d.getYear());
+                entry.setEntryWeek(d.getWeekOfWeekyear());
                 entry.setQuantity(Integer.parseInt(quantityEditText.getText().toString()));
                 entry.setAmount(Double.parseDouble(amountEditText.getText().toString()));
                 realm.copyToRealmOrUpdate (entry);
                 realm.commitTransaction();
+                final Intent intent = new Intent(NewEntryActivity.this, NewEntryActivity.class);
+                Toast.makeText(
+                        NewEntryActivity.this,
+                        "Sale Added Successfully",
+                        Toast.LENGTH_LONG)
+                        .show();
+                startActivityWithTransition(intent, R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
 
                 break;
             case android.R.id.home:
