@@ -30,7 +30,7 @@
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Product Name"
+                android:hint="@string/product_name"
                 android:textSize="20sp"
                 android:inputType="text"
                 android:nextFocusDown="@+id/quantity"
@@ -51,7 +51,7 @@
                 android:id="@+id/quantity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Quantity"
+                android:hint="@string/quantity"
                 android:textSize="20sp"
                 android:inputType="text"
                 android:nextFocusDown="@+id/type_layout"
@@ -71,7 +71,7 @@
                 android:id="@+id/totalcost"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Total Cost"
+                android:hint="@string/total_cost"
                 android:textSize="20sp"
                 android:inputType="text"
                 android:nextFocusDown="@+id/type_layout"
@@ -94,7 +94,7 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Product Image"
+            android:text="@string/add_product_image"
             android:textSize="20sp" />
 
         <LinearLayout
@@ -111,12 +111,10 @@
                 app:srcCompat="@drawable/ic_view_module_black_24dp"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-
-
                 />
             <TextView
                 android:id="@+id/text_list"
-                android:text="Choose From Gallery"
+                android:text="@string/choose_from_gallery"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="3"
@@ -149,7 +147,7 @@
 
             <TextView
                 android:id="@+id/text_cam"
-                android:text="Use camera"
+                android:text="@string/use_camera"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_width="fill_parent"
