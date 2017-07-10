@@ -78,7 +78,7 @@ public class BaseApplication extends MultiDexApplication {
 
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/BrandonGrotesqueLight.ttf")
+                .setDefaultFontPath("fonts/BrandonGrotesqueRegular.ttf")
                 .setFontAttrId(org.enventureenterprises.enventure.R.attr.fontPath)
                 .build()
         );
