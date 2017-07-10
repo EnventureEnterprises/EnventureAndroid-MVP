@@ -9,6 +9,12 @@
     <string name="add_sale">Add Sale</string>
     <string name="add_product">Add Product</string>
     <string name="inventory">Inventory</string>
+    <string name="add_product_image">Add Product Image</string>
+    <string name="choose_from_gallery">Choose From Gallery</string>
+    <string name="use_camera">Use Camera</string>
+    <string name="product_name">Product Name</string>
+    <string name="quantity">Quantity</string>
+    <string name="total_cost">Total Cost</string>
     <string name="google_play_services_error">Google Play Services Error</string>
     <string formatted="false" name="login_buttons_log_in_with_facebook">Log in with Facebook</string>
        <string name="navdrawer_description_a11y">Navigation Drawer used to switch between major
