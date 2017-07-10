@@ -2,7 +2,7 @@ package org.enventureenterprises.enventure.data.local;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import org.enventureenterprises.enventure.ui.reports.DailyReportFragment;
 import org.enventureenterprises.enventure.ui.reports.MonthlyReportFragment;
@@ -11,7 +11,7 @@ import org.enventureenterprises.enventure.ui.reports.WeeklyReportFragment;
 import java.util.ArrayList;
 
 
-public class SectionsPagerAdapter extends FragmentPagerAdapter {
+public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
     private int NUM_ITEMS = 0;
     private ArrayList<String> frags = new ArrayList<>();

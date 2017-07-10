@@ -8,6 +8,13 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.general.HomeActivity"
     tools:showIn="@layout/home_activity">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
     <!--    -->
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbarLayout"
@@ -32,6 +39,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/home_content" />
+    </LinearLayout>
 
           <it.sephiroth.android.library.bottomnavigation.BottomNavigation
         android:id="@+id/bottomNavigation"

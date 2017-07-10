@@ -29,6 +29,7 @@
             android:textColor="@color/white"
             android:textSize="30sp"
             android:textStyle="bold"
+            android:text="test"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp" />
 

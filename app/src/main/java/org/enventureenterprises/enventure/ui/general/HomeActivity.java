@@ -5,8 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -44,6 +47,15 @@ public class HomeActivity extends BaseActivity implements BottomNavigation.OnMen
         setContentView(R.layout.home_activity);
         getActivityComponent().inject(this);
         ButterKnife.bind(this);
+
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            VectorDrawableCompat indicator
+                    = VectorDrawableCompat.create(getResources(), R.drawable.ic_menu, getTheme());
+            indicator.setTint(ResourcesCompat.getColor(getResources(),R.color.white,getTheme()));
+            supportActionBar.setHomeAsUpIndicator(indicator);
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
 
 
@@ -193,11 +205,7 @@ public class HomeActivity extends BaseActivity implements BottomNavigation.OnMen
 
 
                 break;
-            case android.R.id.home:
-                // this takes the user 'back', as if they pressed the left-facing triangle icon on the main android toolbar.
-                // if this doesn't work as desired, another possibility is to call `finish()` here.
-                this.onBackPressed();
-                break;
+
 
 
         }

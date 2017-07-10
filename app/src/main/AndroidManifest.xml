@@ -28,7 +28,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".ui.general.HomeActivity"
+        <activity android:name=".ui.general.SplashActivity"
 
             >
             <intent-filter>
@@ -48,6 +48,8 @@
             android:value="@string/ACCOUNT_KIT_CLIENT_TOKEN" />
 
         <activity
+            android:theme="@style/AccountKitTheme"
+            tools:replace="android:theme"
             android:name="com.facebook.accountkit.ui.AccountKitActivity" />
 
         <activity
@@ -59,6 +61,13 @@
         <activity
             android:name=".ui.general.DispatchActivity"
             android:label="dispatch" />
+
+        <activity
+            android:name=".ui.general.HomeActivity"
+            android:label="EnVenture" />
+
+
+
         <activity
             android:name=".ui.addItem.ItemDetail"
             android:label="Item Detail" />

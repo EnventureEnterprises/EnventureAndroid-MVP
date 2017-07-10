@@ -86,10 +86,11 @@ public class ItemView extends RelativeLayout
 
     public void showAddEntryFragment(@NonNull final Long item, String name) {
 
-        Intent intent = new Intent(this.getContext(), NewEntryActivity.class);
+        Intent intent = new Intent(getContext(), NewEntryActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("item", item);
         intent.putExtra("name", name);
-        this.getContext().startActivity(intent);
+
+        getContext().startActivity(intent);
     }
 }

@@ -17,12 +17,23 @@ public class DispatchActivity extends BaseActivity {
     private CurrentUserType currentUser;
 
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActivityComponent().inject(this);
         currentUser = environment().currentUser();
 
+        if(currentUser.getAccessToken() != null)
+        {
+            goToHome();
+        }
+        else{
+            goToLogin();
+        }
+/*
         currentUser.loggedInUser()
                 .take(1)
                 .compose(bindToLifecycle())
@@ -31,7 +42,8 @@ public class DispatchActivity extends BaseActivity {
         currentUser.isLoggedIn()
                 .map(loggedIn -> !loggedIn)
                 .compose(bindToLifecycle())
-                .subscribe(__ -> goToLogin());
+                .subscribe(__ -> goToLogin());*/
+
 
 
     }

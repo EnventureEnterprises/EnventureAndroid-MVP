@@ -28,7 +28,7 @@
 
 
         <string-array name="entry_array">
-            <item>Credit</item>
+            <item>Cash</item>
             <item>Installment</item>
         </string-array>
 

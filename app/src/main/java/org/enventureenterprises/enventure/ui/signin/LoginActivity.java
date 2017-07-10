@@ -3,6 +3,7 @@ package org.enventureenterprises.enventure.ui.signin;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Toast;
 
@@ -10,6 +11,8 @@ import com.facebook.accountkit.AccountKitLoginResult;
 import com.facebook.accountkit.ui.AccountKitActivity;
 import com.facebook.accountkit.ui.AccountKitConfiguration;
 import com.facebook.accountkit.ui.LoginType;
+import com.facebook.accountkit.ui.SkinManager;
+import com.facebook.accountkit.ui.UIManager;
 
 import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.data.CurrentUserType;
@@ -21,6 +24,8 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static org.enventureenterprises.enventure.BaseApplication.context;
 
 
 public class LoginActivity extends BaseActivity {
@@ -46,10 +51,17 @@ public class LoginActivity extends BaseActivity {
     @OnClick(R.id.facebook_login_button)
     public void phoneLogin(final View view) {
         final Intent intent = new Intent(LoginActivity.this, AccountKitActivity.class);
+        UIManager uiManager;
+        uiManager = new SkinManager(
+                SkinManager.Skin.CONTEMPORARY,
+        ContextCompat.getColor(context, R.color.colorPrimary));
+
+
         AccountKitConfiguration.AccountKitConfigurationBuilder configurationBuilder =
                 new AccountKitConfiguration.AccountKitConfigurationBuilder(
                         LoginType.PHONE,
                         AccountKitActivity.ResponseType.CODE); // or .ResponseType.TOKEN
+        configurationBuilder.setUIManager(uiManager);
 
         intent.putExtra(
                 AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION,
@@ -83,15 +95,22 @@ public class LoginActivity extends BaseActivity {
             } else {
                 if (loginResult.getAccessToken() != null) {
                     toastMessage = "Success:" + loginResult.getAccessToken().getAccountId();
+
+                    currentUser.login(loginResult.getAccessToken().getToken());
+                    onSuccess();
                 } else {
+
                     toastMessage = String.format(
                             "Success:%s...",
                             loginResult.getAuthorizationCode().substring(0, 10));
+
+                    currentUser.login(loginResult.getAuthorizationCode().substring(0, 10));
+                    onSuccess();
                 }
 
-                currentUser.login(loginResult.getAccessToken().getToken());
-                onSuccess();
+
             }
+
 
             // Surface the result to your user in an appropriate way.
             Toast.makeText(

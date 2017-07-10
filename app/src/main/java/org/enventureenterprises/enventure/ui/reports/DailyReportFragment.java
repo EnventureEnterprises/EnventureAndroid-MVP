@@ -2,6 +2,7 @@ package org.enventureenterprises.enventure.ui.reports;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,7 @@ import butterknife.ButterKnife;
  * Created by mossplix on 7/7/17.
  */
 
-public class DailyReportFragment  extends BaseFragment {
+public class DailyReportFragment  extends Fragment {
 
 
 
