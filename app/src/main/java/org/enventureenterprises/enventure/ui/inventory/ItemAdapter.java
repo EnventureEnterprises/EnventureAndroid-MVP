@@ -82,8 +82,7 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
                 item.getName()));
 
 
-
-        holder.quantityTextView.setText(String.format("%s",
+        holder.quantityTextView.setText(String.format("%s Products",
                 item.getQuantity()));
 
         holder.quantityTextView.setOnClickListener(
@@ -111,7 +110,6 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
                         intent.putExtra("item",item.getId ());
                         v.getContext ().startActivity (intent);
 
-
                     }
                 }
         );
@@ -130,8 +128,6 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
                     }
                 }
         );
-
-
 
 
         Glide.with(mContext).load(item.getImage()).asBitmap().placeholder(new ColorDrawable(Color.GRAY)).into(holder.itemImage);

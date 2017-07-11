@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">ENVision</string>
+    <string name="tagline">Business Made Simple</string>
     <string name="facebook_app_id">1612589265442252</string>
     <string name="general_alert_buttons_ok">Ok</string>
     <string name="FACEBOOK_APP_ID">1612589265442252</string>
@@ -7,9 +8,12 @@
     <string name="device_offline_message">Your device is offline</string>
     <string name="sales">Sales</string>
     <string name="add_sale">Add Sale</string>
-    <string name="add_product">Add Product</string>
+    <string name="product_detail">Product Detail</string>
+    <string name="empty_sales">Currently, you do not have any sales.Please click the + button to add a sale</string>
     <string name="inventory">Inventory</string>
+    <string name="empty_inventory">There are currently no products in your inventory. Please click the + button to add a product</string>
     <string name="add_product_image">Add Product Image</string>
+    <string name="add_product">Add Product</string>
     <string name="choose_from_gallery">Choose From Gallery</string>
     <string name="use_camera">Use Camera</string>
     <string name="product_name">Product Name</string>
