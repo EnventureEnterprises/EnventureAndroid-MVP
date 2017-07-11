@@ -98,7 +98,7 @@ public class AddItemActivity extends BaseActivity {
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Add Sale");
+        getSupportActionBar().setTitle("Add Product");
 
         mImageBitmap = null;
 

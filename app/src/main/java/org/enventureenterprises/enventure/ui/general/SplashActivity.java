@@ -26,7 +26,7 @@ public class SplashActivity extends AppCompatActivity {
 
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/BrandonGrotesqueLight.ttf")
+                .setDefaultFontPath("fonts/BrandonGrotesqueRegular.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
