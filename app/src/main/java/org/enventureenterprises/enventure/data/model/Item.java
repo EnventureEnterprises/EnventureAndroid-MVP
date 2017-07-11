@@ -17,14 +17,16 @@ public class Item extends RealmObject {
     private Double totalCost;
     private Integer quantity;
     private String image;
-    @PrimaryKey
     private String name;
+
+    @PrimaryKey
+    private Long created_ts;
 
     private boolean synced;
 
 
     public long getId(){
-        return this.id;
+        return this.created_ts;
     }
     public void setId(Long id){
         this.id=id;
@@ -78,6 +80,13 @@ public class Item extends RealmObject {
     }
     public void setSynced(Boolean synced){
         this.synced=synced;
+    }
+
+    public Long getCreatedTs(){
+        return this.created_ts;
+    }
+    public void setCreatedTs(Long created_ts){
+        this.created_ts=created_ts;
     }
 
 

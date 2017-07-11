@@ -358,6 +358,8 @@ public class AddItemActivity extends BaseActivity {
                 inventoryItem.setTotalCost(Double.parseDouble(totalCostEditText.getText().toString()));
                 inventoryItem.setImage(photo.toString());
 
+                inventoryItem.setCreatedTs(d.getMillis());
+
                 mrep.setTotalSpent(Double.parseDouble(totalCostEditText.getText().toString()));
                 mrep.setUpdated(d.toDate());
 
