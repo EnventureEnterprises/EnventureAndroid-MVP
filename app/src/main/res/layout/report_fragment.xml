@@ -154,6 +154,7 @@
                 android:clickable="true"
 
                 android:foreground="?attr/selectableItemBackground"
+                android:background="@android:color/transparent"
                 android:stateListAnimator="@anim/selector_raise"
                 app:cardCornerRadius="4dp" >
 
@@ -163,7 +164,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/rect"
-                    android:layout_marginBottom="@dimen/grid_1"
+                    android:padding_Bottom="@dimen/grid_1"
 
                     >
 
@@ -177,7 +178,6 @@
                         android:layout_alignParentRight="true"
 
                         android:layout_gravity="center"
-                        android:layout_marginBottom="1dp"
                         android:layout_height="wrap_content">
 
 
@@ -265,6 +265,7 @@
                 android:layout_marginRight="@dimen/md_keylines"
                 android:layout_marginTop="8dp"
                 android:clickable="true"
+                android:background="@android:color/transparent"
 
                 android:foreground="?attr/selectableItemBackground"
                 android:stateListAnimator="@anim/selector_raise"
@@ -276,7 +277,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/rect2"
-                    android:layout_marginBottom="@dimen/grid_1"
+
+                    android:padding_Bottom="@dimen/grid_1"
 
                     >
 

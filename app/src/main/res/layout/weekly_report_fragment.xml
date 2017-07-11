@@ -7,10 +7,70 @@
     android:background="?android:attr/selectableItemBackground"
     >
 
+    <LinearLayout
+        android:id="@+id/header_container"
+        android:layout_width="match_parent"
+        android:weightSum="4"
+        android:background="@color/colorPrimaryDark"
+        android:layout_height="@dimen/grid_7"
+        android:orientation="horizontal">
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/back"
+            android:layout_weight="1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="end"
+            app:srcCompat="@drawable/ic_arrow_back_black_24dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+
+
+            />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_weight="2"
+            android:layout_height="match_parent"
+            >
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:keepScreenOn="true"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:text="This Week"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp" />
+
+
+
+
+        </RelativeLayout>
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/forward"
+            android:layout_weight="1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:srcCompat="@drawable/ic_arrow_forward_black_24dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+
+
+            />
+
+
+
+
+    </LinearLayout>
+
 
     <android.support.v4.view.ViewPager
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/pager"
+        android:layout_below="@+id/header_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
