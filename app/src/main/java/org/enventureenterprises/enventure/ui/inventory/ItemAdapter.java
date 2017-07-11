@@ -80,9 +80,10 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
         holder.itemTextView.setText(String.format("%s",
                 item.getName()));
 
-        holder.quantityTextView.setText(String.format("%s",
+        holder.quantityTextView.setText(String.format("%s Products",
                 item.getQuantity()));
 
+//        Glide.with(mContext).load(item.getImage()).asBitmap().placeholder(new ColorDrawable(Color.GRAY));
 
 
 
