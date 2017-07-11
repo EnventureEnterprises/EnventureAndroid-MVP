@@ -165,6 +165,7 @@ public class NewEntryActivity extends BaseActivity implements AdapterView.OnItem
                 entry.setEntryMonth(d.getDayOfMonth());
                 entry.setEntryYear(d.getYear());
                 entry.setEntryWeek(d.getWeekOfWeekyear());
+                entry.setCreatedTs(d.getMillis());
 
 
                 mrep.setProfit(Double.parseDouble(amountEditText.getText().toString()),item);

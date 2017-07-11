@@ -14,7 +14,7 @@ public class Entry extends RealmObject {
 
     private Item item;
     private Double amount;
-    @PrimaryKey
+
     private Date created;
     private Integer quantity;
     private String type;
@@ -25,6 +25,8 @@ public class Entry extends RealmObject {
     private Integer entry_month;
     private Integer entry_week;
     private Integer entry_day;
+    @PrimaryKey
+    private Long created_ts;
 
 
     public long getId(){
@@ -109,6 +111,13 @@ public class Entry extends RealmObject {
     }
     public void setSynced(Boolean synced){
         this.synced=synced;
+    }
+
+    public Long getCreatedTs(){
+        return this.created_ts;
+    }
+    public void setCreatedTs(Long created_ts){
+        this.created_ts=created_ts;
     }
 
 
