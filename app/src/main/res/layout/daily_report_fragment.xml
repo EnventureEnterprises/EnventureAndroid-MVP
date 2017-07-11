@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/list_view_frag"
-    android:layout_marginTop="250dp"
-    android:layout_height="match_parent" tools:context=".ui.reports.MonthlyReportFragment">
+    android:layout_height="match_parent" tools:context=".ui.reports.DailyReportFragment">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_weight="2"
@@ -231,6 +230,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginLeft="@dimen/grid_4"
                     android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/grid_1"
                     android:layout_height="wrap_content">
 
 
@@ -430,6 +430,18 @@
             android:paddingBottom="@dimen/grid_1"
             android:paddingTop="@dimen/grid_1"
             android:textColor="@color/black"/>
+
+
+        <org.enventureenterprises.enventure.lib.RealmRecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            app:rrvLayoutType="LinearLayout"
+            app:rrvIsRefreshable="false"
+            app:rrvEmptyLayoutId="@layout/empty_iventory"
+            android:paddingTop="6dp"
+            android:scrollbars="vertical" />
 
 
 

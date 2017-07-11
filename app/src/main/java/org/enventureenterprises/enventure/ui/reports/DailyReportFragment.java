@@ -8,15 +8,28 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.enventureenterprises.enventure.R;
+import org.enventureenterprises.enventure.data.model.Item;
+import org.enventureenterprises.enventure.lib.RealmRecyclerView;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
+import org.enventureenterprises.enventure.ui.inventory.ItemAdapter;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by mossplix on 7/7/17.
  */
 
 public class DailyReportFragment  extends Fragment {
+
+    Realm realm;
+    ItemAdapter mInventoryAdapter;
+
+    @BindView(R.id.recycler_view)
+    RealmRecyclerView mRecyclerView;
 
 
 
@@ -51,6 +64,14 @@ public class DailyReportFragment  extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.daily_report_fragment, container, false);
         ButterKnife.bind(this, view);
+
+        realm = Realm.getDefaultInstance ();
+        RealmResults<Item> mItems =
+                realm.where(Item.class).findAllSorted("id", Sort.DESCENDING);
+
+        mInventoryAdapter = new ItemAdapter(getActivity(), mItems, true, true);
+
+        mRecyclerView.setAdapter(mInventoryAdapter);
 
 
 
