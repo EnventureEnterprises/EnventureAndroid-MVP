@@ -64,23 +64,23 @@
 
         <activity
             android:name=".ui.general.HomeActivity"
-            android:label="EnVenture" />
+            android:label="@string/app_name" />
 
 
 
         <activity
             android:name=".ui.addItem.ItemDetail"
-            android:label="Item Detail" />
+            android:label="@string/product_detail" />
 
         <activity
             android:name=".ui.addEntry.NewEntryActivity"
-            android:label="Add Sale" />
+            android:label="@string/add_sale" />
 
 
 
         <activity
             android:name=".ui.addItem.AddItemActivity"
-            android:label="addItem" />
+            android:label="@string/add_product" />
 
 
 
