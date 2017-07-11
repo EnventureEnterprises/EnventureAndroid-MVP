@@ -1,6 +1,7 @@
 package org.enventureenterprises.enventure.ui.inventory;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
@@ -15,7 +16,7 @@ import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.data.model.Item;
 import org.enventureenterprises.enventure.data.remote.EnventureApi;
 import org.enventureenterprises.enventure.injection.qualifier.ApplicationContext;
-import org.enventureenterprises.enventure.util.CircleTransform;
+import org.enventureenterprises.enventure.ui.addItem.ItemDetail;
 
 import javax.inject.Inject;
 
@@ -80,14 +81,56 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
         holder.itemTextView.setText(String.format("%s",
                 item.getName()));
 
+
         holder.quantityTextView.setText(String.format("%s Products",
                 item.getQuantity()));
 
-//        Glide.with(mContext).load(item.getImage()).asBitmap().placeholder(new ColorDrawable(Color.GRAY));
+        holder.quantityTextView.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent intent = new Intent(v.getContext (), ItemDetail.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("item",item.getId ());
+                        v.getContext ().startActivity (intent);
 
 
+                    }
+                }
+        );
 
-        Glide.with(mContext).load(item.getImage()).asBitmap().placeholder(new ColorDrawable(Color.GRAY)).transform(new CircleTransform(mContext)).into(holder.itemImage);
+        holder.itemTextView.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent intent = new Intent(v.getContext (), ItemDetail.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("item",item.getId ());
+                        v.getContext ().startActivity (intent);
+
+                    }
+                }
+        );
+
+        holder.itemImage.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent intent = new Intent(v.getContext (), ItemDetail.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("item",item.getId ());
+                        v.getContext ().startActivity (intent);
+
+
+                    }
+                }
+        );
+
+
+        Glide.with(mContext).load(item.getImage()).asBitmap().placeholder(new ColorDrawable(Color.GRAY)).into(holder.itemImage);
 
 
     }
@@ -104,6 +147,8 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
 
         @BindView(R.id.name)
         TextView itemTextView;
+
+        
 
 
 

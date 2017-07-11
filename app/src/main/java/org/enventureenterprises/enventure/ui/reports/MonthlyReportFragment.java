@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.data.model.Item;
@@ -34,6 +35,12 @@ public class MonthlyReportFragment extends Fragment {
 
     @BindView(R.id.pager)
     ViewPager vpager;
+
+    @BindView(R.id.title)
+    TextView title;
+
+
+
 
     // TODO: Rename and change types and number of parameters
     public static MonthlyReportFragment newInstance() {

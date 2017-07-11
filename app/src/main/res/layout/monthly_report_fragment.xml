@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="?android:attr/selectableItemBackground"
     >
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:id="@+id/header_container"
         android:layout_width="match_parent"
         android:weightSum="4"
@@ -42,7 +41,7 @@
                 android:textColor="@color/white"
                 android:textSize="30sp"
                 android:textStyle="bold"
-                android:text="Today"
+                android:text="This Month"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp" />
 
@@ -51,7 +50,7 @@
 
         </RelativeLayout>
         <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/gallery2"
+            android:id="@+id/forward"
             android:layout_weight="1"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -68,7 +67,7 @@
     </LinearLayout>
 
     <android.support.v4.view.ViewPager
-        xmlns:android="http://schemas.android.com/apk/res/android"
+
         android:id="@+id/pager"
         android:layout_below="@+id/header_container"
         android:layout_width="match_parent"
