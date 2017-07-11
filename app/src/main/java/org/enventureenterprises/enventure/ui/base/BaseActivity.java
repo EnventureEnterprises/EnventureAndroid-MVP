@@ -67,6 +67,7 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private Toolbar mActionBarToolbar;
+    private String TASK_TAG ="periodic_task";
     //private Integer SYNC_INTERVAL = 86400;
     private Integer SYNC_INTERVAL = 30;
 
@@ -104,6 +105,7 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
 
         Task task = new PeriodicTask.Builder()
                 .setService(SyncService.class)
+                .setTag(TASK_TAG)
                 .setPeriod(SYNC_INTERVAL)
                 .setPersisted(true)
                 .setRequiredNetwork(Task.NETWORK_STATE_ANY )
