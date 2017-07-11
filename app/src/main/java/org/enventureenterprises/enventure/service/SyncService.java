@@ -62,13 +62,14 @@ public class SyncService extends GcmTaskService {
 
         OrderedRealmCollectionSnapshot<Entry> entriesSnapshot = entries.createSnapshot();
 
-        for (Entry entry : entriesSnapshot) {
+        for (int i = 0; i >entriesSnapshot.size(); i++) {
+            Entry entry= entriesSnapshot.get(i);
             client.createEntry(entry)
                     .compose(Transformers.neverError()).subscribe(k ->setSynced(entry,realm));
         }
 
-        for (Item item : itemsSnapshot) {
-
+        for (int i = 0; i >itemsSnapshot.size(); i++) {
+            Item item = itemsSnapshot.get(i);
             client.createItem(item)
                     .compose(Transformers.neverError()).subscribe(k ->setSynced(item,realm));
         }
