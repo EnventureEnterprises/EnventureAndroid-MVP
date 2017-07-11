@@ -9,6 +9,7 @@
     <string name="sales">Sales</string>
     <string name="add_sale">Add Sale</string>
     <string name="product_detail">Product Detail</string>
+    <string name="empty_sales">Currently, you do not have any sales.Please click the + button to add a sale</string>
     <string name="inventory">Inventory</string>
     <string name="empty_inventory">There are currently no products in your inventory. Please click the + button to add a product</string>
     <string name="add_product_image">Add Product Image</string>
