@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:keepScreenOn="true"
-            android:textColor="@color/black"
+            android:textColor="@color/textColorDark"
             android:textSize="20sp"
             android:text="@string/empty_sales"
             android:layout_marginStart="10dp"
