@@ -349,6 +349,7 @@ public class AddItemActivity extends BaseActivity {
                 }
 
                 if (mrep == null) {
+                    mrep = new MonthlyReport();
                     mrep.setName(d.toString("MMM"));
                     mrep = new MonthlyReport();
                 }
