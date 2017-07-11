@@ -14,10 +14,12 @@ public class Entry extends RealmObject {
 
     private Item item;
     private Double amount;
+    @PrimaryKey
     private Date created;
     private Integer quantity;
     private String type;
-    @PrimaryKey
+    private boolean synced;
+
     private String name;
     private Integer entry_year;
     private Integer entry_month;
@@ -100,6 +102,13 @@ public class Entry extends RealmObject {
     }
     public void setImage(Integer entry_day){
         this.entry_day=entry_day;
+    }
+
+    public Boolean getSynced(){
+        return this.synced;
+    }
+    public void setSynced(Boolean synced){
+        this.synced=synced;
     }
 
 
