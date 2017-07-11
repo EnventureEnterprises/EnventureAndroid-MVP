@@ -164,7 +164,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/rect"
-                    android:padding_Bottom="@dimen/grid_1"
+
 
                     >
 
@@ -176,6 +176,7 @@
                         android:layout_width="wrap_content"
 
                         android:layout_alignParentRight="true"
+                        android:layout_marginBottom="0dp"
 
                         android:layout_gravity="center"
                         android:layout_height="wrap_content">
@@ -278,7 +279,6 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/rect2"
 
-                    android:padding_Bottom="@dimen/grid_1"
 
                     >
 
@@ -288,6 +288,7 @@
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
+                        android:layout_marginBottom="0dp"
 
                         android:layout_alignParentRight="true"
 
