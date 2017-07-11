@@ -11,6 +11,7 @@
     <string name="add_product">Add Product</string>
     <string name="product_detail">Product Detail</string>
     <string name="inventory">Inventory</string>
+    <string name="empty_inventory">There are currently no products in your inventory. Please click the + button to add a product</string>
     <string name="add_product_image">Add Product Image</string>
     <string name="choose_from_gallery">Choose From Gallery</string>
     <string name="use_camera">Use Camera</string>
