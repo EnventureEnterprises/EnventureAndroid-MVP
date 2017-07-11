@@ -13,10 +13,17 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.enventureenterprises.enventure.R;
+import org.enventureenterprises.enventure.data.model.DailyReport;
 import org.enventureenterprises.enventure.data.model.Entry;
 import org.enventureenterprises.enventure.data.model.Item;
+import org.enventureenterprises.enventure.data.model.MonthlyReport;
+import org.enventureenterprises.enventure.data.model.WeeklyReport;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -115,21 +122,80 @@ public class NewEntryActivity extends BaseActivity implements AdapterView.OnItem
             case R.id.save:
                 realm = Realm.getDefaultInstance ();
                 realm.beginTransaction();
+                DateTime d = new DateTime();
+                DateTimeFormatter fmt = DateTimeFormat.forPattern("EEEE");
                 Entry entry = new Entry ();
+                DailyReport drep = realm.where(DailyReport.class)
+                        .equalTo("name", fmt.withLocale(Locale.getDefault()).print(d))
+                        .findFirst();
+                WeeklyReport wrep = realm.where(WeeklyReport.class)
+                        .equalTo("name", Integer.toString(d.getWeekOfWeekyear()))
+                        .findFirst();
+                MonthlyReport mrep = realm.where(MonthlyReport.class)
+                        .equalTo("name", d.toString("MMM"))
+                        .findFirst();
+
+
+                if (drep == null) {
+                    drep = new DailyReport();
+                    drep.setName(fmt.withLocale(Locale.getDefault()).print(d));
+
+                }
+                if (wrep == null) {
+                    wrep = new WeeklyReport();
+                    wrep.setName(Integer.toString(d.getWeekOfWeekyear()));
+
+                }
+
+                if (mrep == null) {
+                    mrep = new MonthlyReport();
+                    mrep.setName(d.toString("MMM"));
+
+                }
+
                 entry.setName(nameEditText.getText().toString());
                 entry.setType(paymentType);
                 entry.setItem(item);
 
-                DateTime d = new DateTime();
+
+
+
 
                 entry.setCreated(d.toDate());
                 entry.setEntryMonth(d.getDayOfMonth());
                 entry.setEntryYear(d.getYear());
                 entry.setEntryWeek(d.getWeekOfWeekyear());
+
+
+                mrep.setProfit(Double.parseDouble(amountEditText.getText().toString()),item);
+                mrep.setTotalEarned(Double.parseDouble(amountEditText.getText().toString()));
+                mrep.setUpdated(d.toDate());
+
+
+                drep.setProfit(Double.parseDouble(amountEditText.getText().toString()),item);
+                drep.setTotalEarned(Double.parseDouble(amountEditText.getText().toString()));
+                drep.setUpdated(d.toDate());
+
+
+                wrep.setProfit(Double.parseDouble(amountEditText.getText().toString()),item);
+                wrep.setTotalEarned(Double.parseDouble(amountEditText.getText().toString()));
+                wrep.setUpdated(d.toDate());
+
+
                 entry.setQuantity(Integer.parseInt(quantityEditText.getText().toString()));
                 entry.setAmount(Double.parseDouble(amountEditText.getText().toString()));
                 realm.copyToRealmOrUpdate (entry);
+                realm.copyToRealmOrUpdate (drep);
+                realm.copyToRealmOrUpdate (mrep);
+                realm.copyToRealmOrUpdate (wrep);
+
+
+
+
                 realm.commitTransaction();
+
+
+
                 final Intent intent = new Intent(NewEntryActivity.this, NewEntryActivity.class);
                 Toast.makeText(
                         NewEntryActivity.this,

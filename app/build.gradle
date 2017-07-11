@@ -112,6 +112,8 @@ dependencies {
     compile "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:support-v13:$SUPPORT_LIBRARY_VERSION"
+    compile 'com.google.android.gms:play-services-gcm:8.1.0'
+    compile 'commons-io:commons-io:2.4'
 
 
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.1.0'

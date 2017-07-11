@@ -10,13 +10,14 @@ import io.realm.annotations.PrimaryKey;
  */
 
 public class Entry extends RealmObject {
-    @PrimaryKey
-    private  long id;
+    private Long id;
+
     private Item item;
     private Double amount;
     private Date created;
     private Integer quantity;
     private String type;
+    @PrimaryKey
     private String name;
     private Integer entry_year;
     private Integer entry_month;

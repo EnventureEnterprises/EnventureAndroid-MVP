@@ -50,7 +50,7 @@ public class SalesFragment extends BaseFragment {
 
         realm = Realm.getDefaultInstance ();
         RealmResults<Entry> mEntries =
-                realm.where(Entry.class).findAllSorted("id", Sort.DESCENDING);
+                realm.where(Entry.class).findAllSorted("created", Sort.DESCENDING);
 
        mSalesAdapter = new SalesAdapter(getActivity(), mEntries, true, true);
 

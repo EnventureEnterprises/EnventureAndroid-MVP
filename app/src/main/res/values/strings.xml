@@ -8,7 +8,6 @@
     <string name="device_offline_message">Your device is offline</string>
     <string name="sales">Sales</string>
     <string name="add_sale">Add Sale</string>
-    <string name="add_product">Add Product</string>
     <string name="product_detail">Product Detail</string>
     <string name="inventory">Inventory</string>
     <string name="empty_inventory">There are currently no products in your inventory. Please click the + button to add a product</string>

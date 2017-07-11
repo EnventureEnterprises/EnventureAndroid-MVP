@@ -1,22 +1,15 @@
 package org.enventureenterprises.enventure.data.model;
 
-import java.util.Date;
-
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
 /**
- * Created by mossplix on 7/6/17.
+ * Created by mossplix on 7/11/17.
  */
 
-public class MonthlyReport extends RealmObject {
-    @PrimaryKey
-    private  String name;
-
+public class Report extends RealmObject {
     private Double profit;
     private Double total_earned;
     private Double total_spent;
-    private Date updated;
 
     public Double getProfit() {
         return this.profit;
@@ -32,23 +25,6 @@ public class MonthlyReport extends RealmObject {
         return this.total_spent;
     }
 
-    public void setProfit(Double profit)
-    {
-        this.profit = profit;
-    }
-
-
-
-
-
-
-    public String getName(){
-        return this.name;
-    }
-    public void setName(String name){
-        this.name=name;
-    }
-
     public void setProfit(Double amount,Item item)
     {
         Double unitcost = item.getTotalCost()/item.getQuantity();
@@ -58,6 +34,9 @@ public class MonthlyReport extends RealmObject {
         }else{
             this.profit =  amount-unitcost;
         }
+    }
+    public void setProfit(Double amount){
+        this.profit = profit;
     }
 
 
@@ -80,12 +59,4 @@ public class MonthlyReport extends RealmObject {
             this.total_spent =  total_spent;
         }
     }
-
-    public Date getUpdated(){
-        return this.updated;
-    }
-    public void setUpdated(Date updated){
-        this.updated=updated;
-    }
-
 }
