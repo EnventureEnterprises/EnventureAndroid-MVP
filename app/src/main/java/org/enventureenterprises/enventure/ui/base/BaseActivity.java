@@ -36,7 +36,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.PeriodicTask;
-import com.google.android.gms.gcm.Task;
 import com.trello.rxlifecycle.LifecycleProvider;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
@@ -67,7 +66,7 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private Toolbar mActionBarToolbar;
-    private String TASK_TAG ="periodic_task";
+    private String TASK_TAG ="periodic_task2";
     //private Integer SYNC_INTERVAL = 86400;
     private Integer SYNC_INTERVAL = 30;
 
@@ -103,12 +102,12 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
 
         mGcmNetworkManager = GcmNetworkManager.getInstance(this);
 
-        Task task = new PeriodicTask.Builder()
+        PeriodicTask task = new PeriodicTask.Builder()
                 .setService(SyncService.class)
                 .setTag(TASK_TAG)
                 .setPeriod(SYNC_INTERVAL)
                 .setPersisted(true)
-                .setRequiredNetwork(Task.NETWORK_STATE_ANY )
+                .setRequiredNetwork(PeriodicTask.NETWORK_STATE_CONNECTED )
                 .build();
 
         mGcmNetworkManager.schedule(task);

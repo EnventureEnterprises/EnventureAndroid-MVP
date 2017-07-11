@@ -67,7 +67,7 @@ public class ItemDetail extends BaseActivity{
         realm = Realm.getDefaultInstance ();
         actionBar = getSupportActionBar ();
 
-        Item item = realm.where(Item.class).equalTo ("id",item_id).findFirst ();
+        Item item = realm.where(Item.class).equalTo ("created_ts",item_id).findFirst ();
 
 
         if(item != null){

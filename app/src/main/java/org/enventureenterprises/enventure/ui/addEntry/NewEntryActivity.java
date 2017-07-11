@@ -95,7 +95,7 @@ public class NewEntryActivity extends BaseActivity implements AdapterView.OnItem
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(NewEntryActivity.this);
 
-        item = realm.where(Item.class).equalTo ("id",item_id).findFirst ();
+        item = realm.where(Item.class).equalTo ("created_ts",item_id).findFirst ();
 
     }
 
@@ -157,6 +157,20 @@ public class NewEntryActivity extends BaseActivity implements AdapterView.OnItem
                 entry.setType(paymentType);
                 entry.setItem(item);
 
+                Integer current_quantity = item.getQuantity();
+                Double current_total_stock = item.getTotalCost();
+
+                Double unit_cost  =  current_total_stock/current_quantity;
+
+                Double current_value_minus = (Double.parseDouble(quantityEditText.getText().toString())*unit_cost);
+
+                Double  current_value = item.getTotalCost() - current_value_minus;
+
+                item.setTotalCost(current_value);
+                item.setQuantity(current_quantity-Integer.parseInt(quantityEditText.getText().toString()));
+
+
+
 
 
 
@@ -166,6 +180,7 @@ public class NewEntryActivity extends BaseActivity implements AdapterView.OnItem
                 entry.setEntryYear(d.getYear());
                 entry.setEntryWeek(d.getWeekOfWeekyear());
                 entry.setCreatedTs(d.getMillis());
+
 
 
                 mrep.setProfit(Double.parseDouble(amountEditText.getText().toString()),item);
@@ -189,6 +204,7 @@ public class NewEntryActivity extends BaseActivity implements AdapterView.OnItem
                 realm.copyToRealmOrUpdate (drep);
                 realm.copyToRealmOrUpdate (mrep);
                 realm.copyToRealmOrUpdate (wrep);
+                realm.copyToRealmOrUpdate (item);
 
 
 
