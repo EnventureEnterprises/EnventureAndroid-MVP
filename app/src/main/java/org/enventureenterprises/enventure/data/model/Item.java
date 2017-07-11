@@ -10,13 +10,14 @@ import io.realm.annotations.PrimaryKey;
  */
 
 public class Item extends RealmObject {
-    @PrimaryKey
+
     private  long id;
     private Date created;
     private Double amount;
     private Double totalCost;
     private Integer quantity;
     private String image;
+    @PrimaryKey
     private String name;
 
 

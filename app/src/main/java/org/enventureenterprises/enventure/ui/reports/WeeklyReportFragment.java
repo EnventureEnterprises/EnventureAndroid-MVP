@@ -3,12 +3,14 @@ package org.enventureenterprises.enventure.ui.reports;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.data.model.Item;
+import org.enventureenterprises.enventure.data.model.MonthlyReport;
 import org.enventureenterprises.enventure.lib.RealmRecyclerView;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
 import org.enventureenterprises.enventure.ui.inventory.ItemAdapter;
@@ -30,6 +32,9 @@ public class WeeklyReportFragment extends Fragment {
 
     @BindView(R.id.recycler_view)
     RealmRecyclerView mRecyclerView;
+
+    @BindView(R.id.pager)
+    ViewPager vpager;
 
     // TODO: Rename and change types and number of parameters
     public static WeeklyReportFragment newInstance() {
@@ -63,11 +68,17 @@ public class WeeklyReportFragment extends Fragment {
 
         realm = Realm.getDefaultInstance ();
         RealmResults<Item> mItems =
-                realm.where(Item.class).findAllSorted("id", Sort.DESCENDING);
+                realm.where(Item.class).findAllSorted("created", Sort.DESCENDING);
 
         mInventoryAdapter = new ItemAdapter(getActivity(), mItems, true, true);
 
         mRecyclerView.setAdapter(mInventoryAdapter);
+
+        realm = Realm.getDefaultInstance ();
+        RealmResults<MonthlyReport> mReports =
+                realm.where(MonthlyReport.class).findAllSorted("updated", Sort.DESCENDING);
+
+        vpager.setAdapter(new MonthAdapter(getContext(),mReports));
 
 
 

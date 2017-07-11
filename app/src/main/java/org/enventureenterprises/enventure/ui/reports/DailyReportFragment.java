@@ -3,12 +3,13 @@ package org.enventureenterprises.enventure.ui.reports;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.enventureenterprises.enventure.R;
-import org.enventureenterprises.enventure.data.model.Item;
+import org.enventureenterprises.enventure.data.model.DailyReport;
 import org.enventureenterprises.enventure.lib.RealmRecyclerView;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
 import org.enventureenterprises.enventure.ui.inventory.ItemAdapter;
@@ -30,6 +31,15 @@ public class DailyReportFragment  extends Fragment {
 
     @BindView(R.id.recycler_view)
     RealmRecyclerView mRecyclerView;
+
+
+    @BindView(R.id.pager)
+    ViewPager vpager;
+
+
+
+
+
 
 
 
@@ -66,16 +76,33 @@ public class DailyReportFragment  extends Fragment {
         ButterKnife.bind(this, view);
 
         realm = Realm.getDefaultInstance ();
-        RealmResults<Item> mItems =
-                realm.where(Item.class).findAllSorted("id", Sort.DESCENDING);
+        RealmResults<DailyReport> mReports =
+                realm.where(DailyReport.class).findAllSorted("updated", Sort.DESCENDING);
 
-        mInventoryAdapter = new ItemAdapter(getActivity(), mItems, true, true);
+        vpager.setAdapter(new DayAdapter(getContext(),mReports));
 
-        mRecyclerView.setAdapter(mInventoryAdapter);
+
+
+
+
 
 
 
         return view;
+    }
+
+
+    //@OnClick(R.id.back)
+    void back()
+    {
+        if (vpager.getCurrentItem() == 0) {
+            // If the user is currently looking at the first step, allow the system to handle the
+            // Back button. This calls finish() on this activity and pops the back stack.
+
+        } else {
+            // Otherwise, select the previous step.
+            vpager.setCurrentItem(vpager.getCurrentItem() - 1);
+        }
     }
 
 
@@ -125,4 +152,10 @@ public class DailyReportFragment  extends Fragment {
 
 
 
+
+
+
 }
+
+
+

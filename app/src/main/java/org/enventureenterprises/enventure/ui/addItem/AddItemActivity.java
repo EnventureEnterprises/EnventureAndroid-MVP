@@ -22,15 +22,22 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import org.enventureenterprises.enventure.R;
+import org.enventureenterprises.enventure.data.model.DailyReport;
 import org.enventureenterprises.enventure.data.model.Item;
+import org.enventureenterprises.enventure.data.model.MonthlyReport;
+import org.enventureenterprises.enventure.data.model.WeeklyReport;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
 import org.enventureenterprises.enventure.util.Config;
 import org.enventureenterprises.enventure.util.GeneralUtils;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -91,6 +98,7 @@ public class AddItemActivity extends BaseActivity {
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Add Sale");
 
         mImageBitmap = null;
 
@@ -317,14 +325,62 @@ public class AddItemActivity extends BaseActivity {
             case R.id.save:
                 realm = Realm.getDefaultInstance ();
                 realm.beginTransaction();
+                DateTime d = new DateTime();
+                DateTimeFormatter fmt = DateTimeFormat.forPattern("EEEE");
                 Item inventoryItem = new Item ();
+                DailyReport drep = realm.where(DailyReport.class)
+                        .equalTo("name", fmt.withLocale(Locale.getDefault()).print(d))
+                        .findFirst();
+                WeeklyReport wrep = realm.where(WeeklyReport.class)
+                        .equalTo("name", Integer.toString(d.getWeekOfWeekyear()))
+                        .findFirst();
+                MonthlyReport mrep = realm.where(MonthlyReport.class)
+                        .equalTo("name", d.toString("MMM"))
+                        .findFirst();
+
+
+                if (drep == null) {
+                    drep = new DailyReport();
+                    drep.setName(fmt.withLocale(Locale.getDefault()).print(d));
+                }
+                if (wrep == null) {
+                    wrep = new WeeklyReport();
+                    wrep.setName(Integer.toString(d.getWeekOfWeekyear()));
+                }
+
+                if (mrep == null) {
+                    mrep.setName(d.toString("MMM"));
+                    mrep = new MonthlyReport();
+                }
                 inventoryItem.setName(nameEditText.getText().toString());
                 inventoryItem.setQuantity(Integer.parseInt(quantityEditText.getText().toString()));
                 inventoryItem.setTotalCost(Double.parseDouble(totalCostEditText.getText().toString()));
                 inventoryItem.setImage(photo.toString());
 
+                mrep.setTotalSpent(Double.parseDouble(totalCostEditText.getText().toString()));
+                mrep.setUpdated(d.toDate());
+
+
+
+                drep.setTotalSpent(Double.parseDouble(totalCostEditText.getText().toString()));
+                drep.setUpdated(d.toDate());
+
+
+
+                wrep.setTotalSpent(Double.parseDouble(totalCostEditText.getText().toString()));
+                wrep.setUpdated(d.toDate());
+
                 realm.copyToRealmOrUpdate (inventoryItem);
+                realm.copyToRealmOrUpdate (drep);
+                realm.copyToRealmOrUpdate (mrep);
+                realm.copyToRealmOrUpdate (wrep);
+
+
                 realm.commitTransaction();
+
+
+
+
 
                 Intent intent = new Intent(AddItemActivity.this, ItemDetail.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

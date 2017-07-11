@@ -47,7 +47,7 @@ public class InventoryFragment extends BaseFragment {
 
         realm = Realm.getDefaultInstance ();
         RealmResults<Item> mItems =
-                realm.where(Item.class).findAllSorted("id", Sort.DESCENDING);
+                realm.where(Item.class).findAllSorted("created", Sort.DESCENDING);
 
         mInventoryAdapter = new ItemAdapter(getActivity(), mItems, true, true);
 
