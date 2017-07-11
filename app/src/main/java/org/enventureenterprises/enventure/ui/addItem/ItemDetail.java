@@ -83,4 +83,12 @@ public class ItemDetail extends BaseActivity{
 
     }
 
+
+    @Override
+    public void onBackPressed()
+    {
+        // code here to show dialog
+        super.onBackPressed();  // optional depending on your needs
+    }
+
 }

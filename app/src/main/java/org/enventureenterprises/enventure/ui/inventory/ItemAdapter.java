@@ -152,7 +152,7 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
         @BindView(R.id.name)
         TextView itemTextView;
 
-        
+
 
 
 
