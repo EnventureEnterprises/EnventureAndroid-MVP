@@ -20,6 +20,8 @@ public class Item extends RealmObject {
     @PrimaryKey
     private String name;
 
+    private boolean synced;
+
 
     public long getId(){
         return this.id;
@@ -69,6 +71,13 @@ public class Item extends RealmObject {
     }
     public void setImage(String image){
         this.image=image;
+    }
+
+    public Boolean getSynced(){
+        return this.synced;
+    }
+    public void setSynced(Boolean synced){
+        this.synced=synced;
     }
 
 

@@ -5,12 +5,21 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+import org.enventureenterprises.enventure.data.BaseResponse;
+import org.enventureenterprises.enventure.data.model.Entry;
+import org.enventureenterprises.enventure.data.model.Item;
 import org.enventureenterprises.enventure.injection.qualifier.ApplicationContext;
 import org.enventureenterprises.enventure.util.rx.ApiErrorOperator;
 import org.enventureenterprises.enventure.util.rx.Operators;
 
+import java.util.Date;
+
 import io.realm.Realm;
+import io.realm.annotations.PrimaryKey;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
@@ -63,7 +72,70 @@ public class EnventureApi  {
                 .subscribeOn(Schedulers.io());
     }
 
+    private  long id;
+    private Date created;
+    private Double amount;
+    private Double totalCost;
+    private Integer quantity;
+    private String image;
+    @PrimaryKey
+    private String name;
 
+
+    public @NonNull Observable<BaseResponse> createItem(final @NonNull Item item) {
+        MultipartBody.Part photo_file = MultipartBody.Part.createFormData ("", "");
+
+        RequestBody name;
+        RequestBody total_cost;
+        RequestBody quantity;
+        RequestBody mobile;
+        RequestBody created;
+        String mobile_t="";
+
+
+        name =
+                RequestBody.create (
+                        MediaType.parse ("multipart/form-data"), item.getName());
+
+        created =
+                RequestBody.create (
+                        MediaType.parse ("multipart/form-data"), item.getCreated().toString());
+
+        total_cost =
+                RequestBody.create (
+                        MediaType.parse ("multipart/form-data"), item.getTotalCost().toString());
+
+        quantity =
+                RequestBody.create (
+                        MediaType.parse ("multipart/form-data"), item.getQuantity().toString());
+
+        mobile =
+                RequestBody.create (
+                        MediaType.parse ("multipart/form-data"), mobile_t);
+
+        RequestBody requestFile =
+                RequestBody.create (MediaType.parse ("multipart/form-data"), item.getImage());
+
+        photo_file =
+                MultipartBody.Part.createFormData ("picture", "img", requestFile);
+
+
+
+        return service
+                .createItem(name, total_cost, quantity, mobile,created,photo_file)
+                .lift(apiErrorOperator())
+                .subscribeOn(Schedulers.io());
+
+    }
+
+    public @NonNull Observable<BaseResponse> createEntry(final @NonNull Entry entry) {
+        String mobile = "";
+
+        return service
+                .createEntry(entry.getName(), entry.getCreated(), mobile, entry.getAmount(),entry.getQuantity(),entry.getType())
+                .lift(apiErrorOperator())
+                .subscribeOn(Schedulers.io());
+    }
 
 
 

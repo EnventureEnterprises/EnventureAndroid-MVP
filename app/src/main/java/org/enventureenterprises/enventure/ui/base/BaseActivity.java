@@ -34,6 +34,9 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.gcm.GcmNetworkManager;
+import com.google.android.gms.gcm.PeriodicTask;
+import com.google.android.gms.gcm.Task;
 import com.trello.rxlifecycle.LifecycleProvider;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
@@ -46,6 +49,7 @@ import org.enventureenterprises.enventure.BaseApplication;
 import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.data.Environment;
 import org.enventureenterprises.enventure.data.local.SectionsPagerAdapter;
+import org.enventureenterprises.enventure.service.SyncService;
 import org.enventureenterprises.enventure.ui.general.HomeActivity;
 
 import rx.Observable;
@@ -63,6 +67,8 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private Toolbar mActionBarToolbar;
+    //private Integer SYNC_INTERVAL = 86400;
+    private Integer SYNC_INTERVAL = 30;
 
     private static final int REQUEST_INVITE = 30;
 
@@ -80,6 +86,8 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
 
     private ApplicationGraph mApplicationGraph;
 
+    private GcmNetworkManager mGcmNetworkManager;
+
 
 
 
@@ -91,6 +99,17 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
 
 
         getActivityComponent().inject(this);
+
+        mGcmNetworkManager = GcmNetworkManager.getInstance(this);
+
+        Task task = new PeriodicTask.Builder()
+                .setService(SyncService.class)
+                .setPeriod(SYNC_INTERVAL)
+                .setPersisted(true)
+                .setRequiredNetwork(Task.NETWORK_STATE_ANY )
+                .build();
+
+        mGcmNetworkManager.schedule(task);
 
 
     }
