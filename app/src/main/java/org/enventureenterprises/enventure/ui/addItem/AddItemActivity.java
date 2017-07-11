@@ -387,7 +387,8 @@ public class AddItemActivity extends BaseActivity {
 
                 Intent intent = new Intent(AddItemActivity.this, ItemDetail.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("item",inventoryItem.getId());
+                intent.putExtra("item_id",inventoryItem.getCreatedTs());
+                intent.putExtra("item_name",inventoryItem.getName());
                 startActivityWithTransition(intent, R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
 
                 break;

@@ -16,6 +16,7 @@ public class Item extends RealmObject {
     private Double amount;
     private Double totalCost;
     private Integer quantity;
+    private Integer unitcost;
     private String image;
     private String name;
 
@@ -36,7 +37,10 @@ public class Item extends RealmObject {
         return this.totalCost;
     }
     public void setTotalCost(Double totalCost){
+
         this.totalCost=totalCost;
+
+
     }
 
 
