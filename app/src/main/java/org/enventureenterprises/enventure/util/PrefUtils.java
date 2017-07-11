@@ -59,14 +59,14 @@ public class PrefUtils {
 
     }
 
-    public static String getFirebaseToken(final Context context) {
+    public static String getMobile(final Context context) {
         SharedPreferences sp = getSharedPreferences(context);
 
         return sp.getString(PREF_FIREBASE_TOKEN, null);
 
     }
 
-    public static void setFirebaseToken(final Context context,  final String token) {
+    public static void setMobile(final Context context,  final String token) {
 
         SharedPreferences sp = getSharedPreferences(context);
         sp.edit().putString(PREF_FIREBASE_TOKEN,
