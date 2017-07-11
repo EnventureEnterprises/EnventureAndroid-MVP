@@ -17,7 +17,121 @@
 
 
 
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/md_keylines"
+        android:layout_marginRight="@dimen/md_keylines"
+        android:layout_marginTop="25dp"
+        android:foreground="?attr/selectableItemBackground"
+        android:stateListAnimator="@anim/selector_raise"
+        app:cardCornerRadius="4dp" >
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/product_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:keepScreenOn="true"
+                android:textColor="@color/textColorDark"
+                android:textSize="25sp"
+                android:text="Product Name"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp" />
+
+            <TextView
+                android:id="@+id/items_in_stock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:keepScreenOn="true"
+                android:textColor="@color/textColorDark"
+                android:textSize="25sp"
+                android:text="X Items In Stock"
+                android:layout_weight="2"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp" />
+
+            <TextView
+                android:id="@+id/total_cost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:keepScreenOn="true"
+                android:textColor="@color/textColorDark"
+                android:textSize="25sp"
+                android:text="Total Cost"
+                android:layout_weight="3"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp" />
+
+        </LinearLayout>
+
+
+
+    </android.support.v7.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/card_view"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/buttons">
+
+        <Button
+            android:id="@+id/edit_product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_alignParentEnd="true"
+            android:textAllCaps="false"
+            android:layout_alignParentLeft="true"
+            android:textSize="20sp"
+            android:text="Edit Product"
+            android:background="@drawable/button" />
+
+        <Button
+            android:id="@+id/delete_product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:textColor="@color/white"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_alignParentEnd="true"
+            android:textAllCaps="false"
+            android:layout_alignParentLeft="true"
+            android:textSize="20sp"
+            android:text="Delete Product"
+            android:background="@drawable/delete_button" />
+
+
+    </LinearLayout>
 
 
 
