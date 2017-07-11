@@ -58,8 +58,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
 
-
-
         </android.support.design.widget.TextInputLayout>
 
 
@@ -95,7 +93,7 @@
                 android:id="@+id/totalcost"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Quantity"
+                android:hint="Total Price"
                 android:inputType="text"
                 android:nextFocusDown="@+id/type_layout"
                 android:maxLines="1" />
