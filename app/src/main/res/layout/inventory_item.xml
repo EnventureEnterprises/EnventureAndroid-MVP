@@ -4,27 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="80dp"
     android:layout_gravity="center"
     android:layout_marginLeft="@dimen/md_keylines"
     android:layout_marginRight="@dimen/md_keylines"
-    android:layout_marginTop="8dp"
+    android:layout_marginTop="5dp"
     android:clickable="true"
     android:foreground="?attr/selectableItemBackground"
     android:stateListAnimator="@anim/selector_raise"
-    app:cardCornerRadius="4dp" >
+    app:cardCornerRadius="2dp" >
 
 
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="80dp">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
 
 
         <ImageView
             android:id="@+id/item_image"
             android:layout_width="@dimen/grid_8"
-            android:layout_height="80dp"
+            android:layout_height="64dp"
+            android:adjustViewBounds="true"
+            android:layout_marginStart="10dp"
             tools:src="@color/colorPrimary"
             android:scaleType="fitCenter" />
 
@@ -41,7 +45,6 @@
             <TextView
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
-                android:layout_marginTop="5dp"
                 android:layout_height="@dimen/social_icon_size"
                 android:layout_gravity="center"
                 android:textStyle="bold"
@@ -58,7 +61,7 @@
                 android:layout_marginTop="5dp"
                 tools:text="55"
                 android:layout_below="@+id/name"
-                android:textSize="25sp"
+                android:textSize="20sp"
                 android:maxLines="1"
                 android:textColor="@color/colorPrimaryDark"
                 android:layout_gravity="center"
