@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-	    android:id="@+id/inventory"
-        android:icon="@drawable/c"
-	    android:title="Inventory" />
-    <item
-	    android:id="@+id/sales"
-	    android:icon="@drawable/c"
-        android:title="Sales" />
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:background="@color/colorAccent"
+	app:bbn_badgeColor="#FFFF0000"
+	app:bbn_alwaysShowLabels="true"
+	app:bbn_rippleColor="@color/colorAccent">
 	<item
-        android:id="@+id/reports"
-        android:icon="@drawable/c"
-	    android:title="Reports" />
-    <item
-	    android:id="@+id/profile"
-        android:icon="@drawable/c"
-	    android:title="Profile" />
+		android:id="@+id/inventory"
+		android:color="@color/colorPrimary"
+		android:icon="@drawable/c"
+		android:title="Inventory" />
+	<item
+		android:id="@+id/sales"
+		android:color="@color/colorPrimary"
+		android:icon="@drawable/c"
+		android:title="Sales" />
+	<item
+		android:id="@+id/reports"
+		android:color="@color/colorPrimary"
+		android:icon="@drawable/c"
+		android:title="Reports" />
+	<item
+		android:id="@+id/profile"
+		android:color="@color/colorPrimary"
+		android:icon="@drawable/c"
+		android:title="Profile" />
 </menu>
 
