@@ -8,21 +8,21 @@
     <item
 	    android:id="@+id/inventory"
     	android:color="@color/colorPrimary"
-        android:icon="@drawable/c"
+        android:icon="@drawable/circle"
 	    android:title="Inventory" />
     <item
 	    android:id="@+id/sales"
 		android:color="@color/colorPrimary"
-	    android:icon="@drawable/c"
+	    android:icon="@drawable/circle"
         android:title="Sales" />
 	<item
         android:id="@+id/reports"
 		android:color="@color/colorPrimary"
-        android:icon="@drawable/c"
+        android:icon="@drawable/circle"
 	    android:title="Reports" />
     <item
 	    android:id="@+id/profile"
 		android:color="@color/colorPrimary"
-        android:icon="@drawable/c"
+        android:icon="@drawable/circle"
 	    android:title="Profile" />
 </menu>
