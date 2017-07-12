@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.data.model.Item;
 import org.enventureenterprises.enventure.injection.qualifier.ApplicationContext;
+import org.enventureenterprises.enventure.util.CircleTransform;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,8 +65,9 @@ public class ItemView extends RelativeLayout
 
 
 
-        Glide.with(this.getContext()).load(item.getImage()).placeholder(new ColorDrawable(Color.GRAY)).fitCenter().crossFade().into(itemImage);
-
+//        Glide.with(this.getContext()).load(item.getImage()).placeholder(new ColorDrawable(Color.GRAY)).fitCenter().crossFade().into(itemImage);
+        Glide.with(this.getContext()).load(item.getImage()).placeholder(new ColorDrawable(Color.GRAY)).transform(new CircleTransform(this.getContext())).into(itemImage);
+//        Glide.with(mContext).load(item.getImage()).asBitmap().placeholder(new ColorDrawable(Color.GRAY)).transform(new CircleTransform(mContext)).into(holder.itemImage);
 
 
 

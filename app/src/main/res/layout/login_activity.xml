@@ -51,37 +51,23 @@
         />
 
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/mobile_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        tools:hintTextAppearance="@style/TextAppearance.AppCompat">
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/mbile"
+
+        <EditText
+            android:id="@+id/mobile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter your mobile"
+            android:hint="Enter your mobile Number"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:inputType="phone"
             android:maxLines="1" />
 
-    </android.support.design.widget.TextInputLayout>
 
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/code_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
 
-        tools:hintTextAppearance="@style/TextAppearance.AppCompat">
 
-        <android.support.design.widget.TextInputEditText
+        <EditText
             android:id="@+id/code"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -93,13 +79,6 @@
             android:inputType="text"
             android:nextFocusDown="@+id/mobile"
             android:maxLines="1" />
-
-    </android.support.design.widget.TextInputLayout>
-
-
-
-
-
 
 
 

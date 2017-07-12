@@ -5,12 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputEditText;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,15 +24,20 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 
 import org.enventureenterprises.enventure.R;
+import org.enventureenterprises.enventure.data.CurrentUserType;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
 import org.enventureenterprises.enventure.ui.general.HomeActivity;
 import org.enventureenterprises.enventure.util.PrefUtils;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 
 public class LoginActivity extends BaseActivity implements
         View.OnClickListener {
+    @Inject
+    CurrentUserType currentUser;
     private static final String TAG = "PhoneAuthActivity";
 
     private static final String KEY_VERIFY_IN_PROGRESS = "key_verify_in_progress";
@@ -54,11 +58,10 @@ public class LoginActivity extends BaseActivity implements
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
 
-    private ViewGroup mPhoneNumberViews;
     private TextView mDetailText;
 
-    private TextInputEditText mPhoneNumberField;
-    private TextInputEditText mVerificationField;
+    private EditText mPhoneNumberField;
+    private EditText mVerificationField;
 
     private Button blogin;
     private Button bverify;
@@ -68,20 +71,20 @@ public class LoginActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
+        getActivityComponent().inject(this);
 
         // Restore instance state
         if (savedInstanceState != null) {
             onRestoreInstanceState(savedInstanceState);
         }
 
-        // Assign views
-        mPhoneNumberViews = (ViewGroup) findViewById(R.id.mobile);
 
 
         mDetailText = (TextView) findViewById(R.id.detail);
+      
 
-        mPhoneNumberField = (TextInputEditText) findViewById(R.id.mobile);
-        mVerificationField = (TextInputEditText) findViewById(R.id.code);
+        mPhoneNumberField = (EditText) findViewById(R.id.mobile);
+        mVerificationField = (EditText) findViewById(R.id.code);
 
         blogin = (Button) findViewById(R.id.login);
         bverify = (Button) findViewById(R.id.verify);
@@ -297,11 +300,12 @@ public class LoginActivity extends BaseActivity implements
                 enableViews(blogin, mPhoneNumberField);
                 disableViews(bverify, bresend, mVerificationField);
                 mDetailText.setText(null);
+
                 break;
             case STATE_CODE_SENT:
                 // Code sent state, show the verification field, the
-                enableViews(bverify, bresend);
-                disableViews(mPhoneNumberField, mVerificationField,blogin);
+                enableViews(bverify, bresend,mVerificationField);
+                disableViews(mPhoneNumberField,blogin);
                 mDetailText.setText(R.string.status_code_sent);
                 break;
             case STATE_VERIFY_FAILED:
@@ -337,12 +341,14 @@ public class LoginActivity extends BaseActivity implements
 
         if (user == null) {
             // Signed out
-            mPhoneNumberViews.setVisibility(View.VISIBLE);
-            mSignedInViews.setVisibility(View.GONE);
+
 
         } else {
             // Signed in
             onSuccess();
+
+            currentUser.login(mAuth.getCurrentUser().getPhoneNumber());
+
         }
     }
 
@@ -360,16 +366,20 @@ public class LoginActivity extends BaseActivity implements
 
     private void enableViews(View... views) {
         for (View v : views) {
-            v.setEnabled(true);
-            v.setVisibility(View.VISIBLE);
+            if (v!=null) {
+                v.setEnabled(true);
+                v.setVisibility(View.VISIBLE);
+            }
         }
     }
 
     private void disableViews(View... views) {
 
         for (View v : views) {
-            v.setEnabled(false);
-            v.setVisibility(View.GONE);
+            if (v!=null) {
+                v.setEnabled(false);
+                v.setVisibility(View.GONE);
+            }
         }
 
     }

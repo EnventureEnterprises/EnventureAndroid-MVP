@@ -2,13 +2,11 @@ package org.enventureenterprises.enventure.ui.general;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
-import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,13 +24,14 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
 
 /**
  * Created by mossplix on 7/6/17.
  */
 
-public class HomeActivity extends BaseActivity implements  BottomNavigationView.OnNavigationItemSelectedListener {
-    @BindView(R.id.bottomNavigation) BottomNavigationView bottomNavigation;
+public class HomeActivity extends BaseActivity implements BottomNavigation.OnMenuItemSelectionListener {
+    @BindView(R.id.bottomNavigation) BottomNavigation bottomNavigation;
     private static final int SALES = 1;
     private static final int INVENTORY =0;
     private static final int REPORTS = 2;
@@ -49,18 +48,16 @@ public class HomeActivity extends BaseActivity implements  BottomNavigationView.
 
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
-            VectorDrawableCompat indicator
-                    = VectorDrawableCompat.create(getResources(), R.drawable.ic_menu, getTheme());
-            indicator.setTint(ResourcesCompat.getColor(getResources(),R.color.white,getTheme()));
-            supportActionBar.setHomeAsUpIndicator(indicator);
-            supportActionBar.setDisplayHomeAsUpEnabled(true);
+
+            supportActionBar.setDisplayHomeAsUpEnabled(false);
         }
 
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        bottomNavigation.setOnNavigationItemSelectedListener(this);
 
+
+        bottomNavigation.setOnMenuItemClickListener(this);
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
@@ -74,38 +71,11 @@ public class HomeActivity extends BaseActivity implements  BottomNavigationView.
     }
 
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.inventory:
-                onNavigationChanged(INVENTORY);
-
-                break;
-            case R.id.sales:
-                onNavigationChanged(SALES);
-
-                break;
-            case R.id.reports:
-                onNavigationChanged(REPORTS);
-
-                break;
-            case R.id.profile:
-                onNavigationChanged(PROFILE);
-
-                break;
-            default:
-                return false;
-        }
-        return true;
-    }
-
-
-
     public void onNavigationChanged(int navType) {
-
+        //noinspection WrongConstant
+        if (bottomNavigation.getSelectedIndex() != navType) bottomNavigation.setSelectedIndex(navType, true);
         this.navType = navType;
-         onModuleChanged(getSupportFragmentManager(), navType);
+        onModuleChanged(getSupportFragmentManager(), navType);
     }
 
     @Nullable
@@ -169,7 +139,7 @@ public class HomeActivity extends BaseActivity implements  BottomNavigationView.
         }
     }
 
-     public void onShowHideFragment(@NonNull FragmentManager fragmentManager, @NonNull Fragment toShow, @NonNull Fragment toHide) {
+    public void onShowHideFragment(@NonNull FragmentManager fragmentManager, @NonNull Fragment toShow, @NonNull Fragment toHide) {
         toHide.onHiddenChanged(true);
         fragmentManager
                 .beginTransaction()
@@ -189,6 +159,14 @@ public class HomeActivity extends BaseActivity implements  BottomNavigationView.
         toAdd.onHiddenChanged(false);
     }
 
+
+    @Override public void onMenuItemSelect(@IdRes int id, int position, boolean fromUser) {
+
+        onNavigationChanged(position);
+
+    }
+
+    @Override public void onMenuItemReselect(@IdRes int id, int position, boolean fromUser) {}
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

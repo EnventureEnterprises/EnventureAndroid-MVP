@@ -17,6 +17,7 @@ import org.enventureenterprises.enventure.data.model.Item;
 import org.enventureenterprises.enventure.data.remote.EnventureApi;
 import org.enventureenterprises.enventure.injection.qualifier.ApplicationContext;
 import org.enventureenterprises.enventure.ui.addItem.ItemDetail;
+import org.enventureenterprises.enventure.util.CircleTransform;
 
 import javax.inject.Inject;
 
@@ -129,8 +130,8 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
                 }
         );
 
-
-        Glide.with(mContext).load(item.getImage()).asBitmap().placeholder(new ColorDrawable(Color.GRAY)).into(holder.itemImage);
+        Glide.with(mContext).load(item.getImage()).asBitmap().placeholder(new ColorDrawable(Color.GRAY)).transform(new CircleTransform(mContext)).into(holder.itemImage);
+//        Glide.with(mContext).load(item.getImage()).asBitmap().placeholder(new ColorDrawable(Color.GRAY)).into(holder.itemImage);
 
 
     }
