@@ -3,6 +3,8 @@ package org.enventureenterprises.enventure.ui.general;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.data.CurrentUserType;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
@@ -32,6 +34,15 @@ public class DispatchActivity extends BaseActivity {
         }
         else{
             goToLogin();
+        }
+
+
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            // already signed in
+        } else {
+            // not signed in
         }
 /*
         currentUser.loggedInUser()

@@ -180,6 +180,7 @@ public class NewEntryActivity extends BaseActivity implements AdapterView.OnItem
                 entry.setEntryYear(d.getYear());
                 entry.setEntryWeek(d.getWeekOfWeekyear());
                 entry.setCreatedTs(d.getMillis());
+                entry.setSynced(false);
 
 
 

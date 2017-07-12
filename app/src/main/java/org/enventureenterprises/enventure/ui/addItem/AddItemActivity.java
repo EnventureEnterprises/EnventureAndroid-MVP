@@ -357,6 +357,7 @@ public class AddItemActivity extends BaseActivity {
                 inventoryItem.setQuantity(Integer.parseInt(quantityEditText.getText().toString()));
                 inventoryItem.setTotalCost(Double.parseDouble(totalCostEditText.getText().toString()));
                 inventoryItem.setImage(photo.toString());
+                inventoryItem.setSynced(false);
 
                 inventoryItem.setCreatedTs(d.getMillis());
 

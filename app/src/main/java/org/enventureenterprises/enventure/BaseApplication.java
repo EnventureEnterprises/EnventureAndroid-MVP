@@ -8,8 +8,6 @@ import android.preference.PreferenceManager;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
-import com.facebook.accountkit.AccountKit;
-
 import org.enventureenterprises.enventure.data.model.Migration;
 import org.enventureenterprises.enventure.data.remote.AccessToken;
 import org.enventureenterprises.enventure.data.remote.EnventureApi;
@@ -88,7 +86,7 @@ public class BaseApplication extends MultiDexApplication {
 
 
         RealmConfiguration realmConfig = new RealmConfiguration.Builder()
-                .name("enventure5.realm")
+                .name("enventure6.realm")
                 .schemaVersion(0)
                 .build();
 
@@ -109,7 +107,6 @@ public class BaseApplication extends MultiDexApplication {
             }
         });
 
-        AccountKit.initialize(this);
 
 
         //Realm.deleteRealm(config);
