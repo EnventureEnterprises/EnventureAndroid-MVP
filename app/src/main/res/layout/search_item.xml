@@ -47,7 +47,4 @@
             android:textColor="@color/textColorDark" />
 
     </RelativeLayout>
-
-
-
 </android.support.v7.widget.CardView>
