@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.AppCompatImageView;
 import android.view.Menu;
@@ -26,9 +27,11 @@ import org.enventureenterprises.enventure.data.model.DailyReport;
 import org.enventureenterprises.enventure.data.model.Item;
 import org.enventureenterprises.enventure.data.model.MonthlyReport;
 import org.enventureenterprises.enventure.data.model.WeeklyReport;
+import org.enventureenterprises.enventure.data.remote.EnventureApi;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
 import org.enventureenterprises.enventure.util.Config;
 import org.enventureenterprises.enventure.util.GeneralUtils;
+import org.enventureenterprises.enventure.util.rx.Transformers;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -38,6 +41,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,6 +56,14 @@ import timber.log.Timber;
 
 public class AddItemActivity extends BaseActivity {
     private Realm realm;
+    private Long item_id;
+    private String item_name;
+    private ActionBar actionBar;
+
+    @Inject
+    EnventureApi client;
+
+    Item item;
 
 
     @BindView(R.id.camera)
@@ -109,6 +122,28 @@ public class AddItemActivity extends BaseActivity {
         } else {
             mAlbumStorageDirFactory = new BaseAlbumDirFactory ();
         }
+
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if (extras != null) {
+                item_id = extras.getLong("item");
+                item_name = extras.getString("name");
+
+            }
+
+        } else {
+            item_id = savedInstanceState.getLong("item");
+            item_name = savedInstanceState.getString("name");
+        }
+
+        item = realm.where(Item.class).equalTo ("created_ts",item_id).findFirst ();
+        if(item != null) {
+
+            nameEditText.setText(item.getName());
+            quantityEditText.setText(item.getQuantity().toString());
+            totalCostEditText.setText(item.getTotalCost().toString());
+        }
+
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -382,6 +417,9 @@ public class AddItemActivity extends BaseActivity {
 
                 realm.commitTransaction();
 
+                client.createItem(inventoryItem)
+                        .compose(Transformers.neverError());
+
 
 
 
@@ -389,6 +427,7 @@ public class AddItemActivity extends BaseActivity {
                 Intent intent = new Intent(AddItemActivity.this, ItemDetail.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("item_id",inventoryItem.getCreatedTs());
+                intent.putExtra("item",inventoryItem.getCreatedTs());
                 intent.putExtra("item_name",inventoryItem.getName());
                 startActivityWithTransition(intent, R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
 

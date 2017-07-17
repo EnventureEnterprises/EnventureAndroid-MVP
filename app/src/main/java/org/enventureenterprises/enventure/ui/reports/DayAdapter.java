@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.data.model.DailyReport;
+import org.enventureenterprises.enventure.util.GeneralUtils;
 
 import javax.inject.Inject;
 
@@ -54,13 +55,13 @@ public class DayAdapter  extends PagerAdapter {
         
 
         profit.setText(String.format("%s",
-                report.getProfit()));
+                GeneralUtils.round(report.getProfit())));
 
         totalearned.setText(String.format("%s",
-                report.getTotalEarned()));
+                GeneralUtils.round(report.getTotalEarned())));
         
         totalspent.setText(String.format("%s",
-                report.getTotalSpent()));
+                GeneralUtils.round(report.getTotalSpent())));
 
 
         collection.addView(layout);

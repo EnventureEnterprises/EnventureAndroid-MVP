@@ -9,11 +9,14 @@ import android.widget.TextView;
 
 import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.data.model.MonthlyReport;
+import org.enventureenterprises.enventure.util.GeneralUtils;
 
 import javax.inject.Inject;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+
+import static java.lang.Math.round;
 
 /**
  * Created by mossplix on 7/11/17.
@@ -54,13 +57,13 @@ public class MonthAdapter  extends PagerAdapter {
 
 
         profit.setText(String.format("%s",
-                report.getProfit()));
+                GeneralUtils.round(report.getProfit())));
 
         totalearned.setText(String.format("%s",
-                report.getTotalEarned()));
+                GeneralUtils.round(report.getTotalEarned())));
 
         totalspent.setText(String.format("%s",
-                report.getTotalSpent()));
+                GeneralUtils.round(report.getTotalSpent())));
 
 
         collection.addView(layout);

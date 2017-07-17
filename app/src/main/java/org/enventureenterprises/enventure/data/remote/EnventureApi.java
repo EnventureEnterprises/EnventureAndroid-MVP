@@ -9,6 +9,7 @@ import org.enventureenterprises.enventure.data.BaseResponse;
 import org.enventureenterprises.enventure.data.model.Entry;
 import org.enventureenterprises.enventure.data.model.Item;
 import org.enventureenterprises.enventure.injection.qualifier.ApplicationContext;
+import org.enventureenterprises.enventure.util.PrefUtils;
 import org.enventureenterprises.enventure.util.rx.ApiErrorOperator;
 import org.enventureenterprises.enventure.util.rx.Operators;
 
@@ -90,7 +91,7 @@ public class EnventureApi  {
         RequestBody quantity;
         RequestBody mobile;
         RequestBody created;
-        String mobile_t="";
+        String mobile_t=PrefUtils.getMobile(mContext);
 
 
         name =
@@ -129,7 +130,7 @@ public class EnventureApi  {
     }
 
     public @NonNull Observable<BaseResponse> createEntry(final @NonNull Entry entry) {
-        String mobile = "";
+        String mobile = PrefUtils.getMobile(mContext);
 
         return service
                 .createEntry(entry.getName(), entry.getCreated(), mobile, entry.getAmount(),entry.getQuantity(),entry.getType())

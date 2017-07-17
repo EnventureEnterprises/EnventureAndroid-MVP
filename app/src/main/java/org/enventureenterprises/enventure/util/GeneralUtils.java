@@ -502,6 +502,17 @@ public class GeneralUtils {
     }
 
 
+    public static Long round(Double number){
+        if(number == null)
+        {
+            return 0L;
+        }
+        else{
+            return Math.round(number);
+        }
+    }
+
+
 
 
 

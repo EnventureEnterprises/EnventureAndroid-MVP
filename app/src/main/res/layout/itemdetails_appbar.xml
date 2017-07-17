@@ -78,9 +78,14 @@
 
 
 
-
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <include layout="@layout/itemdetails_content" />
+
+    </android.support.v4.widget.NestedScrollView>
 
     <!--<android.support.design.widget.FloatingActionButton-->
         <!--android:layout_height="wrap_content"-->

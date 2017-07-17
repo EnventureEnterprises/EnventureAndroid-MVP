@@ -30,8 +30,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Pair;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -51,7 +49,6 @@ import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.data.Environment;
 import org.enventureenterprises.enventure.data.local.SectionsPagerAdapter;
 import org.enventureenterprises.enventure.service.SyncService;
-import org.enventureenterprises.enventure.ui.addEntry.SearchItemActivity;
 import org.enventureenterprises.enventure.ui.general.HomeActivity;
 
 import rx.Observable;
@@ -98,7 +95,7 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
     @CallSuper
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //lifecycleSubject.onNext(ActivityEvent.CREATE);
+        lifecycleSubject.onNext(ActivityEvent.CREATE);
 
 
         getActivityComponent().inject(this);
@@ -437,38 +434,6 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
 
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.home2, menu);
-        return true;
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        switch(id){
-            case R.id.add_entry:
-
-                    startActivityWithTransition(new Intent(BaseActivity.this, SearchItemActivity.class), R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
-
-
-
-
-                break;
-
-
-
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
 
 }

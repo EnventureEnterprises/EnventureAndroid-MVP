@@ -84,10 +84,15 @@ public class ItemDetail extends BaseActivity{
         actionBar = getSupportActionBar ();
 
         item = realm.where(Item.class).equalTo ("created_ts",item_id).findFirst ();
+
         productName.setText(item.getName());
 
         totalStock.setText(item.getTotalCost().toString());
-        quantityInStock.setText(item.getQuantity());
+        quantityInStock.setText(item.getQuantity().toString());
+
+        quantityInStock.setText(String.format("%s Items in stock",
+                item.getQuantity().toString()));
+
 
         if(item != null){
 
@@ -132,7 +137,10 @@ public class ItemDetail extends BaseActivity{
     @OnClick(R.id.edit_product)
     public void edit_product()
     {
+        Intent intent = new Intent(getApplicationContext(), AddItemActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("item",item.getId ());
+        startActivity (intent);
 
     }
-
 }

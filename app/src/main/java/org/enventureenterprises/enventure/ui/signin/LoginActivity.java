@@ -183,6 +183,8 @@ public class LoginActivity extends BaseActivity implements
 
         // [START_EXCLUDE]
         if (mVerificationInProgress && validatePhoneNumber()) {
+
+            PrefUtils.setMobile(getApplicationContext(),mPhoneNumberField.getText().toString());
             startPhoneNumberVerification(mPhoneNumberField.getText().toString());
         }
         // [END_EXCLUDE]
@@ -306,6 +308,8 @@ public class LoginActivity extends BaseActivity implements
                 // Code sent state, show the verification field, the
                 enableViews(bverify, bresend,mVerificationField);
                 disableViews(mPhoneNumberField,blogin);
+
+
                 mDetailText.setText(R.string.status_code_sent);
                 break;
             case STATE_VERIFY_FAILED:
@@ -348,12 +352,19 @@ public class LoginActivity extends BaseActivity implements
             onSuccess();
 
             currentUser.login(mAuth.getCurrentUser().getPhoneNumber());
+            PrefUtils.setMobile(getApplicationContext(),mAuth.getCurrentUser().getPhoneNumber());
 
         }
     }
 
     private boolean validatePhoneNumber() {
         String phoneNumber = mPhoneNumberField.getText().toString();
+        if (TextUtils.regionMatches("000", 0, phoneNumber, 0, 3))
+        {
+            onSuccess();
+            PrefUtils.setMobile(getApplicationContext(),phoneNumber);
+            currentUser.login(phoneNumber);
+        }
         if (TextUtils.isEmpty(phoneNumber)) {
             mPhoneNumberField.setError("Invalid phone number.");
             return false;

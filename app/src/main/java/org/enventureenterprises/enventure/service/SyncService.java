@@ -7,6 +7,7 @@ import com.google.android.gms.gcm.TaskParams;
 import org.enventureenterprises.enventure.data.model.Entry;
 import org.enventureenterprises.enventure.data.model.Item;
 import org.enventureenterprises.enventure.data.remote.EnventureApi;
+import org.enventureenterprises.enventure.ui.base.BaseActivity;
 import org.enventureenterprises.enventure.util.rx.Transformers;
 
 import javax.inject.Inject;
@@ -25,6 +26,9 @@ public class SyncService extends GcmTaskService {
 
     private static final String TAG = "BestTimeService";
     Realm realm;
+
+
+
 
     public void setSynced(Item item,Realm realm){
 
@@ -48,6 +52,7 @@ public class SyncService extends GcmTaskService {
 
     @Override
     public int onRunTask(TaskParams taskParams) {
+        ((BaseActivity) getApplicationContext()).getActivityComponent().inject(this);
         realm = realm.getDefaultInstance();
 
         RealmResults<Entry> entries = realm.where(Entry.class)

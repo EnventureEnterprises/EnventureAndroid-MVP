@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "519406370865",
+    "firebase_url": "https://enventure-c2c64.firebaseio.com",
+    "project_id": "enventure-c2c64",
+    "storage_bucket": "enventure-c2c64.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:519406370865:android:374f0c79d901b57b",
+        "android_client_info": {
+          "package_name": "org.enventureenterprises.enventure"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "519406370865-i06dao2qqu56fpjaf2fhg5n32q8qp47t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.enventureenterprises.enventure",
+            "certificate_hash": "57febe0f38529ac8ab891dab44c7a4dadb26b6ce"
+          }
+        },
+        {
+          "client_id": "519406370865-g123ur7p269inko02lajqoi38v848f7f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBliC8H_MvxMm74kyF4mS5SMX9A7W5dQMQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "519406370865-g123ur7p269inko02lajqoi38v848f7f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

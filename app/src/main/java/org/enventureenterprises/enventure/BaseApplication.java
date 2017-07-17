@@ -11,6 +11,7 @@ import android.support.multidex.MultiDexApplication;
 import org.enventureenterprises.enventure.data.model.Migration;
 import org.enventureenterprises.enventure.data.remote.AccessToken;
 import org.enventureenterprises.enventure.data.remote.EnventureApi;
+import org.enventureenterprises.enventure.util.PrefUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -83,10 +84,16 @@ public class BaseApplication extends MultiDexApplication {
 
         Realm.init(this);
 
+        String mobile = PrefUtils.getMobile(getApplicationContext());
+        String databasename ="enventure_p.realm";
 
+        if (mobile != null)
+        {
+            databasename = mobile;
+        }
 
         RealmConfiguration realmConfig = new RealmConfiguration.Builder()
-                .name("enventure6.realm")
+                .name(databasename)
 
 
                 .schemaVersion(0)
