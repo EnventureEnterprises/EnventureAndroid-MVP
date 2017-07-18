@@ -18,6 +18,9 @@ public class Entry extends RealmObject {
     private Date created;
     private Integer quantity;
     private String type;
+    private String user;
+    private Account  credit;
+    private Account  debit;
     private boolean synced;
 
     private String name;
@@ -27,6 +30,10 @@ public class Entry extends RealmObject {
     private Integer entry_day;
     @PrimaryKey
     private Long created_ts;
+
+    private String transaction_type;
+
+    private Transaction transaction;
 
 
     public long getId(){
@@ -118,6 +125,37 @@ public class Entry extends RealmObject {
     }
     public void setCreatedTs(Long created_ts){
         this.created_ts=created_ts;
+    }
+
+    public String getTransactionType(){
+        return this.transaction_type;
+    }
+    public void setTransactionType(String transaction_type){
+        this.transaction_type=transaction_type;
+    }
+
+
+    public Account getDebitAccount(){
+        return this.debit;
+    }
+    public void setDebitAccount(Account account){
+        this.debit=account;
+    }
+
+
+    public Account getCreditAccount(){
+        return this.credit;
+    }
+    public void setCreditAccount(Account account){
+        this.credit=account;
+    }
+
+
+    public Transaction getTransaction(){
+        return this.transaction;
+    }
+    public void setTransaction(Transaction transaction){
+        this.transaction=transaction;
     }
 
 

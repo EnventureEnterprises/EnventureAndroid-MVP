@@ -77,10 +77,10 @@ public final class ApiRequestInterceptor implements Interceptor {
 
 
     public static boolean isApiUri(final @NonNull Uri uri,String endpoint) {
-          return isUrbUri(uri, endpoint);
+          return isEnventureUri(uri, endpoint);
             }
 
-    public static boolean isUrbUri(final @NonNull Uri uri, final @NonNull String endpoint) {
+    public static boolean isEnventureUri(final @NonNull Uri uri, final @NonNull String endpoint) {
         return uri.getHost().equals(Uri.parse(endpoint).getHost());
     }
 }

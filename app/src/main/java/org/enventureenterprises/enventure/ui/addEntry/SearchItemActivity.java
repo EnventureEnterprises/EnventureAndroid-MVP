@@ -24,7 +24,7 @@ import io.realm.Realm;
  */
 
 
-public class SearchItemActivity extends BaseActivity implements SearchView.OnQueryTextListener  {
+public class SearchItemActivity extends BaseActivity implements SearchView.OnQueryTextListener {
 
     private String mQuery = "";
     private ListView mSearchResults;
@@ -122,4 +122,6 @@ public class SearchItemActivity extends BaseActivity implements SearchView.OnQue
         searchFor(newText);
         return false;
     }
+
+
 }

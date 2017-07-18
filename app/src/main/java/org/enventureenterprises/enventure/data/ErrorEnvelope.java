@@ -23,7 +23,7 @@ public abstract class ErrorEnvelope implements Parcelable {
     public abstract @Nullable
     List<String> errorMessages();
     public abstract int httpCode();
-    public abstract @Nullable String urbCode();
+    public abstract @Nullable String enCode();
     public abstract @Nullable FacebookUser facebookUser();
     public abstract @Nullable TwitterUser twitterUser();
 
@@ -79,7 +79,7 @@ public abstract class ErrorEnvelope implements Parcelable {
     public abstract static class Builder {
         public abstract Builder errorMessages(List<String> __);
         public abstract Builder httpCode(int __);
-        public abstract Builder urbCode(String __);
+        public abstract Builder enCode(String __);
         public abstract Builder facebookUser(FacebookUser __);
         public abstract Builder twitterUser(TwitterUser __);
         public abstract ErrorEnvelope build();
@@ -119,36 +119,36 @@ public abstract class ErrorEnvelope implements Parcelable {
     }
 
     public boolean isConfirmFacebookSignupError() {
-        return CONFIRM_FACEBOOK_SIGNUP.equals(urbCode());
+        return CONFIRM_FACEBOOK_SIGNUP.equals(enCode());
     }
 
     public boolean isConfirmTwitterSignupError() {
-        return CONFIRM_TWITTER_SIGNUP.equals(urbCode());
+        return CONFIRM_TWITTER_SIGNUP.equals(enCode());
     }
 
 
     public boolean isInvalidLoginError() {
-        return INVALID_XAUTH_LOGIN.equals(urbCode());
+        return INVALID_XAUTH_LOGIN.equals(enCode());
     }
 
     public boolean isTfaRequiredError() {
-        return TFA_REQUIRED.equals(urbCode());
+        return TFA_REQUIRED.equals(enCode());
     }
 
     public boolean isTfaFailedError() {
-        return TFA_FAILED.equals(urbCode());
+        return TFA_FAILED.equals(enCode());
     }
 
     public boolean isMissingFacebookEmailError() {
-        return MISSING_FACEBOOK_EMAIL.equals(urbCode());
+        return MISSING_FACEBOOK_EMAIL.equals(enCode());
     }
 
     public boolean isFacebookInvalidAccessTokenError() {
-        return FACEBOOK_INVALID_ACCESS_TOKEN.equals(urbCode());
+        return FACEBOOK_INVALID_ACCESS_TOKEN.equals(enCode());
     }
 
     public boolean isUnauthorizedError() {
-        return UNAUTHORIZED.equals(urbCode());
+        return UNAUTHORIZED.equals(enCode());
     }
 
     /*
@@ -157,8 +157,8 @@ public abstract class ErrorEnvelope implements Parcelable {
      */
     public boolean isGenericLoginError() {
         return
-                !INVALID_XAUTH_LOGIN.equals(urbCode()) &&
-                        !TFA_REQUIRED.equals(urbCode());
+                !INVALID_XAUTH_LOGIN.equals(enCode()) &&
+                        !TFA_REQUIRED.equals(enCode());
     }
 
     /**

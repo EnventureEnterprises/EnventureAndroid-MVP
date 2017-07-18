@@ -55,7 +55,7 @@ public class Config {
 
     public static final class RegExpPattern {
         public static final Pattern API = Pattern.compile("\\Aapi\\z");
-        public static final Pattern URB = Pattern.compile("\\Aurb\\z");
+        public static final Pattern ENVENTURE = Pattern.compile("\\Aenventure\\z");
         public static final Pattern LOCALHOST = Pattern.compile("\\Alocalhost\\z");
         public static final Pattern INTERNAL = Pattern.compile("\\Ainternal\\z");
 

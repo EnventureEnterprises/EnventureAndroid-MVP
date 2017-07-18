@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,14 +13,20 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.AppCompatImageView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.enventureenterprises.enventure.R;
@@ -29,6 +36,7 @@ import org.enventureenterprises.enventure.data.model.MonthlyReport;
 import org.enventureenterprises.enventure.data.model.WeeklyReport;
 import org.enventureenterprises.enventure.data.remote.EnventureApi;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
+import org.enventureenterprises.enventure.ui.general.ProgressDialogFragment;
 import org.enventureenterprises.enventure.util.Config;
 import org.enventureenterprises.enventure.util.GeneralUtils;
 import org.enventureenterprises.enventure.util.rx.Transformers;
@@ -59,6 +67,7 @@ public class AddItemActivity extends BaseActivity {
     private Long item_id;
     private String item_name;
     private ActionBar actionBar;
+    private ProgressDialogFragment progressFragment;
 
     @Inject
     EnventureApi client;
@@ -80,6 +89,24 @@ public class AddItemActivity extends BaseActivity {
 
     @BindView(R.id.totalcost)
     TextInputEditText totalCostEditText;
+
+    @BindView(R.id.selected_photo)
+    ImageView imageView;
+
+    @BindView(R.id.no_photo)
+    TextView noPhoto;
+
+    @BindView(R.id.name_layout)
+    TextInputLayout nameLayout;
+
+    @BindView(R.id.quantity_layout)
+    TextInputLayout quantityLayout;
+
+    @BindView(R.id.totalcost_layout)
+    TextInputLayout totalcostLayout;
+
+
+
 
 
     private Bitmap mImageBitmap;
@@ -148,6 +175,11 @@ public class AddItemActivity extends BaseActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 
+        nameEditText.addTextChangedListener(new FormTextWatcher(nameEditText));
+        quantityEditText.addTextChangedListener(new FormTextWatcher(quantityEditText));
+        totalCostEditText.addTextChangedListener(new FormTextWatcher(totalCostEditText));
+
+
 
     }
 
@@ -197,6 +229,7 @@ public class AddItemActivity extends BaseActivity {
     private void handleCameraPhoto() {
 
         if (mCurrentPhotoPath != null) {
+            setPic();
             galleryAddPic();
             mCurrentPhotoPath = null;
         }
@@ -208,7 +241,7 @@ public class AddItemActivity extends BaseActivity {
 
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
 
-            storageDir = mAlbumStorageDirFactory.getAlbumStorageDir("Urb");
+            storageDir = mAlbumStorageDirFactory.getAlbumStorageDir("Enventure");
 
             if (storageDir != null) {
                 if (! storageDir.mkdirs()) {
@@ -291,7 +324,7 @@ public class AddItemActivity extends BaseActivity {
                 if (resultCode == Activity.RESULT_OK) {
 
                     handleCameraPhoto();
-                    //noPhoto.setVisibility(View.INVISIBLE);
+                    noPhoto.setVisibility(View.INVISIBLE);
 
                 }
                 else{
@@ -303,7 +336,7 @@ public class AddItemActivity extends BaseActivity {
 
                     photo = data.getData();
                     Bitmap img= GeneralUtils.getThumbnail(AddItemActivity.this,data.getData(),GeneralUtils.MIME_TYPE_IMAGE );
-                    //imageView.setImageBitmap(img);
+                    imageView.setImageBitmap(img);
                     Timber.d("Image selected: "+data.getData());
                     //noPhoto.setVisibility(View.INVISIBLE);
 
@@ -358,6 +391,22 @@ public class AddItemActivity extends BaseActivity {
         //noinspection SimplifiableIfStatement
         switch(id){
             case R.id.save:
+
+                if (!validateName()) {
+                    return false;
+                }
+
+
+
+                if (!validateQuantity()) {
+                    return false;
+                }
+
+                if (!validateTotalCost()) {
+                    return false;
+                }
+
+
                 realm = Realm.getDefaultInstance ();
                 realm.beginTransaction();
                 DateTime d = new DateTime();
@@ -393,6 +442,7 @@ public class AddItemActivity extends BaseActivity {
                 inventoryItem.setTotalCost(Double.parseDouble(totalCostEditText.getText().toString()));
                 inventoryItem.setImage(photo.toString());
                 inventoryItem.setSynced(false);
+                inventoryItem.setCreated(d.toDate());
 
                 inventoryItem.setCreatedTs(d.getMillis());
 
@@ -425,7 +475,6 @@ public class AddItemActivity extends BaseActivity {
 
 
                 Intent intent = new Intent(AddItemActivity.this, ItemDetail.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("item_id",inventoryItem.getCreatedTs());
                 intent.putExtra("item",inventoryItem.getCreatedTs());
                 intent.putExtra("item_name",inventoryItem.getName());
@@ -443,6 +492,166 @@ public class AddItemActivity extends BaseActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
+    private boolean validateName() {
+        if (nameEditText.getText().toString().trim().isEmpty()) {
+            nameLayout.setErrorEnabled(true);
+            nameEditText.setError("The Product name is required");
+            requestFocus(nameEditText);
+            return false;
+
+        }
+        else if(Item.byName(getRealm(),nameEditText.getText().toString()) !=null)
+        {
+            nameLayout.setErrorEnabled(true);
+            nameEditText.setError("A Product with a similar name already exists");
+            requestFocus(nameEditText);
+            return false;
+        }
+
+
+        else
+        {
+            nameLayout.setErrorEnabled (false);
+        }
+
+        return true;
+    }
+
+    private boolean validateQuantity() {
+        String quantity = quantityEditText.getText().toString();
+        if (quantity.trim().isEmpty()) {
+            quantityLayout.setErrorEnabled(true);
+            quantityEditText.setError("Quantity is a required Field");
+            requestFocus(quantityEditText);
+            return false;
+        }
+
+        else if(Double.parseDouble(quantity) == Double.NaN)
+        {
+            quantityLayout.setErrorEnabled(true);
+            quantityEditText.setError("Invalid entry. Enter numbers only");
+            requestFocus(quantityEditText);
+            return false;
+        }
+        else {
+            quantityLayout.setErrorEnabled (false);
+        }
+
+        return true;
+    }
+
+    private boolean validateTotalCost() {
+        String totalcost = totalCostEditText.getText().toString();
+        if (totalCostEditText.getText().toString().trim().isEmpty()) {
+            totalcostLayout.setErrorEnabled(true);
+            totalCostEditText.setError("Total Cost is a required Field");
+            requestFocus(totalCostEditText);
+            return false;
+        }
+        else if(Double.parseDouble(totalcost) == Double.NaN)
+        {
+            totalcostLayout.setErrorEnabled(true);
+            totalCostEditText.setError("Invalid entry. Enter numbers only");
+            requestFocus(totalCostEditText);
+            return false;
+
+        }
+        else {
+            totalcostLayout.setErrorEnabled (false);
+        }
+
+        return true;
+    }
+
+    private void requestFocus(View view) {
+        if (view.requestFocus()) {
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
+    }
+
+
+    private class FormTextWatcher implements TextWatcher {
+
+        private View view;
+
+        private FormTextWatcher(View view) {
+            this.view = view;
+        }
+
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void afterTextChanged(Editable editable) {
+            switch (view.getId()) {
+                case R.id.name:
+                    validateName ();
+                    break;
+                case R.id.quantity:
+                    validateQuantity ();
+                    break;
+                case R.id.totalcost:
+                    validateTotalCost ();
+                    break;
+
+            }
+        }
+    }
+
+    private void startProgress() {
+        progressFragment= ProgressDialogFragment.newInstance ("creating post");
+        progressFragment.show(getSupportFragmentManager(), "progress");
+    }
+
+    private void finishProgress() {
+        progressFragment.dismiss();
+    }
+
+
+
+    private void setPic() {
+
+		/* There isn't enough memory to open up more than a couple camera photos */
+		/* So pre-scale the target bitmap into which the file is decoded */
+
+		/* Get the size of the ImageView */
+        int targetW = imageView.getWidth();
+        int targetH = imageView.getHeight();
+
+		/* Get the size of the image */
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+
+        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+		/* Figure out which way needs to be reduced less */
+        int scaleFactor = 1;
+        if ((targetW > 0) || (targetH > 0)) {
+            scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+        }
+
+		/* Set bitmap options to scale the image decode target */
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+		/* Decode the JPEG file into a Bitmap */
+        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+
+		/* Associate the Bitmap to the ImageView */
+        imageView.setImageBitmap(bitmap);
+        imageView.setVisibility(View.VISIBLE);
+
+    }
+
+
 
 
 

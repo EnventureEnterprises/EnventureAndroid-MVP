@@ -138,7 +138,6 @@ public class ItemDetail extends BaseActivity{
     public void edit_product()
     {
         Intent intent = new Intent(getApplicationContext(), AddItemActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("item",item.getId ());
         startActivity (intent);
 

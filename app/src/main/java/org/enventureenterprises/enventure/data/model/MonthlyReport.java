@@ -2,6 +2,7 @@ package org.enventureenterprises.enventure.data.model;
 
 import java.util.Date;
 
+import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -87,5 +88,25 @@ public class MonthlyReport extends RealmObject {
     public void setUpdated(Date updated){
         this.updated=updated;
     }
+
+
+    public static void update(final Transaction transaction) {
+        try(Realm realm = Realm.getDefaultInstance()) {
+            realm.executeTransactionAsync(new Realm.Transaction() {
+                @Override
+                public void execute(Realm bgRealm) {
+                    //Score score = new Score();
+                    //score.setName(winnerName);
+                    //score.setTime(finishTime);
+                    //bgRealm.copyToRealm(score);
+                }
+            });
+        }
+    }
+
+    public static MonthlyReport byName(Realm realm, String name) {
+        return realm.where(MonthlyReport.class).equalTo("name", name).findFirst();
+    }
+
 
 }

@@ -4,6 +4,7 @@ import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
 import com.google.android.gms.gcm.TaskParams;
 
+import org.enventureenterprises.enventure.BaseApplication;
 import org.enventureenterprises.enventure.data.model.Entry;
 import org.enventureenterprises.enventure.data.model.Item;
 import org.enventureenterprises.enventure.data.remote.EnventureApi;
@@ -27,7 +28,11 @@ public class SyncService extends GcmTaskService {
     private static final String TAG = "BestTimeService";
     Realm realm;
 
+    public SyncService() {
+        super();
+        BaseApplication.getInstance().getComponent().inject(this);
 
+    }
 
 
     public void setSynced(Item item,Realm realm){

@@ -32,9 +32,10 @@ public class ItemView extends RelativeLayout
     TextView nameTextView;
     @BindView(R.id.item_image)
     ImageView itemImage;
+        View view;
 
 
-    private @ApplicationContext
+        private @ApplicationContext
     Context context;
 
     public ItemView(@ApplicationContext Context context) {
@@ -44,7 +45,7 @@ public class ItemView extends RelativeLayout
     }
 
     private void init(Context context) {
-        inflate(context, R.layout.search_item, this);
+        view = inflate(context, R.layout.search_item, this);
         ButterKnife.bind(this);
     }
 
@@ -52,7 +53,8 @@ public class ItemView extends RelativeLayout
         nameTextView.setText(String.format("%s",
                 item.getName()));
 
-        nameTextView.setOnClickListener(
+
+        view.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -88,8 +90,7 @@ public class ItemView extends RelativeLayout
 
     public void showAddEntryFragment(@NonNull final Long item, String name) {
 
-        Intent intent = new Intent(getContext(), NewEntryActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent = new Intent(getContext(), NewSaleActivity.class);
         intent.putExtra("item", item);
         intent.putExtra("name", name);
 

@@ -26,7 +26,7 @@
 
 
 
-    <include layout="@layout/addentry_content"></include>
+    <include layout="@layout/new_sale_content"></include>
 
 
 

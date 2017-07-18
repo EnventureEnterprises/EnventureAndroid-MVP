@@ -43,7 +43,6 @@ android {
 
     signingConfigs {
         release {
-            //storeFile file('keystore/urb-release-key.jks')
             storeFile file("$System.env.ENVENTURE_RELEASE_KEY")
 
             keyAlias "$System.env.ENVENTURE_KEY_ALIAS"
@@ -114,6 +113,8 @@ dependencies {
     compile "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:support-v13:$SUPPORT_LIBRARY_VERSION"
     compile "com.google.android.gms:play-services-gcm:$PLAY_SERVICES_VERSION"
+    compile 'com.googlecode.libphonenumber:libphonenumber:8.7.0'
+    compile 'com.github.ittianyu:BottomNavigationViewEx:1.2.2'
 
 
 
@@ -161,6 +162,7 @@ dependencies {
     compile 'com.google.guava:guava:19.0'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.facebook.android:account-kit-sdk:4.+'
+    compile 'com.jonathanfinerty.once:once:1.2.2'
 
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:2.0.1-rc1'

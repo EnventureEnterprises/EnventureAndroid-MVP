@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -16,7 +17,7 @@ import org.enventureenterprises.enventure.lib.RealmSearchViewHolder;
 import io.realm.Realm;
 
 
-public class SearchAdapter extends RealmSearchAdapter<Item, SearchAdapter.ViewHolder> {
+public class SearchAdapter extends RealmSearchAdapter<Item, SearchAdapter.ViewHolder> implements AdapterView.OnItemClickListener {
 
     private @ApplicationContext
     Context context;
@@ -72,8 +73,7 @@ public class SearchAdapter extends RealmSearchAdapter<Item, SearchAdapter.ViewHo
                     @Override
                     public void onClick(View v) {
 
-                        Intent intent = new Intent(v.getContext (), NewEntryActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        Intent intent = new Intent(v.getContext (), NewSaleActivity.class);
                         intent.putExtra("item",item.getId ());
                         context.startActivity (intent);
 
@@ -82,4 +82,17 @@ public class SearchAdapter extends RealmSearchAdapter<Item, SearchAdapter.ViewHo
                 }
         );
     }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        final Item item = realmResults.get(position);
+                        Intent intent = new Intent(getContext (), NewSaleActivity.class);
+                        intent.putExtra("item",item.getId ());
+                        context.startActivity (intent);
+
+
+
+    }
+
+
 }

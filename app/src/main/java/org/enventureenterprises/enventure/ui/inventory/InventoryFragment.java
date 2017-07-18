@@ -1,13 +1,18 @@
 package org.enventureenterprises.enventure.ui.inventory;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.data.model.Item;
 import org.enventureenterprises.enventure.lib.RealmRecyclerView;
+import org.enventureenterprises.enventure.ui.addItem.AddItemActivity;
 import org.enventureenterprises.enventure.ui.reports.BaseFragment;
 
 import butterknife.BindView;
@@ -37,6 +42,20 @@ public class InventoryFragment extends BaseFragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu,MenuInflater inflater) {
+        inflater.inflate(R.menu.home2, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+
+    }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,5 +75,28 @@ public class InventoryFragment extends BaseFragment {
 
 
         return view;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        switch(id){
+            case R.id.add_entry:
+
+                startActivity(new Intent(getContext(), AddItemActivity.class));
+                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
+                break;
+
+
+
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

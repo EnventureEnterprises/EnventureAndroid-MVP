@@ -1,7 +1,15 @@
 package org.enventureenterprises.enventure.data.model;
 
-import java.util.Date;
+import android.support.annotation.NonNull;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+
+import java.util.Date;
+import java.util.Locale;
+
+import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -83,5 +91,62 @@ public class DailyReport extends RealmObject {
     public void setUpdated(Date updated){
         this.updated=updated;
     }
+
+    public static void update(final Transaction transaction) {
+        try(Realm realm = Realm.getDefaultInstance()) {
+            realm.executeTransactionAsync(new Realm.Transaction() {
+                @Override
+                public void execute(Realm bgRealm) {
+                    //Score score = new Score();
+                    //score.setName(winnerName);
+                    //score.setTime(finishTime);
+                    //bgRealm.copyToRealm(score);
+                }
+            });
+        }
+    }
+
+
+    public static MonthlyReport byName(Realm realm, String name) {
+        return realm.where(MonthlyReport.class).equalTo("name", name).findFirst();
+    }
+
+    public static boolean isDateToday(final @NonNull DateTime dateTime) {
+        return dateTime.withZone(DateTimeZone.UTC).withTimeAtStartOfDay()
+                .equals(DateTime.now().withTimeAtStartOfDay().withZoneRetainFields(DateTimeZone.UTC));
+    }
+
+    public static @NonNull String fullDate(final @NonNull DateTime dateTime) {
+        return fullDate(dateTime, Locale.getDefault());
+    }
+
+    /**
+     * e.g.: Dec 17, 2015.
+     */
+    public static @NonNull String fullDate(final @NonNull DateTime dateTime, final @NonNull Locale locale) {
+        try {
+            return dateTime.toString(DateTimeFormat.fullDate().withLocale(locale).withZoneUTC());
+        } catch (final IllegalArgumentException e) {
+            // JodaTime doesn't support the 'cccc' pattern, triggered by fullDate and fullDateTime. See: https://github.com/dlew/joda-time-android/issues/30
+            // Instead just return a medium date.
+            return mediumDate(dateTime, locale);
+        }
+    }
+
+    /**
+     * e.g.: Dec 17, 2015.
+     */
+    public static @NonNull String mediumDate(final @NonNull DateTime dateTime) {
+        return mediumDate(dateTime, Locale.getDefault());
+    }
+
+    /**
+     * e.g.: Dec 17, 2015.
+     */
+    public static @NonNull String mediumDate(final @NonNull DateTime dateTime, final @NonNull Locale locale) {
+        return dateTime.toString(DateTimeFormat.mediumDate().withLocale(locale).withZoneUTC());
+    }
+
+
 
 }

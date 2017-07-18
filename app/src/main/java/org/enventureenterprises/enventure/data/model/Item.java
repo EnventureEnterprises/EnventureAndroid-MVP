@@ -2,6 +2,7 @@ package org.enventureenterprises.enventure.data.model;
 
 import java.util.Date;
 
+import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -18,9 +19,11 @@ public class Item extends RealmObject {
     private Integer quantity;
     private Integer unitcost;
     private String image;
+    @PrimaryKey
     private String name;
 
-    @PrimaryKey
+
+
     private Long created_ts;
 
     private boolean synced;
@@ -92,6 +95,13 @@ public class Item extends RealmObject {
     public void setCreatedTs(Long created_ts){
         this.created_ts=created_ts;
     }
+
+
+    public static Item byName(Realm realm, String name) {
+        return realm.where(Item.class).equalTo("name", name).findFirst();
+    }
+
+
 
 
 

@@ -33,7 +33,7 @@
 
         <string-array name="entry_array">
             <item>Cash</item>
-            <item>Installment</item>
+            <item>Installment Addon</item>
         </string-array>
 
     <string name="signed_in">Signed In</string>
@@ -53,5 +53,6 @@
     <string name="sign_outt">Sign Out</string>
     <string name="phone_title_text">phone_title_text</string>
     <string name="sign_out">sign_out</string>
+    <string name="validationErrors">Validation Error</string>
 
 </resources>

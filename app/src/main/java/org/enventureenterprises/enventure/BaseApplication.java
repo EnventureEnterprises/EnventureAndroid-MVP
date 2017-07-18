@@ -8,10 +8,18 @@ import android.preference.PreferenceManager;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
+import com.google.android.gms.gcm.GcmNetworkManager;
+import com.google.android.gms.gcm.PeriodicTask;
+
+import net.danlew.android.joda.JodaTimeAndroid;
+
+import org.enventureenterprises.enventure.data.model.Account;
 import org.enventureenterprises.enventure.data.model.Migration;
 import org.enventureenterprises.enventure.data.remote.AccessToken;
 import org.enventureenterprises.enventure.data.remote.EnventureApi;
+import org.enventureenterprises.enventure.service.SyncService;
 import org.enventureenterprises.enventure.util.PrefUtils;
+import org.joda.time.DateTime;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,6 +28,7 @@ import javax.inject.Inject;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import jonathanfinerty.once.Once;
 import rx.plugins.RxJavaErrorHandler;
 import rx.plugins.RxJavaPlugins;
 import timber.log.Timber;
@@ -32,8 +41,13 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 public class BaseApplication extends MultiDexApplication {
 
     private static ApplicationComponent mApplicationComponent;
+    private static final String INIT_SYNC_ON_INSTALL = "org.enventureenterprises.enventure.INIT_SYNC_ON_INSTALL";
 
-    public final static String ISSUE_PIC_DIR = "urb";
+    public final static String EVENTURE_PIC_DIR = "enventure";
+
+    private String TASK_TAG ="periodic_task2";
+    //private Integer SYNC_INTERVAL = 86400;
+    private Integer SYNC_INTERVAL = 30;
 
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
 
@@ -47,6 +61,10 @@ public class BaseApplication extends MultiDexApplication {
     public static Context context;
 
     public SharedPreferences preferences;
+
+    private GcmNetworkManager mGcmNetworkManager;
+
+
 
 
     @Inject
@@ -66,6 +84,7 @@ public class BaseApplication extends MultiDexApplication {
         super.onCreate();
         //MultiDex.install(this);
         singleton = this;
+
         context = getApplicationContext();
 
         /*if (LeakCanary.isInAnalyzerProcess(this)) {
@@ -89,7 +108,7 @@ public class BaseApplication extends MultiDexApplication {
 
         if (mobile != null)
         {
-            databasename = mobile;
+            databasename = mobile+".realm";
         }
 
         RealmConfiguration realmConfig = new RealmConfiguration.Builder()
@@ -116,6 +135,8 @@ public class BaseApplication extends MultiDexApplication {
             }
         });
 
+        JodaTimeAndroid.init(this);
+
 
 
         //Realm.deleteRealm(config);
@@ -133,6 +154,8 @@ public class BaseApplication extends MultiDexApplication {
         mApplicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
                 .build();
+
+
         component().inject(this);
 
     }
@@ -186,7 +209,7 @@ public class BaseApplication extends MultiDexApplication {
         // Get the directory for the user's public pictures directory.
         final File picsDir = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES);
-        final File issuePicsDir = new File(picsDir, ISSUE_PIC_DIR);
+        final File issuePicsDir = new File(picsDir, EVENTURE_PIC_DIR);
         issuePicsDir.mkdirs();
         return new File(issuePicsDir, fileName);
     }
@@ -218,6 +241,61 @@ public class BaseApplication extends MultiDexApplication {
         editor.putBoolean("are_crashes_enabled", status);
         editor.apply();
     }
+
+    private void scheduleSync() {
+        if (!Once.beenDone(Once.THIS_APP_INSTALL, INIT_SYNC_ON_INSTALL)) {
+
+            Timber.i("Scheduling background sync on first-install.");
+            mGcmNetworkManager = GcmNetworkManager.getInstance(this);
+
+            PeriodicTask task = new PeriodicTask.Builder()
+                    .setService(SyncService.class)
+                    .setTag(TASK_TAG)
+                    .setPeriod(SYNC_INTERVAL)
+                    .setPersisted(true)
+                    .setUpdateCurrent(true)
+                    .setRequiredNetwork(PeriodicTask.NETWORK_STATE_CONNECTED )
+                    .build();
+            setupAccounts();
+
+            mGcmNetworkManager.schedule(task);
+            Once.markDone(INIT_SYNC_ON_INSTALL);
+        }
+    }
+
+
+    public void setupAccounts()
+    {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        Account salesAccount = new Account ();
+        Account accountReceivable = new Account ();
+        Account inventoryAccount = new Account ();
+        DateTime d = new DateTime();
+
+        salesAccount.setName(Account.SALES_ACCOUNT);
+        salesAccount.setBalance(0.0);
+        salesAccount.setQuantity(0);
+        salesAccount.setCreated(d.toDate());
+        accountReceivable.setName(Account.ACCOUNT_RECEIVABLE);
+        accountReceivable.setBalance(0.0);
+        accountReceivable.setQuantity(0);
+        accountReceivable.setCreated(d.toDate());
+        inventoryAccount.setName(Account.INVENTORY_ACCOUNT);
+        inventoryAccount.setBalance(0.0);
+        inventoryAccount.setQuantity(0);
+        inventoryAccount.setCreated(d.toDate());
+
+        realm.copyToRealmOrUpdate (salesAccount);
+        realm.copyToRealmOrUpdate (accountReceivable);
+        realm.copyToRealmOrUpdate (inventoryAccount);
+
+        realm.commitTransaction();
+
+
+
+    }
+
 
 
 

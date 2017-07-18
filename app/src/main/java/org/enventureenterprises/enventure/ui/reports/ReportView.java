@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.injection.qualifier.ApplicationContext;
-import org.enventureenterprises.enventure.ui.addEntry.NewEntryActivity;
+import org.enventureenterprises.enventure.ui.addEntry.NewSaleActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,8 +66,7 @@ public class ReportView extends RelativeLayout
 
     public void showAddEntryFragment(@NonNull final Long item, String name) {
 
-        Intent intent = new Intent(getContext(), NewEntryActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent = new Intent(getContext(), NewSaleActivity.class);
         intent.putExtra("item", item);
         intent.putExtra("name", name);
 

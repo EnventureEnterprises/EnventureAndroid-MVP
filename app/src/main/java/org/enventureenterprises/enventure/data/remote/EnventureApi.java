@@ -145,5 +145,27 @@ public class EnventureApi  {
     }
 
 
+    public @NonNull Observable<BaseResponse> syncItem(Item item) {
+        final int relationshipsDepthLevel = 0;
+       Item tosync_item = realm.copyFromRealm(item, relationshipsDepthLevel);
+
+        return service
+                .syncItem(tosync_item)
+                .lift(apiErrorOperator())
+                .subscribeOn(Schedulers.io());
+    }
+
+
+    public @NonNull Observable<BaseResponse> syncEntry(Entry entry) {
+        final int relationshipsDepthLevel = 3;
+        Entry tosync_entry = realm.copyFromRealm(entry, relationshipsDepthLevel);
+
+        return service
+                .syncEntry(tosync_entry)
+                .lift(apiErrorOperator())
+                .subscribeOn(Schedulers.io());
+    }
+
+
 
 }

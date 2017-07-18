@@ -22,7 +22,7 @@
 
 
         <TextView
-            android:id="@+id/whyUrb"
+            android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"

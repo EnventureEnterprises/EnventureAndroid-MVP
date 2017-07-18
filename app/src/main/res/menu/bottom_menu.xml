@@ -9,20 +9,24 @@
 		android:id="@+id/inventory"
 		android:color="@color/colorPrimary"
 		android:icon="@drawable/c"
+		app:showAsAction="always|withText"
 		android:title="Inventory" />
 	<item
 		android:id="@+id/sales"
 		android:color="@color/colorPrimary"
 		android:icon="@drawable/c"
+		app:showAsAction="always|withText"
 		android:title="Sales" />
 	<item
 		android:id="@+id/reports"
 		android:color="@color/colorPrimary"
+		app:showAsAction="always|withText"
 		android:icon="@drawable/c"
 		android:title="Reports" />
 	<item
 		android:id="@+id/profile"
 		android:color="@color/colorPrimary"
+		app:showAsAction="always|withText"
 		android:icon="@drawable/c"
 		android:title="Profile" />
 </menu>

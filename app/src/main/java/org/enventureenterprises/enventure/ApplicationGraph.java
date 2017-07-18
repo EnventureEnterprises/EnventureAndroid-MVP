@@ -6,7 +6,7 @@ import org.enventureenterprises.enventure.data.Environment;
 import org.enventureenterprises.enventure.data.Logout;
 import org.enventureenterprises.enventure.data.remote.EnventureApi;
 import org.enventureenterprises.enventure.service.SyncService;
-import org.enventureenterprises.enventure.ui.addEntry.NewEntryActivity;
+import org.enventureenterprises.enventure.ui.addEntry.NewSaleActivity;
 import org.enventureenterprises.enventure.ui.addEntry.SearchItemActivity;
 import org.enventureenterprises.enventure.ui.addItem.AddItemActivity;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
@@ -45,7 +45,7 @@ public interface ApplicationGraph {
     void inject( MonthlyReportFragment __);
     void inject( WeeklyReportFragment __);
     void inject( DispatchActivity __);
-    void inject( NewEntryActivity __);
+    void inject( NewSaleActivity __);
     void inject( SearchItemActivity __);
     void inject( ProfileFragment __);
     void inject( InventoryFragment __);

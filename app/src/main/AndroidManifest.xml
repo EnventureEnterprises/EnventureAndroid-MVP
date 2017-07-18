@@ -73,10 +73,11 @@
 
         <activity
             android:name=".ui.addItem.ItemDetail"
+            android:parentActivityName=".ui.general.HomeActivity"
             android:label="@string/product_detail" />
 
         <activity
-            android:name=".ui.addEntry.NewEntryActivity"
+            android:name=".ui.addEntry.NewSaleActivity"
             android:label="@string/add_sale" />
 
 

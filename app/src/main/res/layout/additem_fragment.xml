@@ -19,7 +19,7 @@
         android:paddingTop="@dimen/activity_vertical_margin">
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/title_layout"
+            android:id="@+id/name_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -31,6 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/product_name"
+
                 android:textSize="20sp"
                 android:inputType="text"
                 android:nextFocusDown="@+id/quantity"
@@ -53,14 +54,14 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/quantity"
                 android:textSize="20sp"
-                android:inputType="text"
+                android:inputType="number"
                 android:nextFocusDown="@+id/type_layout"
                 android:maxLines="1" />
 
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/cost_layout"
+            android:id="@+id/totalcost_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -73,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/total_cost"
                 android:textSize="20sp"
-                android:inputType="text"
+                android:inputType="numberDecimal"
                 android:nextFocusDown="@+id/type_layout"
                 android:maxLines="1" />
 
@@ -90,6 +91,36 @@
         android:layout_width="match_parent"
         android:layout_marginTop="25dip">
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/selected_photo"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@color/grey_background"
+
+                />
+
+            <TextView
+                android:id="@+id/no_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No Picture Selected"
+
+
+                android:layout_alignTop="@+id/selected_photo"
+                android:layout_alignBottom="@+id/selected_photo"
+                android:layout_alignEnd="@+id/selected_photo"
+                android:layout_alignRight="@+id/selected_photo"
+                android:layout_alignLeft="@+id/selected_photo"
+                android:layout_alignStart="@+id/selected_photo"
+                android:gravity="center"
+                />
+
+        </RelativeLayout>
+
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
@@ -98,7 +129,6 @@
             android:textSize="20sp" />
 
         <LinearLayout
-            android:layout_marginTop="50dip"
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -127,7 +157,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="50dip"
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

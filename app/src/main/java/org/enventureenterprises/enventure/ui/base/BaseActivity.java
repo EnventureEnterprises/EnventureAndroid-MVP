@@ -35,7 +35,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
-import com.google.android.gms.gcm.PeriodicTask;
 import com.trello.rxlifecycle.LifecycleProvider;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
@@ -48,9 +47,9 @@ import org.enventureenterprises.enventure.BaseApplication;
 import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.data.Environment;
 import org.enventureenterprises.enventure.data.local.SectionsPagerAdapter;
-import org.enventureenterprises.enventure.service.SyncService;
 import org.enventureenterprises.enventure.ui.general.HomeActivity;
 
+import io.realm.Realm;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.BehaviorSubject;
@@ -88,6 +87,8 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
 
     private GcmNetworkManager mGcmNetworkManager;
 
+    private Realm realm;
+
 
 
 
@@ -100,17 +101,7 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
 
         getActivityComponent().inject(this);
 
-        mGcmNetworkManager = GcmNetworkManager.getInstance(this);
 
-        PeriodicTask task = new PeriodicTask.Builder()
-                .setService(SyncService.class)
-                .setTag(TASK_TAG)
-                .setPeriod(SYNC_INTERVAL)
-                .setPersisted(true)
-                .setRequiredNetwork(PeriodicTask.NETWORK_STATE_CONNECTED )
-                .build();
-
-        mGcmNetworkManager.schedule(task);
 
 
     }
@@ -362,6 +353,7 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
     @CallSuper
     protected void onStart() {
         super.onStart();
+        realm = Realm.getDefaultInstance();
         lifecycleSubject.onNext(ActivityEvent.START);
         back
                 .compose(bindUntilEvent(ActivityEvent.STOP))
@@ -395,6 +387,7 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
     @CallSuper
     protected void onStop() {
         lifecycleSubject.onNext(ActivityEvent.STOP);
+        closeRealm();
         super.onStop();
     }
 
@@ -412,6 +405,25 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
     public void back() {
         back.onNext(null);
     }
+
+
+    protected Realm getRealm() {
+        return realm;
+    }
+
+
+
+    private void closeRealm() {
+        if (realm != null) {
+            realm.removeAllChangeListeners();
+            if (realm.isInTransaction()) {
+                realm.cancelTransaction();
+            }
+            realm.close();
+            realm = null;
+        }
+    }
+
 
 
 

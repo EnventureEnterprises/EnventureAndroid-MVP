@@ -2,6 +2,8 @@ package org.enventureenterprises.enventure.data.remote;
 
 
 import org.enventureenterprises.enventure.data.BaseResponse;
+import org.enventureenterprises.enventure.data.model.Entry;
+import org.enventureenterprises.enventure.data.model.Item;
 import org.enventureenterprises.enventure.data.model.User;
 
 import java.util.Date;
@@ -9,6 +11,7 @@ import java.util.Date;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Response;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -18,7 +21,6 @@ import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import rx.Observable;
-
 
 
 public interface EnventureApiService {
@@ -84,4 +86,12 @@ public interface EnventureApiService {
                                                    @Field("amount") Double amount,
                                                    @Field("quantity") Integer quantity,
                                                       @Field("type") String type);
+
+
+    @POST("entries")
+    Observable<Response<BaseResponse>> syncEntry(@Body Entry entry);
+
+
+    @POST("items")
+    Observable<Response<BaseResponse>> syncItem(@Body Item item);
 }

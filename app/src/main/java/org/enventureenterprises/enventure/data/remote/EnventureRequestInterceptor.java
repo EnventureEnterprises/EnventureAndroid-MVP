@@ -28,8 +28,8 @@ public final class EnventureRequestInterceptor implements Interceptor {
 
     private Request request(final @NonNull Request initialRequest) {
         return initialRequest.newBuilder()
-                .header("urb-Android-App", build.versionCode().toString())
-                .header("urb-App-Id", build.applicationId())
+                .header("enventure-Android-App", build.versionCode().toString())
+                .header("enventure-App-Id", build.applicationId())
                 .build();
     }
 }
