@@ -113,12 +113,16 @@ public class EnventureApi  {
         mobile =
                 RequestBody.create (
                         MediaType.parse ("multipart/form-data"), mobile_t);
+        if(item.getImage() != null) {
 
-        RequestBody requestFile =
-                RequestBody.create (MediaType.parse ("multipart/form-data"), item.getImage());
+            RequestBody requestFile =
+                    RequestBody.create(MediaType.parse("multipart/form-data"), item.getImage());
 
-        photo_file =
-                MultipartBody.Part.createFormData ("picture", "img", requestFile);
+            photo_file =
+                    MultipartBody.Part.createFormData ("picture", "img", requestFile);
+        }
+
+
 
 
 

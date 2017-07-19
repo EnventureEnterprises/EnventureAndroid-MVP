@@ -39,7 +39,6 @@ import org.enventureenterprises.enventure.ui.base.BaseActivity;
 import org.enventureenterprises.enventure.ui.general.ProgressDialogFragment;
 import org.enventureenterprises.enventure.util.Config;
 import org.enventureenterprises.enventure.util.GeneralUtils;
-import org.enventureenterprises.enventure.util.rx.Transformers;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -440,7 +439,9 @@ public class AddItemActivity extends BaseActivity {
                 inventoryItem.setName(nameEditText.getText().toString());
                 inventoryItem.setQuantity(Integer.parseInt(quantityEditText.getText().toString()));
                 inventoryItem.setTotalCost(Double.parseDouble(totalCostEditText.getText().toString()));
-                inventoryItem.setImage(photo.toString());
+                if (photo != null) {
+                    inventoryItem.setImage(photo.toString());
+                }
                 inventoryItem.setSynced(false);
                 inventoryItem.setCreated(d.toDate());
 
@@ -467,8 +468,8 @@ public class AddItemActivity extends BaseActivity {
 
                 realm.commitTransaction();
 
-                client.createItem(inventoryItem)
-                        .compose(Transformers.neverError());
+                client.createItem(inventoryItem);
+                        //.compose(Transformers.neverError());
 
 
 

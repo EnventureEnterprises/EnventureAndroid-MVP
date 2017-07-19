@@ -14,7 +14,7 @@ public class Config {
     public static final String REGISTRATION_COMPLETE = "registrationComplete";
 
     //public static final String DebugBaseEndpoint = "http://192.168.0.100:8000/api/v1/";
-    public static final String DebugBaseEndpoint = "http://192.168.0.101:8000/api/v1/";
+    public static final String DebugBaseEndpoint = "http://192.168.1.27:8000/api/v1/";
 
     public static final String BaseEndpoint = "http://enventure.sparkpl.ug/api/v1/";
     public static final String DEBUG_CLIENT_ID = "uQVxxypFe9H6EMuMbKulEvKlEZY3LW5Ran5irC2D";

@@ -1,12 +1,14 @@
 package org.enventureenterprises.enventure.ui.general;
 
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
+import android.view.MenuItem;
+
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
@@ -18,14 +20,14 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
 
 /**
  * Created by mossplix on 7/6/17.
  */
 
-public class HomeActivity extends BaseActivity implements BottomNavigation.OnMenuItemSelectionListener {
-    @BindView(R.id.bottomNavigation) BottomNavigation bottomNavigation;
+public class HomeActivity extends BaseActivity implements BottomNavigationViewEx.OnNavigationItemSelectedListener {
+    @BindView(R.id.bottomNavigation)
+    BottomNavigationViewEx bottomNavigation;
     private static final int SALES = 1;
     private static final int INVENTORY =0;
     private static final int REPORTS = 2;
@@ -51,7 +53,10 @@ public class HomeActivity extends BaseActivity implements BottomNavigation.OnMen
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        bottomNavigation.setOnMenuItemClickListener(this);
+        bottomNavigation.setOnNavigationItemSelectedListener(this);
+        bottomNavigation.enableAnimation(false);
+        bottomNavigation.enableShiftingMode(false);
+        bottomNavigation.enableItemShiftingMode(false);
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
@@ -66,10 +71,35 @@ public class HomeActivity extends BaseActivity implements BottomNavigation.OnMen
 
 
     public void onNavigationChanged(int navType) {
-        //noinspection WrongConstant
-        if (bottomNavigation.getSelectedIndex() != navType) bottomNavigation.setSelectedIndex(navType, true);
+
         this.navType = navType;
         onModuleChanged(getSupportFragmentManager(), navType);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.inventory:
+                onNavigationChanged(INVENTORY);
+
+                break;
+            case R.id.sales:
+                onNavigationChanged(SALES);
+
+                break;
+            case R.id.reports:
+                onNavigationChanged(REPORTS);
+
+                break;
+            case R.id.profile:
+                onNavigationChanged(PROFILE);
+
+                break;
+            default:
+                return false;
+        }
+        return true;
     }
 
     @Nullable
@@ -153,14 +183,6 @@ public class HomeActivity extends BaseActivity implements BottomNavigation.OnMen
         toAdd.onHiddenChanged(false);
     }
 
-
-    @Override public void onMenuItemSelect(@IdRes int id, int position, boolean fromUser) {
-
-        onNavigationChanged(position);
-
-    }
-
-    @Override public void onMenuItemReselect(@IdRes int id, int position, boolean fromUser) {}
 
 
 

@@ -302,6 +302,9 @@ public class ApplicationModule {
             builder.addInterceptor(httpLoggingInterceptor);
         }
 
+
+
+
         return builder
                 .addInterceptor(apiRequestInterceptor)
                 .addInterceptor(enventureRequestInterceptor)

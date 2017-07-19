@@ -354,7 +354,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
         // An item was selected. You can retrieve the selected item using
         paymentType = parent.getItemAtPosition(pos).toString();
 
-        if(paymentType == "Installment Addon"){
+        if(paymentType.toString().equals("Installment Addon")){
 
             quantityEditText.setVisibility(View.GONE);
             totalcostEditText.setVisibility(View.GONE);
@@ -393,7 +393,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
 
 
     private boolean validateQuantity() {
-        if(paymentType == "Cash") {
+        if(paymentType.toString().equals("Cash")) {
             String quantity = quantityEditText.getText().toString();
             if (quantity.trim().isEmpty()) {
                 quantityLayout.setErrorEnabled(true);
@@ -416,7 +416,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
     }
 
     private boolean validateTotalCost() {
-        if(paymentType == "Cash") {
+        if(paymentType.toString().equals("Cash")) {
             String totalcost = totalcostEditText.getText().toString();
             if (totalcostEditText.getText().toString().trim().isEmpty()) {
                 totalcostLayout.setErrorEnabled(true);
@@ -440,7 +440,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
     }
 
     private boolean validateAmountPaying (){
-        if(paymentType == "Installment Addon") {
+        if(paymentType.toString().equals("Installment Addon")) {
 
             String amountPaying = amountPayingEditText.getText().toString();
             if (amountPayingEditText.getText().toString().trim().isEmpty()) {
@@ -466,7 +466,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
     }
 
     private boolean validateAmountRemaining (){
-        if(paymentType == "Installment Addon") {
+        if(paymentType.toString().equals("Installment Addon")) {
             String amountRemaining = amountRemainingEditText.getText().toString().trim();
             if (amountRemaining.isEmpty()) {
                 amountRemainingLayout.setErrorEnabled(true);
@@ -492,7 +492,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
     }
 
     private boolean validatePhone (){
-        if(paymentType == "Installment Addon") {
+        if(paymentType.toString().equals("Installment Addon")) {
 
 
             String phone = phoneEditText.getText().toString();

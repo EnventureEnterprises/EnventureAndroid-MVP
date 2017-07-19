@@ -9,6 +9,7 @@
     <dimen name="social_icon_size">30dp</dimen>
     <dimen name="location_distance_icon_size">25dp</dimen>
     <dimen name="icon_buffer">10dp</dimen>
+    <dimen name="design_bottom_navigation_active_text_size">12sp</dimen>
 
 
     <dimen name="grid_1_half">4dp</dimen>
