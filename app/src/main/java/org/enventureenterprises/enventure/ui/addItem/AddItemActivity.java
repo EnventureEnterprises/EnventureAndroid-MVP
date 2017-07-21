@@ -468,8 +468,7 @@ public class AddItemActivity extends BaseActivity {
 
                 realm.commitTransaction();
 
-                client.createItem(inventoryItem);
-                        //.compose(Transformers.neverError());
+                //client.createItem(inventoryItem).compose(Transformers.neverError()).subscribe();
 
 
 

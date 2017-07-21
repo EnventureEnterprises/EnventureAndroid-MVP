@@ -1,5 +1,6 @@
 package org.enventureenterprises.enventure.ui.general;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -46,11 +47,11 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
         if (supportActionBar != null) {
 
             supportActionBar.setDisplayHomeAsUpEnabled(false);
+            supportActionBar.setDisplayShowHomeEnabled(false);
+            supportActionBar.setIcon(
+                    new ColorDrawable(getResources().getColor(android.R.color.transparent)));
         }
 
-
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         bottomNavigation.setOnNavigationItemSelectedListener(this);

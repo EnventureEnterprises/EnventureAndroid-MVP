@@ -8,7 +8,6 @@ import org.enventureenterprises.enventure.BaseApplication;
 import org.enventureenterprises.enventure.data.model.Entry;
 import org.enventureenterprises.enventure.data.model.Item;
 import org.enventureenterprises.enventure.data.remote.EnventureApi;
-import org.enventureenterprises.enventure.ui.base.BaseActivity;
 import org.enventureenterprises.enventure.util.rx.Transformers;
 
 import javax.inject.Inject;
@@ -16,6 +15,7 @@ import javax.inject.Inject;
 import io.realm.OrderedRealmCollectionSnapshot;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import timber.log.Timber;
 
 /**
  * Created by mossplix on 7/11/17.
@@ -36,8 +36,10 @@ public class SyncService extends GcmTaskService {
 
 
     public void setSynced(Item item,Realm realm){
+        Timber.i("item synced with waragi");
 
         realm.beginTransaction();
+        item.setSynced(true);
 
         realm.copyToRealmOrUpdate (item);
 
@@ -46,8 +48,10 @@ public class SyncService extends GcmTaskService {
     }
 
     public void setSynced(Entry entry,Realm realm){
+        Timber.i("entry synced with waragi");
 
         realm.beginTransaction();
+        entry.setSynced(true);
 
         realm.copyToRealmOrUpdate (entry);
 
@@ -57,7 +61,7 @@ public class SyncService extends GcmTaskService {
 
     @Override
     public int onRunTask(TaskParams taskParams) {
-        ((BaseActivity) getApplicationContext()).getActivityComponent().inject(this);
+        Timber.i("sync service running on waragi");
         realm = realm.getDefaultInstance();
 
         RealmResults<Entry> entries = realm.where(Entry.class)

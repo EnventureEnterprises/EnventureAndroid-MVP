@@ -136,6 +136,7 @@ public class BaseApplication extends MultiDexApplication {
         });
 
         JodaTimeAndroid.init(this);
+        Once.initialise(this);
 
 
 
@@ -157,6 +158,8 @@ public class BaseApplication extends MultiDexApplication {
 
 
         component().inject(this);
+
+        scheduleSync();
 
     }
 

@@ -120,16 +120,26 @@ public class EnventureApi  {
 
             photo_file =
                     MultipartBody.Part.createFormData ("picture", "img", requestFile);
+
+            return service
+                    .createItem(name, total_cost, quantity, mobile,created,photo_file)
+                    .lift(apiErrorOperator())
+                    .subscribeOn(Schedulers.io());
+        }
+        else{
+            return service
+                    .createItem(name, total_cost, quantity, mobile,created)
+                    .lift(apiErrorOperator())
+                    .subscribeOn(Schedulers.io());
         }
 
 
 
 
 
-        return service
-                .createItem(name, total_cost, quantity, mobile,created,photo_file)
-                .lift(apiErrorOperator())
-                .subscribeOn(Schedulers.io());
+
+
+
 
     }
 

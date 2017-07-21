@@ -77,6 +77,14 @@ public interface EnventureApiService {
                                                  @Part("created") RequestBody created,
                                                  @Part MultipartBody.Part image);
 
+    @POST("items")
+    @Multipart
+    Observable<Response<BaseResponse>> createItem(@Part("name") RequestBody name,
+                                                  @Part("total_cost") RequestBody total_cost,
+                                                  @Part("quantity") RequestBody quantity,
+                                                  @Part("mobile") RequestBody mobile,
+                                                  @Part("created") RequestBody created);
+
 
     @POST("entries")
     @FormUrlEncoded

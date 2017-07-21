@@ -38,18 +38,6 @@ public final class ApiRequestInterceptor implements Interceptor {
             return initialRequest;
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
         return initialRequest.newBuilder()
                 //.header("Accept", "application/json")
                 .header ("Authorization", "Bearer "+ currentUser.getAccessToken())

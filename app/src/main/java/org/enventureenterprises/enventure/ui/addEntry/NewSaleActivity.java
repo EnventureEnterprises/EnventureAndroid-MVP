@@ -54,6 +54,12 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
     @BindView(R.id.quantity)
     EditText quantityEditText;
 
+    @BindView(R.id.amount_paid)
+    EditText amountPaidEditText;
+
+    @BindView(R.id.total_price)
+    EditText totalPriceEditText;
+
     @BindView(R.id.totalcost)
     EditText totalcostEditText;
 
@@ -72,6 +78,12 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
 
     @BindView(R.id.phone_layout)
     TextInputLayout phoneLayout;
+
+    @BindView(R.id.amount_paid_layout)
+    TextInputLayout amountPaidLayout;
+
+    @BindView(R.id.total_price_layout)
+    TextInputLayout totalPriceLayout;
 
     @BindView(R.id.amount_paying_layout)
     TextInputLayout amountPayingLayout;
@@ -138,6 +150,10 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
         amountPayingEditText.addTextChangedListener(new FormTextWatcher(amountPayingEditText));
         amountRemainingEditText.addTextChangedListener(new FormTextWatcher(amountRemainingEditText));
         phoneEditText.addTextChangedListener(new FormTextWatcher(phoneEditText));
+        amountPaidEditText.addTextChangedListener(new FormTextWatcher(amountPaidEditText));
+        amountPaidEditText.addTextChangedListener(new FormTextWatcher(amountPaidEditText));
+        totalPriceEditText.addTextChangedListener(new FormTextWatcher(totalPriceEditText));
+
 
     }
 
@@ -173,7 +189,12 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                 case R.id.phone:
                     validatePhone ();
                     break;
-
+                case R.id.amount_paid:
+                    validateAmountPaid();
+                    break;
+                case R.id.total_price:
+                    validateTotalPrice();
+                    break;
 
             }
         }
@@ -231,6 +252,16 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                 }
 
                 if (! validateTotalCost()) {
+                    return false;
+                }
+
+                if (!validateTotalPrice())
+                {
+                    return false;
+                }
+
+                if(validateAmountPaid())
+                {
                     return false;
                 }
                 realm = getRealm();
@@ -354,33 +385,80 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
         // An item was selected. You can retrieve the selected item using
         paymentType = parent.getItemAtPosition(pos).toString();
 
-        if(paymentType.toString().equals("Installment Addon")){
+        switch (paymentType.toString()) {
 
-            quantityEditText.setVisibility(View.GONE);
-            totalcostEditText.setVisibility(View.GONE);
-            amountPayingEditText.setVisibility(View.VISIBLE);
-            amountRemainingEditText.setVisibility(View.VISIBLE);
-            phoneEditText.setVisibility(View.VISIBLE);
-            phoneLayout.setVisibility(View.VISIBLE);
-            amountPayingLayout.setVisibility(View.VISIBLE);
-            amountRemainingLayout.setVisibility(View.VISIBLE);
-            quantityLayout.setVisibility(View.GONE);
-            totalcostLayout.setVisibility(View.GONE);
+            case "Installment Addon":
+                isInstallmentAddon();
+                break;
+            case "Cash":
+                isCash();
+                break;
+            case "Installment":
+                isInstallment();
 
-        }else{
-
-            quantityEditText.setVisibility(View.VISIBLE);
-            totalcostEditText.setVisibility(View.VISIBLE);
-            amountPayingEditText.setVisibility(View.GONE);
-            amountRemainingEditText.setVisibility(View.GONE);
-            phoneEditText.setVisibility(View.GONE);
-            phoneLayout.setVisibility(View.GONE);
-            amountPayingLayout.setVisibility(View.GONE);
-            amountRemainingLayout.setVisibility(View.GONE);
-            quantityLayout.setVisibility(View.VISIBLE);
-            totalcostLayout.setVisibility(View.VISIBLE);
-
+                break;
+            default:
+                isCash();
+                break;
         }
+
+
+
+
+
+    }
+
+
+    public void isInstallmentAddon(){
+        totalPriceLayout.setVisibility(View.GONE);
+        totalPriceEditText.setVisibility(View.GONE);
+        amountPaidLayout.setVisibility(View.GONE);
+        amountPaidEditText.setVisibility(View.GONE);
+        quantityEditText.setVisibility(View.GONE);
+        totalcostEditText.setVisibility(View.GONE);
+        amountPayingEditText.setVisibility(View.VISIBLE);
+        amountRemainingEditText.setVisibility(View.VISIBLE);
+        phoneEditText.setVisibility(View.VISIBLE);
+        phoneLayout.setVisibility(View.VISIBLE);
+        amountPayingLayout.setVisibility(View.VISIBLE);
+        amountRemainingLayout.setVisibility(View.VISIBLE);
+        quantityLayout.setVisibility(View.GONE);
+        totalcostLayout.setVisibility(View.GONE);
+
+    }
+
+    public void  isCash(){
+        totalPriceLayout.setVisibility(View.GONE);
+        totalPriceEditText.setVisibility(View.GONE);
+        amountPaidLayout.setVisibility(View.GONE);
+        amountPaidEditText.setVisibility(View.GONE);
+        quantityEditText.setVisibility(View.VISIBLE);
+        totalcostEditText.setVisibility(View.VISIBLE);
+        amountPayingEditText.setVisibility(View.GONE);
+        amountRemainingEditText.setVisibility(View.GONE);
+        phoneEditText.setVisibility(View.GONE);
+        phoneLayout.setVisibility(View.GONE);
+        amountPayingLayout.setVisibility(View.GONE);
+        amountRemainingLayout.setVisibility(View.GONE);
+        quantityLayout.setVisibility(View.VISIBLE);
+        totalcostLayout.setVisibility(View.VISIBLE);
+
+    }
+
+    public void isInstallment(){
+        quantityEditText.setVisibility(View.VISIBLE);
+        quantityEditText.setVisibility(View.VISIBLE);
+        totalPriceLayout.setVisibility(View.VISIBLE);
+        totalPriceEditText.setVisibility(View.VISIBLE);
+        amountPaidLayout.setVisibility(View.VISIBLE);
+        amountPaidEditText.setVisibility(View.VISIBLE);
+        amountPayingEditText.setVisibility(View.GONE);
+        amountRemainingEditText.setVisibility(View.GONE);
+        phoneEditText.setVisibility(View.VISIBLE);
+        phoneLayout.setVisibility(View.VISIBLE);
+        amountPayingLayout.setVisibility(View.GONE);
+        amountRemainingLayout.setVisibility(View.GONE);
+
 
     }
 
@@ -437,6 +515,59 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
         }else{
             return true;
         }
+    }
+
+
+    private boolean validateTotalPrice()
+    {
+        if(paymentType.toString().equals("Installment")) {
+            String totalprice = totalPriceEditText.getText().toString();
+            if (totalPriceEditText.getText().toString().trim().isEmpty()) {
+                totalPriceLayout.setErrorEnabled(true);
+                totalPriceEditText.setError("Total Price is a required Field");
+                requestFocus(totalPriceEditText);
+                return false;
+            } else if (Double.parseDouble(totalprice) == Double.NaN) {
+                totalPriceLayout.setErrorEnabled(true);
+                totalPriceEditText.setError("Invalid entry. Enter numbers only");
+                requestFocus(totalPriceEditText);
+                return false;
+
+            } else {
+                totalPriceLayout.setErrorEnabled(false);
+            }
+
+            return true;
+        }else{
+            return true;
+        }
+
+    }
+
+    private boolean validateAmountPaid(){
+        String amuntPaid = amountPaidEditText.getText().toString().trim();
+        if(paymentType.toString().equals("Installment")) {
+
+            if (amuntPaid.isEmpty()) {
+                amountPaidLayout.setErrorEnabled(true);
+                amountPaidEditText.setError("Amount Paid is a required Field");
+                requestFocus(amountPaidEditText);
+                return false;
+            } else if (Double.parseDouble(amuntPaid) == Double.NaN) {
+                amountPaidLayout.setErrorEnabled(true);
+                amountPaidEditText.setError("Invalid entry. Enter numbers only");
+                requestFocus(amountPaidEditText);
+                return false;
+
+            } else {
+                amountPaidLayout.setErrorEnabled(false);
+            }
+
+            return true;
+        }else{
+            return true;
+        }
+
     }
 
     private boolean validateAmountPaying (){

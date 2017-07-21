@@ -102,8 +102,11 @@ public class LoginActivity extends BaseActivity {
 
 
                 if (loginResult.getAccessToken() != null) {
-                    toastMessage = "Success:" + loginResult.getAccessToken().getAccountId();
+
                     getMobile();
+                    toastMessage = String.format(
+                            "Successfully Logged in with %s...",
+                            PrefUtils.getMobile(getApplicationContext()));
 
                     currentUser.login(loginResult.getAccessToken().getToken());
                     onSuccess();
@@ -112,8 +115,8 @@ public class LoginActivity extends BaseActivity {
                    getMobile();
 
                     toastMessage = String.format(
-                            "Success:%s...",
-                            loginResult.getAuthorizationCode().substring(0, 10));
+                            "Successfully Logged in with %s...",
+                            PrefUtils.getMobile(getApplicationContext()));
 
                     currentUser.login(loginResult.getAuthorizationCode().substring(0, 10));
                     onSuccess();

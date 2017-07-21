@@ -306,7 +306,7 @@ public class ApplicationModule {
 
 
         return builder
-                .addInterceptor(apiRequestInterceptor)
+                //.addInterceptor(apiRequestInterceptor) //add request header 
                 .addInterceptor(enventureRequestInterceptor)
                 .build();
     }
