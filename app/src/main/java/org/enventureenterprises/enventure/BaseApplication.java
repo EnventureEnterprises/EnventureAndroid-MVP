@@ -108,7 +108,7 @@ public class BaseApplication extends MultiDexApplication {
 
         if (mobile != null)
         {
-            databasename = mobile+".realm.database45";
+            databasename = mobile+".dub";
         }
 
         RealmConfiguration realmConfig = new RealmConfiguration.Builder()

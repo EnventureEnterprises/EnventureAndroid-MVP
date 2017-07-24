@@ -61,7 +61,7 @@ public class SalesFragment extends BaseFragment {
 
         realm = Realm.getDefaultInstance ();
         RealmResults<Entry> mEntries =
-                realm.where(Entry.class).findAllSorted("created", Sort.DESCENDING);
+                realm.where(Entry.class).equalTo("transaction_type","sales").findAllSorted("created", Sort.DESCENDING);
 
        mSalesAdapter = new SalesAdapter(getActivity(), mEntries, true, true);
 

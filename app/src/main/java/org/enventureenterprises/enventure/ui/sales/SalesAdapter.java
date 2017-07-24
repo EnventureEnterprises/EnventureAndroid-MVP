@@ -76,8 +76,10 @@ public class SalesAdapter extends RealmBasedRecyclerViewAdapter<Entry, SalesAdap
         //holder.hexColorView.setBackgroundColor(Color.parseColor(entry.profile.hexColor));
 
 
-        holder.itemTextView.setText(String.format("%s",
-                entry.getItem().getName()));
+        if(entry.getItem() != null) {
+            holder.itemTextView.setText(String.format("%s",
+                    entry.getItem().getName()));
+        }
 
         holder.quantityTextView.setText(String.format("%s Items",
                 entry.getQuantity()));

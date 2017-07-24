@@ -52,6 +52,14 @@ public class Item extends RealmObject {
 
     }
 
+    public RealmList<Entry> getSales(){
+        return this.sales;
+    }
+
+    public RealmList<Entry> getInventories(){
+        return this.inventory_updates;
+    }
+
 
     public Double getUnitCost(){
         return this.totalCost;
