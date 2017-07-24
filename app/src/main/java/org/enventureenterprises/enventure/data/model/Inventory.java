@@ -57,4 +57,6 @@ public class Inventory extends RealmObject {
         return realm.where(Inventory.class).equalTo("item.name", item.getName()).findFirst();
     }
 
+    
+
 }

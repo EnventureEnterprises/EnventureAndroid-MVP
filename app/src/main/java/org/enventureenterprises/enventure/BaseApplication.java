@@ -104,11 +104,11 @@ public class BaseApplication extends MultiDexApplication {
         Realm.init(this);
 
         String mobile = PrefUtils.getMobile(getApplicationContext());
-        String databasename ="enventure_p.realm";
+        String databasename ="enventure_p.realm.dbd";
 
         if (mobile != null)
         {
-            databasename = mobile+".realm";
+            databasename = mobile+".realm.database45";
         }
 
         RealmConfiguration realmConfig = new RealmConfiguration.Builder()

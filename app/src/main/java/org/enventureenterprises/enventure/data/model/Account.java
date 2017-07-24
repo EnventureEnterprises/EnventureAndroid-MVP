@@ -26,6 +26,8 @@ public class Account extends RealmObject {
 
     private RealmList<Transaction> transactions;
 
+    private RealmList<Entry> entries;
+
     public String getName(){
         return this.name;
     }
@@ -60,6 +62,17 @@ public class Account extends RealmObject {
 
     public static Account byName(Realm realm, String name) {
         return realm.where(Account.class).equalTo("name", name).findFirst();
+    }
+
+    public static Account getOrCreate(Realm realm,String name){
+        Account acc = Account.byName(realm,name);
+        if (acc == null){
+            acc = new Account();
+            acc.setName(name);
+        }
+        return acc;
+
+
     }
 
 }

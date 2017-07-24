@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,11 +13,14 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import org.enventureenterprises.enventure.R;
+import org.enventureenterprises.enventure.data.model.Entry;
 import org.enventureenterprises.enventure.data.model.Item;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
 import org.enventureenterprises.enventure.ui.general.HomeActivity;
+import org.enventureenterprises.enventure.util.GeneralUtils;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,6 +53,9 @@ public class ItemDetail extends BaseActivity{
 
     @BindView(items_in_stock)
     TextView quantityInStock;
+
+    @BindView(R.id.fab)
+    FloatingActionButton addItem;
 
 
     @Override
@@ -88,17 +95,55 @@ public class ItemDetail extends BaseActivity{
         productName.setText(item.getName());
 
         totalStock.setText(item.getTotalCost().toString());
-        quantityInStock.setText(item.getQuantity().toString());
+
+        Double value_in_stock=0.0;
+
 
         quantityInStock.setText(String.format("%s Items in stock",
                 item.getQuantity().toString()));
+
+        Long items_stocked = item.inventory_updates.where().sum("quantity").longValue();
+        Long items_sold  = item.sales.where().sum("quantity").longValue();
+
+        Double value_of_purchase = item.inventory_updates.where().sum("amount").doubleValue();
+
+       RealmResults<Entry> purchases = item.inventory_updates.where().findAll();
+        ArrayList<Double> costPrices = new ArrayList<Double>();
+        Double sum = 0.0;
+
+        for (int i = 0; i<purchases.size(); i++) {
+            Double unitcost = purchases.get(i).getAmount()/purchases.get(i).getQuantity();
+            sum+=unitcost;
+        }
+        Double standardized_unitcost = sum/purchases.size();
+
+        Long items_in_stock = items_stocked - items_sold;
+
+
+
+
+
+
+        Double value_of_stock = standardized_unitcost*items_in_stock;
+
+
+
+        totalStock.setText(GeneralUtils.round(value_of_stock).toString());
+
+
+        quantityInStock.setText(String.format("%s Items in stock",
+                items_in_stock));
+
+
 
 
         if(item != null){
 
 
             actionBar.setTitle (item.getName ());
-            Glide.with(ItemDetail.this).load(new File(Uri.parse(item.getImage()).getPath())).placeholder(new ColorDrawable(Color.GRAY)).into(itemImage);
+            if(item.getImage() != null) {
+                Glide.with(ItemDetail.this).load(new File(Uri.parse(item.getImage()).getPath())).placeholder(new ColorDrawable(Color.GRAY)).into(itemImage);
+            }
         }
 
 
@@ -139,6 +184,17 @@ public class ItemDetail extends BaseActivity{
     {
         Intent intent = new Intent(getApplicationContext(), AddItemActivity.class);
         intent.putExtra("item",item.getId ());
+        intent.putExtra("edit",true);
+        startActivity (intent);
+
+    }
+
+    @OnClick(R.id.fab)
+    public void addItem(){
+
+        Intent intent = new Intent(getApplicationContext(), AddItemActivity.class);
+        intent.putExtra("item",item.getId ());
+        intent.putExtra("add",true);
         startActivity (intent);
 
     }

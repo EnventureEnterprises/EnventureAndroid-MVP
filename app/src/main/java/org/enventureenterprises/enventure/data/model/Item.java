@@ -3,6 +3,7 @@ package org.enventureenterprises.enventure.data.model;
 import java.util.Date;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -17,10 +18,15 @@ public class Item extends RealmObject {
     private Double amount;
     private Double totalCost;
     private Integer quantity;
-    private Integer unitcost;
+    private Double unitcost;
     private String image;
     @PrimaryKey
     private String name;
+
+    public  RealmList<Entry> sales;
+    public  RealmList<Entry> inventory_updates;
+    public  RealmList<Account> debtors;
+    public RealmList<Entry> installment_payments;
 
 
 
@@ -47,6 +53,14 @@ public class Item extends RealmObject {
     }
 
 
+    public Double getUnitCost(){
+        return this.totalCost;
+    }
+    public void setUnitcost(Double unitcost){
+        this.unitcost=unitcost;
+    }
+
+
     public Double getAmount(){
         return this.amount;
     }
@@ -60,6 +74,8 @@ public class Item extends RealmObject {
     public void setCreated(Date created){
         this.created=created;
     }
+
+
 
     public Integer getQuantity(){
         return this.quantity;
@@ -99,6 +115,17 @@ public class Item extends RealmObject {
 
     public static Item byName(Realm realm, String name) {
         return realm.where(Item.class).equalTo("name", name).findFirst();
+    }
+
+    public static Item getOrCreate(Realm realm,String name){
+         Item item = Item.byName(realm,name);
+        if (item == null){
+            item = new Item();
+            item.setName(name);
+        }
+        return item;
+
+
     }
 
 

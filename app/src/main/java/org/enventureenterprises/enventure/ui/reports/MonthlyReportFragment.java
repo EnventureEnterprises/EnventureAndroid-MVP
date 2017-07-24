@@ -18,6 +18,7 @@ import org.enventureenterprises.enventure.ui.inventory.ItemAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -38,6 +39,8 @@ public class MonthlyReportFragment extends Fragment {
 
     @BindView(R.id.title)
     TextView title;
+
+    RealmResults<MonthlyReport> mReports;
 
 
 
@@ -84,10 +87,14 @@ public class MonthlyReportFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         realm = Realm.getDefaultInstance ();
-        RealmResults<MonthlyReport> mReports =
+        mReports =
                 realm.where(MonthlyReport.class).findAllSorted("updated", Sort.DESCENDING);
 
         vpager.setAdapter(new MonthAdapter(getContext(),mReports));
+        if(vpager.getAdapter().getCount()>0) {
+
+            title.setText(mReports.get(vpager.getCurrentItem()).getName());
+        }
 
 
 
@@ -136,6 +143,29 @@ public class MonthlyReportFragment extends Fragment {
 
         //setEmptyText(R.string.no_);
     }
+
+    @OnClick(R.id.forward)
+    public void forward()
+    {
+        int prev = vpager.getCurrentItem() - 1;
+        if (prev>=0 && prev <= vpager.getAdapter().getCount()) {
+            vpager.setCurrentItem(prev);
+            title.setText(mReports.get(prev).getName());
+        }
+
+    }
+
+    @OnClick(R.id.back)
+    public void prev(){
+        int ff = vpager.getCurrentItem() + 1;
+        if(ff<vpager.getAdapter().getCount())
+        {
+            vpager.setCurrentItem(ff);
+            title.setText(mReports.get(ff).getName());
+        }
+
+    }
+
 
 
 }

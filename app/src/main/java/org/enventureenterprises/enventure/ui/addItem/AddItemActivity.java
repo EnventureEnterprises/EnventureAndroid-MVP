@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,8 +31,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.data.model.DailyReport;
+import org.enventureenterprises.enventure.data.model.Entry;
 import org.enventureenterprises.enventure.data.model.Item;
 import org.enventureenterprises.enventure.data.model.MonthlyReport;
 import org.enventureenterprises.enventure.data.model.WeeklyReport;
@@ -55,6 +60,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
+import io.realm.Sort;
 import timber.log.Timber;
 
 /**
@@ -71,7 +77,7 @@ public class AddItemActivity extends BaseActivity {
     @Inject
     EnventureApi client;
 
-    Item item;
+    private Item item;
 
 
     @BindView(R.id.camera)
@@ -122,6 +128,11 @@ public class AddItemActivity extends BaseActivity {
 
     private Uri photo;
 
+    private boolean is_edit;
+    private boolean is_add;
+
+    Entry entry_to_edit;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,20 +165,43 @@ public class AddItemActivity extends BaseActivity {
             if (extras != null) {
                 item_id = extras.getLong("item");
                 item_name = extras.getString("name");
+                is_edit = extras.getBoolean("edit");
+                is_add = extras.getBoolean("add");
+
 
             }
 
         } else {
             item_id = savedInstanceState.getLong("item");
             item_name = savedInstanceState.getString("name");
+            is_edit = savedInstanceState.getBoolean("edit");
+            is_add = savedInstanceState.getBoolean("add");
         }
 
         item = realm.where(Item.class).equalTo ("created_ts",item_id).findFirst ();
         if(item != null) {
 
             nameEditText.setText(item.getName());
-            quantityEditText.setText(item.getQuantity().toString());
-            totalCostEditText.setText(item.getTotalCost().toString());
+
+
+            if(is_add == true){
+                nameEditText.setEnabled(false);
+                getSupportActionBar().setTitle(String.format("Add Inventory to %s",item.getName()));
+            }
+
+            if (is_edit == true)
+            {
+                nameEditText.setEnabled(false);
+                //get last entry
+                getSupportActionBar().setTitle(String.format("Editing Item  %s",item.getName()));
+                quantityEditText.setText(item.getQuantity().toString());
+                totalCostEditText.setText(item.getTotalCost().toString());
+
+                entry_to_edit = item.inventory_updates.where().findAllSorted("created", Sort.DESCENDING).first();
+                if(item.getImage() != null) {
+                    Glide.with(AddItemActivity.this).load(new File(Uri.parse(item.getImage()).getPath())).placeholder(new ColorDrawable(Color.GRAY)).into(imageView);
+                }
+            }
         }
 
 
@@ -381,20 +415,22 @@ public class AddItemActivity extends BaseActivity {
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem itm) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        int id = itm.getItemId();
 
         //noinspection SimplifiableIfStatement
         switch(id){
             case R.id.save:
 
-                if (!validateName()) {
-                    return false;
-                }
-
+               if(item == null)
+               {
+                   if (!validateName()) {
+                       return false;
+                   }
+               }
 
 
                 if (!validateQuantity()) {
@@ -405,80 +441,153 @@ public class AddItemActivity extends BaseActivity {
                     return false;
                 }
 
-
-                realm = Realm.getDefaultInstance ();
-                realm.beginTransaction();
                 DateTime d = new DateTime();
+                String day_name = d.toString(DateTimeFormat.mediumDate().withLocale(Locale.getDefault()).withZoneUTC());
+                String week_name =  WeeklyReport.getWeekName(d);
+                String month_name = d.toString("MMM-Y");
+
                 DateTimeFormatter fmt = DateTimeFormat.forPattern("EEEE");
-                Item inventoryItem = new Item ();
+
                 DailyReport drep = realm.where(DailyReport.class)
-                        .equalTo("name", fmt.withLocale(Locale.getDefault()).print(d))
+                        .equalTo("name", d.toString(DateTimeFormat.mediumDate().withLocale(Locale.getDefault()).withZoneUTC()))
                         .findFirst();
-                WeeklyReport wrep = realm.where(WeeklyReport.class)
-                        .equalTo("name", Integer.toString(d.getWeekOfWeekyear()))
-                        .findFirst();
+                WeeklyReport wrep = WeeklyReport.byName(realm, WeeklyReport.getWeekName(d));
                 MonthlyReport mrep = realm.where(MonthlyReport.class)
-                        .equalTo("name", d.toString("MMM"))
+                        .equalTo("name", d.toString("MMM-Y"))
                         .findFirst();
 
 
                 if (drep == null) {
                     drep = new DailyReport();
-                    drep.setName(fmt.withLocale(Locale.getDefault()).print(d));
+                    drep.setName(d.toString(DateTimeFormat.mediumDate().withLocale(Locale.getDefault()).withZoneUTC()));
                 }
                 if (wrep == null) {
                     wrep = new WeeklyReport();
-                    wrep.setName(Integer.toString(d.getWeekOfWeekyear()));
+
+                    wrep.setName(WeeklyReport.getWeekName(d));
                 }
 
                 if (mrep == null) {
                     mrep = new MonthlyReport();
-                    mrep.setName(d.toString("MMM"));
-                    mrep = new MonthlyReport();
+                    mrep.setName(d.toString("MMM-Y"));
                 }
-                inventoryItem.setName(nameEditText.getText().toString());
-                inventoryItem.setQuantity(Integer.parseInt(quantityEditText.getText().toString()));
-                inventoryItem.setTotalCost(Double.parseDouble(totalCostEditText.getText().toString()));
-                if (photo != null) {
-                    inventoryItem.setImage(photo.toString());
+
+                if (is_edit == true)
+                {
+                    realm.beginTransaction();
+                    entry_to_edit.setQuantity(Integer.parseInt(quantityEditText.getText().toString()));
+                    entry_to_edit.setAmount(Double.parseDouble(totalCostEditText.getText().toString()));
+                    entry_to_edit.setSynced(false);
+                    realm.copyToRealmOrUpdate(entry_to_edit);
+                    Intent intent = new Intent(AddItemActivity.this, ItemDetail.class);
+                    intent.putExtra("item_id", item.getCreatedTs());
+                    intent.putExtra("item", item.getCreatedTs());
+                    intent.putExtra("item_name", item.getName());
+                    startActivityWithTransition(intent, R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
+                    realm.commitTransaction();
                 }
-                inventoryItem.setSynced(false);
-                inventoryItem.setCreated(d.toDate());
+                else if (is_add == true)
+                {
+                    realm.beginTransaction();
+                    Entry entry = realm.createObject(Entry.class, d.getMillis());
 
-                inventoryItem.setCreatedTs(d.getMillis());
-
-                mrep.setTotalSpent(Double.parseDouble(totalCostEditText.getText().toString()));
-                mrep.setUpdated(d.toDate());
-
-
-
-                drep.setTotalSpent(Double.parseDouble(totalCostEditText.getText().toString()));
-                drep.setUpdated(d.toDate());
-
-
-
-                wrep.setTotalSpent(Double.parseDouble(totalCostEditText.getText().toString()));
-                wrep.setUpdated(d.toDate());
-
-                realm.copyToRealmOrUpdate (inventoryItem);
-                realm.copyToRealmOrUpdate (drep);
-                realm.copyToRealmOrUpdate (mrep);
-                realm.copyToRealmOrUpdate (wrep);
-
-
-                realm.commitTransaction();
-
-                //client.createItem(inventoryItem).compose(Transformers.neverError()).subscribe();
+                    entry.setItem(item);
+                    entry.setQuantity(Integer.parseInt(quantityEditText.getText().toString()));
+                    entry.setAmount(Double.parseDouble(totalCostEditText.getText().toString()));
+                    entry.setCreated(d.toDateTime().toDate());
+                    entry.setEntryMonth(month_name);
+                    entry.setEntryWeek(week_name);
+                    entry.setEntryDay(day_name);
+                    //entry.setCreatedTs(d.getMillis());
+                    entry.setSynced(false);
+                    entry.setTransactionType("inventory");
+                    item.inventory_updates.add(entry);
 
 
 
+                    drep.updateProfit(d,realm);
+                    wrep.updateProfit(d,realm);
+                    mrep.updateProfit(d,realm);
+                    realm.commitTransaction();
+
+                    Intent intent = new Intent(AddItemActivity.this, ItemDetail.class);
+                    intent.putExtra("item_id", item.getCreatedTs());
+                    intent.putExtra("item", item.getCreatedTs());
+                    intent.putExtra("item_name", item.getName());
+                    startActivityWithTransition(intent, R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
+
+                }
 
 
-                Intent intent = new Intent(AddItemActivity.this, ItemDetail.class);
-                intent.putExtra("item_id",inventoryItem.getCreatedTs());
-                intent.putExtra("item",inventoryItem.getCreatedTs());
-                intent.putExtra("item_name",inventoryItem.getName());
-                startActivityWithTransition(intent, R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
+                else {
+
+
+                    realm = getRealm();
+                    realm.beginTransaction();
+
+                    Item inventoryItem = realm.createObject(Item.class, nameEditText.getText().toString());
+                    //inventoryItem.setName(nameEditText.getText().toString());
+                    inventoryItem.setQuantity(Integer.parseInt(quantityEditText.getText().toString()));
+                    inventoryItem.setTotalCost(Double.parseDouble(totalCostEditText.getText().toString()));
+
+                    Entry entry = realm.createObject(Entry.class, d.getMillis());
+                    realm.copyToRealmOrUpdate(inventoryItem);
+
+                    entry.setItem(inventoryItem);
+                    entry.setQuantity(Integer.parseInt(quantityEditText.getText().toString()));
+                    entry.setAmount(Double.parseDouble(totalCostEditText.getText().toString()));
+                    entry.setCreated(d.toDateTime().toDate());
+
+                    //entry.setCreatedTs(d.getMillis());
+                    entry.setSynced(false);
+
+                    entry.setTransactionType("inventory");
+
+                    if (photo != null) {
+                        inventoryItem.setImage(photo.toString());
+                    }
+                    inventoryItem.setSynced(false);
+                    inventoryItem.setCreated(d.toDate());
+
+                    inventoryItem.setCreatedTs(d.getMillis());
+
+                    mrep.setTotalSpent(Double.parseDouble(totalCostEditText.getText().toString()));
+                    mrep.setUpdated(d.toDate());
+
+
+                    drep.setTotalSpent(Double.parseDouble(totalCostEditText.getText().toString()));
+                    drep.setUpdated(d.toDate());
+
+
+                    wrep.setTotalSpent(Double.parseDouble(totalCostEditText.getText().toString()));
+                    wrep.setUpdated(d.toDate());
+
+                    inventoryItem.inventory_updates.add(entry);
+                    realm.copyToRealmOrUpdate(inventoryItem);
+                    realm.commitTransaction();
+                    realm.beginTransaction();
+
+                    drep.updateProfit(d,realm);
+                    wrep.updateProfit(d,realm);
+                    mrep.updateProfit(d,realm);
+
+                    realm.copyToRealmOrUpdate(drep);
+                    realm.copyToRealmOrUpdate(mrep);
+                    realm.copyToRealmOrUpdate(wrep);
+
+
+                    realm.commitTransaction();
+
+
+                    //client.createItem(inventoryItem).compose(Transformers.neverError()).subscribe();
+
+
+                    Intent intent = new Intent(AddItemActivity.this, ItemDetail.class);
+                    intent.putExtra("item_id", inventoryItem.getCreatedTs());
+                    intent.putExtra("item", inventoryItem.getCreatedTs());
+                    intent.putExtra("item_name", inventoryItem.getName());
+                    startActivityWithTransition(intent, R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
+                }
 
                 break;
             case android.R.id.home:
@@ -490,7 +599,7 @@ public class AddItemActivity extends BaseActivity {
 
         }
 
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(itm);
     }
 
 

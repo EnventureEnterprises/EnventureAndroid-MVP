@@ -16,8 +16,6 @@ import javax.inject.Inject;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-import static java.lang.Math.round;
-
 /**
  * Created by mossplix on 7/11/17.
  */
@@ -49,8 +47,14 @@ public class MonthAdapter  extends PagerAdapter {
 
 
         TextView profit = (TextView)layout.findViewById(R.id.profit);
+
+
         TextView totalearned = (TextView)layout.findViewById(R.id.total_earned);
         TextView totalspent = (TextView)layout.findViewById(R.id.total_spent);
+
+
+
+
 
 
 
@@ -73,6 +77,7 @@ public class MonthAdapter  extends PagerAdapter {
     @Override
     public void destroyItem(ViewGroup collection, int position, Object view) {
         collection.removeView((View) view);
+
     }
 
     @Override
@@ -87,15 +92,18 @@ public class MonthAdapter  extends PagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
+        MonthlyReport mr = reports.get(position);
 
 
-        return "";
+        return mr.getName();
     }
 
     @Override
     public float getPageWidth(int position) {
         return(1f);
     }
+
+
 
 
 

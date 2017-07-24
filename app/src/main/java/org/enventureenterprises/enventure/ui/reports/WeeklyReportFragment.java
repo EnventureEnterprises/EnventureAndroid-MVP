@@ -7,16 +7,18 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.data.model.Item;
-import org.enventureenterprises.enventure.data.model.MonthlyReport;
+import org.enventureenterprises.enventure.data.model.WeeklyReport;
 import org.enventureenterprises.enventure.lib.RealmRecyclerView;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
 import org.enventureenterprises.enventure.ui.inventory.ItemAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -35,6 +37,12 @@ public class WeeklyReportFragment extends Fragment {
 
     @BindView(R.id.pager)
     ViewPager vpager;
+
+    @BindView(R.id.title)
+    TextView title;
+
+    RealmResults<WeeklyReport> mReports;
+
 
     // TODO: Rename and change types and number of parameters
     public static WeeklyReportFragment newInstance() {
@@ -75,10 +83,13 @@ public class WeeklyReportFragment extends Fragment {
         mRecyclerView.setAdapter(mInventoryAdapter);
 
         realm = Realm.getDefaultInstance ();
-        RealmResults<MonthlyReport> mReports =
-                realm.where(MonthlyReport.class).findAllSorted("updated", Sort.DESCENDING);
+        mReports =
+                realm.where(WeeklyReport.class).findAllSorted("updated", Sort.DESCENDING);
 
-        vpager.setAdapter(new MonthAdapter(getContext(),mReports));
+        vpager.setAdapter(new WeekAdapter(getContext(),mReports));
+        if(vpager.getAdapter().getCount()>0) {
+            title.setText(mReports.get(vpager.getCurrentItem()).getName());
+        }
 
 
 
@@ -126,6 +137,29 @@ public class WeeklyReportFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         //setEmptyText(R.string.no_);
+    }
+
+
+    @OnClick(R.id.forward)
+    public void forward()
+    {
+        int prev = vpager.getCurrentItem() - 1;
+        if (prev>=0 && prev <= vpager.getAdapter().getCount()) {
+            vpager.setCurrentItem(prev);
+            title.setText(mReports.get(prev).getName());
+        }
+
+    }
+
+    @OnClick(R.id.back)
+    public void prev(){
+        int ff = vpager.getCurrentItem() + 1;
+        if(ff<vpager.getAdapter().getCount())
+        {
+            vpager.setCurrentItem(ff);
+            title.setText(mReports.get(ff).getName());
+        }
+
     }
 
 

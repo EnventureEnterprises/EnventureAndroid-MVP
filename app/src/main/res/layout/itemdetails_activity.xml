@@ -80,6 +80,18 @@
 
     <include layout="@layout/itemdetails_content" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_anchor="@id/appbar"
+
+        app:layout_anchorGravity="bottom|end"
+        android:clickable="true"
+
+
+        android:src="@drawable/ic_add" />
+
 
 
 </android.support.design.widget.CoordinatorLayout>

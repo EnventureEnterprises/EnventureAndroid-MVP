@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 
@@ -37,6 +36,8 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+
+import static java.lang.Double.parseDouble;
 
 /**
  * Created by mossplix on 7/8/17.
@@ -260,14 +261,105 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                     return false;
                 }
 
-                if(validateAmountPaid())
+                if(!validateAmountPaid())
                 {
                     return false;
                 }
+
+                Double amount;
+
+
+                switch (paymentType.toString()) {
+
+                    case "Installment Addon":
+                        amount = parseDouble(amountPayingEditText.getText().toString());
+
+                        break;
+                    case "Cash":
+
+                        amount = parseDouble(totalcostEditText.getText().toString());
+                        break;
+                    case "Installment":
+                        //create account with phone number and add as entry
+                        amount = parseDouble(amountPaidEditText.getText().toString());
+
+                        break;
+                    default:
+                        amount = parseDouble(totalcostEditText.getText().toString());
+
+                        break;
+                }
+
                 realm = getRealm();
-                realm.beginTransaction();
                 DateTime d = new DateTime();
+                int quantity=0;
+
+                String qty = quantityEditText.getText().toString().trim();
+                String tt = totalcostEditText.getText().toString().trim();
+                Double totalCost = 0.0;
+                if(!qty.isEmpty()||qty != null){
+                    quantity = Integer.parseInt(quantityEditText.getText().toString());
+                }
+
+                if(!tt.isEmpty()||tt != null)
+                {
+                    totalCost = parseDouble(tt);
+                }
+
+
+                //Entry.newSale(item, d, paymentType,Integer.parseInt(quantityEditText.getText().toString()),amount,phoneEditText.getText().toString(),Double.parseDouble(totalcostEditText.getText().toString()),getRealm());
+                Entry.newSale(item, d, paymentType,quantity,amount,phoneEditText.getText().toString(),totalCost,realm);
+
+
+                String day_name = d.toString(DateTimeFormat.mediumDate().withLocale(Locale.getDefault()).withZoneUTC());
+                String week_name =  WeeklyReport.getWeekName(d);
+                String month_name = d.toString("MMM-Y");
+
                 DateTimeFormatter fmt = DateTimeFormat.forPattern("EEEE");
+
+                DailyReport drep = realm.where(DailyReport.class)
+                        .equalTo("name", d.toString(DateTimeFormat.mediumDate().withLocale(Locale.getDefault()).withZoneUTC()))
+                        .findFirst();
+                WeeklyReport wrep = WeeklyReport.byName(realm, WeeklyReport.getWeekName(d));
+                MonthlyReport mrep = realm.where(MonthlyReport.class)
+                        .equalTo("name", d.toString("MMM-Y"))
+                        .findFirst();
+
+                realm.beginTransaction();
+
+
+                if (drep == null) {
+                    drep = new DailyReport();
+                    drep.setName(d.toString(DateTimeFormat.mediumDate().withLocale(Locale.getDefault()).withZoneUTC()));
+                }
+                if (wrep == null) {
+                    wrep = new WeeklyReport();
+
+                    wrep.setName(WeeklyReport.getWeekName(d));
+                }
+
+                if (mrep == null) {
+                    mrep = new MonthlyReport();
+                    mrep.setName(d.toString("MMM-Y"));
+                }
+
+
+
+
+                drep.updateProfit(d,realm);
+                wrep.updateProfit(d,realm);
+                mrep.updateProfit(d,realm);
+
+
+
+                realm.copyToRealmOrUpdate (drep);
+                realm.copyToRealmOrUpdate (mrep);
+                realm.copyToRealmOrUpdate (wrep);
+                realm.commitTransaction();
+
+
+
+              /*  DateTimeFormatter fmt = DateTimeFormat.forPattern("EEEE");
                 Entry entry = new Entry ();
                 DailyReport drep = realm.where(DailyReport.class)
                         .equalTo("name", fmt.withLocale(Locale.getDefault()).print(d))
@@ -314,11 +406,6 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                 item.setQuantity(current_quantity-Integer.parseInt(quantityEditText.getText().toString()));
 
 
-
-
-
-
-
                 entry.setCreated(d.toDate());
                 entry.setEntryMonth(d.getDayOfMonth());
                 entry.setEntryYear(d.getYear());
@@ -355,7 +442,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
 
 
                 realm.commitTransaction();
-
+*/
 
 
                 final Intent intent = new Intent(NewSaleActivity.this, NewSaleActivity.class);
@@ -447,7 +534,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
 
     public void isInstallment(){
         quantityEditText.setVisibility(View.VISIBLE);
-        quantityEditText.setVisibility(View.VISIBLE);
+        quantityLayout.setVisibility(View.VISIBLE);
         totalPriceLayout.setVisibility(View.VISIBLE);
         totalPriceEditText.setVisibility(View.VISIBLE);
         amountPaidLayout.setVisibility(View.VISIBLE);
@@ -458,6 +545,8 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
         phoneLayout.setVisibility(View.VISIBLE);
         amountPayingLayout.setVisibility(View.GONE);
         amountRemainingLayout.setVisibility(View.GONE);
+        totalcostEditText.setVisibility(View.GONE);
+        totalcostLayout.setVisibility(View.GONE);
 
 
     }
@@ -471,22 +560,50 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
 
 
     private boolean validateQuantity() {
-        if(paymentType.toString().equals("Cash")) {
+        if(paymentType.toString().equals("Cash") || paymentType.toString().equals("Installment")) {
             String quantity = quantityEditText.getText().toString();
             if (quantity.trim().isEmpty()) {
                 quantityLayout.setErrorEnabled(true);
                 quantityEditText.setError("Quantity is a required Field");
                 requestFocus(quantityEditText);
                 return false;
-            } else if (Double.parseDouble(quantity) == Double.NaN) {
+            } else if (parseDouble(quantity) == Double.NaN) {
                 quantityLayout.setErrorEnabled(true);
                 quantityEditText.setError("Invalid entry. Enter numbers only");
                 requestFocus(quantityEditText);
                 return false;
             } else {
-                quantityLayout.setErrorEnabled(false);
-            }
 
+
+                Long items_stocked = item.inventory_updates.where().sum("quantity").longValue();
+                Long items_sold  = item.sales.where().sum("quantity").longValue();
+                Long quantity_in_stock =  items_stocked - items_sold;
+                Double val = Double.parseDouble(quantity);
+
+                String error_message = "";
+
+                if(val > quantity_in_stock){
+
+                    error_message = "You do not have enough items in stock";
+                }
+                else if(val <0 ) {
+                    error_message = "Enter a positive number";
+
+                }
+
+                else{
+                    quantityLayout.setErrorEnabled(false);
+                    return true;
+
+                }
+
+                quantityLayout.setErrorEnabled(true);
+                quantityEditText.setError(error_message);
+                requestFocus(quantityEditText);
+
+
+            }
+            quantityLayout.setErrorEnabled(false);
             return true;
         }else{
             return true;
@@ -501,7 +618,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                 totalcostEditText.setError("Total Cost is a required Field");
                 requestFocus(totalcostEditText);
                 return false;
-            } else if (Double.parseDouble(totalcost) == Double.NaN) {
+            } else if (parseDouble(totalcost) == Double.NaN) {
                 totalcostLayout.setErrorEnabled(true);
                 totalcostEditText.setError("Invalid entry. Enter numbers only");
                 requestFocus(totalcostEditText);
@@ -527,7 +644,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                 totalPriceEditText.setError("Total Price is a required Field");
                 requestFocus(totalPriceEditText);
                 return false;
-            } else if (Double.parseDouble(totalprice) == Double.NaN) {
+            } else if (parseDouble(totalprice) == Double.NaN) {
                 totalPriceLayout.setErrorEnabled(true);
                 totalPriceEditText.setError("Invalid entry. Enter numbers only");
                 requestFocus(totalPriceEditText);
@@ -553,7 +670,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                 amountPaidEditText.setError("Amount Paid is a required Field");
                 requestFocus(amountPaidEditText);
                 return false;
-            } else if (Double.parseDouble(amuntPaid) == Double.NaN) {
+            } else if (parseDouble(amuntPaid) == Double.NaN) {
                 amountPaidLayout.setErrorEnabled(true);
                 amountPaidEditText.setError("Invalid entry. Enter numbers only");
                 requestFocus(amountPaidEditText);
@@ -579,7 +696,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                 amountPayingEditText.setError("Total Cost is a required Field");
                 requestFocus(amountPayingEditText);
                 return false;
-            } else if (Double.parseDouble(amountPaying) == Double.NaN) {
+            } else if (parseDouble(amountPaying) == Double.NaN) {
                 amountPayingLayout.setErrorEnabled(true);
                 amountPayingEditText.setError("Invalid entry. Enter numbers only");
                 requestFocus(amountPayingEditText);
@@ -604,7 +721,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                 amountRemainingEditText.setError("Amount Remaining is required");
                 requestFocus(amountRemainingEditText);
                 return false;
-            } else if (Double.parseDouble(amountRemaining) == Double.NaN) {
+            } else if (parseDouble(amountRemaining) == Double.NaN) {
                 amountRemainingLayout.setErrorEnabled(true);
                 amountRemainingEditText.setError("Invalid entry. Enter numbers only");
                 requestFocus(amountRemainingEditText);
@@ -623,7 +740,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
     }
 
     private boolean validatePhone (){
-        if(paymentType.toString().equals("Installment Addon")) {
+        if(paymentType.toString().equals("Installment Addon") || paymentType.toString().equals("Installment")) {
 
 
             String phone = phoneEditText.getText().toString();
@@ -637,8 +754,21 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
 
                 PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
                 try {
-                    Phonenumber.PhoneNumber ugNumberProto = phoneUtil.parse(phone, "UGA");
-                } catch (NumberParseException e) {
+                    Phonenumber.PhoneNumber ugNumberProto = phoneUtil.parse(phone, "UG");
+                    if (Long.toString(ugNumberProto.getNationalNumber()).length()>=9 ) {
+
+                        if (phoneUtil.isValidNumber(ugNumberProto)) {
+                            phoneLayout.setErrorEnabled(false);
+                            return true;
+                        } else {
+                            phoneLayout.setErrorEnabled(true);
+                            phoneEditText.setError("Please enter a valid phone number");
+                            requestFocus(phoneEditText);
+                            return false;
+
+                        }
+                    }
+                } catch (Exception e) {
 
                     phoneLayout.setErrorEnabled(true);
                     phoneEditText.setError("Please enter a valid phone number");
@@ -650,13 +780,13 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
             }
 
 
-            phoneLayout.setErrorEnabled(false);
 
-            return true;
         }
-        else{
-            return true;
-        }
+
+
+        phoneLayout.setErrorEnabled(false);
+
+        return true;
 
     }
 

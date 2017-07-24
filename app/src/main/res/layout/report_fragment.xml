@@ -21,13 +21,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_below="@+id/header_container"
             android:layout_marginLeft="@dimen/md_keylines"
             android:layout_marginRight="@dimen/md_keylines"
             android:layout_marginTop="8dp"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
             android:stateListAnimator="@anim/selector_raise"
+            app:cardBackgroundColor="#4dbcd4"
             app:cardCornerRadius="4dp" >
 
 
@@ -35,12 +35,12 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/rect">
+               >
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_marginBottom="@dimen/grid_1"
+
                     android:layout_gravity="center"
                     android:layout_height="wrap_content">
 
@@ -121,23 +121,18 @@
                 android:layout_marginRight="@dimen/md_keylines"
                 android:layout_marginTop="8dp"
                 android:clickable="false"
-                android:background="@color/colorPrimary"
                 android:stateListAnimator="@anim/selector_raise"
+                app:cardBackgroundColor="#4dbcd4"
+                app:cardUseCompatPadding="true"
                 app:cardCornerRadius="4dp" >
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/rect" >
+                     >
 
 
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:layout_gravity="center"
-                        android:layout_height="wrap_content">
+
 
 
 
@@ -145,13 +140,15 @@
                             android:id="@+id/total_earned_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/grid_4"
+                            android:textAlignment="center"
+
 
                             android:layout_gravity="center"
                             android:gravity="center_horizontal"
 
                             tools:text="Total Earned"
                             android:text="Total Earned"
+                            android:layout_centerHorizontal="true"
                             android:textSize="20sp"
                             android:maxLines="1"
                             android:paddingBottom="@dimen/grid_1"
@@ -182,9 +179,10 @@
                             android:layout_below="@+id/view2"
                             android:paddingBottom="@dimen/grid_1"
                             android:paddingTop="@dimen/grid_1"
-                            android:layout_marginLeft="@dimen/grid_4"
+                            android:textAlignment="center"
 
                             android:layout_gravity="center"
+                            android:layout_centerHorizontal="true"
 
 
                             android:maxLines="1"
@@ -198,10 +196,6 @@
                     </RelativeLayout>
 
 
-
-
-
-                </RelativeLayout>
 
 
 
@@ -225,7 +219,9 @@
                 android:layout_marginRight="@dimen/md_keylines"
                 android:layout_marginTop="8dp"
                 android:clickable="true"
-                android:background="@color/colorPrimaryDark"
+                app:cardBackgroundColor="@color/colorPrimaryDark"
+                app:cardUseCompatPadding="true"
+
 
                 android:foreground="?attr/selectableItemBackground"
                 android:stateListAnimator="@anim/selector_raise"
@@ -233,13 +229,7 @@
 
 
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/rect2"
 
-
-                    >
 
 
 
@@ -248,13 +238,8 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
 
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
-
-                        android:layout_alignParentRight="true"
 
                         android:layout_gravity="center"
-
                         android:layout_height="wrap_content">
 
 
@@ -266,7 +251,8 @@
 
                             android:layout_gravity="center"
                             android:gravity="center_horizontal"
-                            android:layout_marginLeft="@dimen/grid_4"
+                            android:textAlignment="center"
+                            android:layout_centerHorizontal="true"
 
                             tools:text="Total Spent"
                             android:text="Total spent"
@@ -301,7 +287,8 @@
                             android:paddingBottom="@dimen/grid_1"
                             android:paddingTop="@dimen/grid_1"
                             android:layout_gravity="center"
-                            android:layout_marginLeft="@dimen/grid_4"
+                            android:textAlignment="center"
+                            android:layout_centerHorizontal="true"
 
 
                             android:maxLines="1"
@@ -311,14 +298,12 @@
                             android:textSize="30sp"
 
 
+
                             />
                     </RelativeLayout>
 
 
 
-
-
-                </RelativeLayout>
 
 
 
