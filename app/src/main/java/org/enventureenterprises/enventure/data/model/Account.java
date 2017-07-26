@@ -24,9 +24,12 @@ public class Account extends RealmObject {
 
     private Integer quantity;
 
+    private Double total_price;
+
     private RealmList<Transaction> transactions;
 
     private RealmList<Entry> entries;
+    private RealmList<Entry> installments;
 
     public String getName(){
         return this.name;
@@ -56,6 +59,13 @@ public class Account extends RealmObject {
         this.balance=balance;
     }
 
+    public Double getTotalPrice(){
+        return this.total_price;
+    }
+    public void setTotalPrice(Double total_price){
+        this.total_price=total_price;
+    }
+
     public void addTransaction(Transaction t) {
         transactions.add(t);
     }
@@ -73,6 +83,14 @@ public class Account extends RealmObject {
         return acc;
 
 
+    }
+
+    public void setInstallment(Entry entry){
+        this.installments.add(entry);
+    }
+
+    public RealmList<Entry> getInstallments(){
+        return this.installments;
     }
 
 }

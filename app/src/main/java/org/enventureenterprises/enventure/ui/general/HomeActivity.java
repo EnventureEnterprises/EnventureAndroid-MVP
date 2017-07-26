@@ -29,11 +29,11 @@ import butterknife.ButterKnife;
 public class HomeActivity extends BaseActivity implements BottomNavigationViewEx.OnNavigationItemSelectedListener {
     @BindView(R.id.bottomNavigation)
     BottomNavigationViewEx bottomNavigation;
-    private static final int SALES = 1;
-    private static final int INVENTORY =0;
-    private static final int REPORTS = 2;
-    private static final int PROFILE = 3;
-    private int navType =SALES;
+    public static final int SALES = 1;
+    public static final int INVENTORY =0;
+    public static final int REPORTS = 2;
+    public static final int PROFILE = 3;
+    private int navType;
     private int currentSelected = 0;
 
     @Override
@@ -52,6 +52,22 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
                     new ColorDrawable(getResources().getColor(android.R.color.transparent)));
         }
 
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if (extras != null) {
+                navType = extras.getInt("navTab");
+
+
+            }
+
+        } else {
+            navType = savedInstanceState.getInt("navTab");
+
+
+        }
+
+
+
 
 
         bottomNavigation.setOnNavigationItemSelectedListener(this);
@@ -59,10 +75,17 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
         bottomNavigation.enableShiftingMode(false);
         bottomNavigation.enableItemShiftingMode(false);
         if (savedInstanceState == null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.home_container, InventoryFragment.newInstance(), InventoryFragment.TAG)
-                    .commit();
+
+
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.home_container, InventoryFragment.newInstance(), InventoryFragment.TAG)
+                        .commit();
+
+        }
+
+        if (navType == SALES){
+            onNavigationChanged(SALES);
         }
 
 

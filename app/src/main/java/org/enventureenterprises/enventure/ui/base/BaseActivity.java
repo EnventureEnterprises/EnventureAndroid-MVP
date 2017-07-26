@@ -47,9 +47,15 @@ import org.enventureenterprises.enventure.BaseApplication;
 import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.data.Environment;
 import org.enventureenterprises.enventure.data.local.SectionsPagerAdapter;
+import org.enventureenterprises.enventure.data.model.Account;
+import org.enventureenterprises.enventure.data.model.Entry;
+import org.enventureenterprises.enventure.data.model.Item;
 import org.enventureenterprises.enventure.ui.general.HomeActivity;
+import org.joda.time.DateTime;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.BehaviorSubject;
@@ -88,23 +94,49 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
     private GcmNetworkManager mGcmNetworkManager;
 
     private Realm realm;
-
-
-
+    RealmResults<Entry> entries;
+    RealmResults<Item> items;
 
     @Override
     @CallSuper
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         lifecycleSubject.onNext(ActivityEvent.CREATE);
-
-
         getActivityComponent().inject(this);
 
 
 
 
+
+
+
+
+
+        realm = Realm.getDefaultInstance();
+
+
+        if(realm != null) {
+            items = realm.where(Item.class).findAllAsync();
+            entries = realm.where(Entry.class).findAllAsync();
+
+            entries.addChangeListener(new RealmChangeListener<RealmResults<Entry>>() {
+                @Override
+                public void onChange(RealmResults<Entry> entries) {
+                    Entry.updateReports(new DateTime());
+                }
+            });
+
+
+            items.addChangeListener(new RealmChangeListener<RealmResults<Item>>() {
+                @Override
+                public void onChange(RealmResults<Item> items) {
+                    Entry.updateReports(new DateTime());
+                }
+            });
+        }
     }
+
+
 
 
 
@@ -292,6 +324,8 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
     private void showMessage(String msg) {
         ViewGroup container = (ViewGroup) findViewById(android.R.id.content);
         Snackbar.make(container, msg, Snackbar.LENGTH_SHORT).show();
+
+
     }
 
 
@@ -353,7 +387,7 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
     @CallSuper
     protected void onStart() {
         super.onStart();
-        realm = Realm.getDefaultInstance();
+         realm = Realm.getDefaultInstance();
         lifecycleSubject.onNext(ActivityEvent.START);
         back
                 .compose(bindUntilEvent(ActivityEvent.STOP))
@@ -380,6 +414,10 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
     @CallSuper
     protected void onPause() {
         lifecycleSubject.onNext(ActivityEvent.PAUSE);
+
+        if(realm != null) {
+            getRealm().removeAllChangeListeners();
+        }
         super.onPause();
     }
 
@@ -443,6 +481,45 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
     Environment environment() {
         return component().environment();
     }
+
+
+
+    public void setupAccounts()
+    {
+
+        Realm realm = getRealm();
+        getRealm().beginTransaction();
+        Account salesAccount = new Account ();
+        Account accountReceivable = new Account ();
+        Account inventoryAccount = new Account ();
+        DateTime d = new DateTime();
+
+        salesAccount.setName(Account.SALES_ACCOUNT);
+        salesAccount.setBalance(0.0);
+        salesAccount.setQuantity(0);
+        salesAccount.setCreated(d.toDate());
+        accountReceivable.setName(Account.ACCOUNT_RECEIVABLE);
+        accountReceivable.setBalance(0.0);
+        accountReceivable.setQuantity(0);
+        accountReceivable.setCreated(d.toDate());
+        inventoryAccount.setName(Account.INVENTORY_ACCOUNT);
+        inventoryAccount.setBalance(0.0);
+        inventoryAccount.setQuantity(0);
+        inventoryAccount.setCreated(d.toDate());
+
+        realm.copyToRealmOrUpdate (salesAccount);
+        realm.copyToRealmOrUpdate (accountReceivable);
+        realm.copyToRealmOrUpdate (inventoryAccount);
+
+        realm.commitTransaction();
+
+
+
+    }
+
+
+
+
 
 
 

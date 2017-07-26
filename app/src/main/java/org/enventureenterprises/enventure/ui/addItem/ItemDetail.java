@@ -69,7 +69,7 @@ public class ItemDetail extends BaseActivity{
         ButterKnife.bind(this);
 
 
-        realm = Realm.getDefaultInstance();
+        realm = getRealm();
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -99,15 +99,14 @@ public class ItemDetail extends BaseActivity{
         Double value_in_stock=0.0;
 
 
-        quantityInStock.setText(String.format("%s Items in stock",
-                item.getQuantity().toString()));
 
-        Long items_stocked = item.inventory_updates.where().sum("quantity").longValue();
-        Long items_sold  = item.sales.where().sum("quantity").longValue();
 
-        Double value_of_purchase = item.inventory_updates.where().sum("amount").doubleValue();
+        Long items_stocked = item.getInventories().where().sum("quantity").longValue();
+        Long items_sold  = item.getSales().where().sum("quantity").longValue();
 
-       RealmResults<Entry> purchases = item.inventory_updates.where().findAll();
+        Double value_of_purchase = item.getInventories().where().sum("amount").doubleValue();
+
+       RealmResults<Entry> purchases = item.getInventories().where().findAll();
         ArrayList<Double> costPrices = new ArrayList<Double>();
         Double sum = 0.0;
 
@@ -165,6 +164,7 @@ public class ItemDetail extends BaseActivity{
     @OnClick(R.id.delete_product)
     public void delete_product()
     {
+        realm = getRealm();
 
 
         realm.executeTransaction(new Realm.Transaction() {

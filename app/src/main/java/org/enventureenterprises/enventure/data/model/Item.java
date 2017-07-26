@@ -1,10 +1,12 @@
 package org.enventureenterprises.enventure.data.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
 import io.realm.annotations.PrimaryKey;
 
 /**
@@ -137,9 +139,45 @@ public class Item extends RealmObject {
     }
 
 
+    public void addSale(Entry sale)
+    {
+
+       this.sales.add(sale);
+    }
+
+    public void addInventoryUpdate(Entry inventory)
+    {
+        this.inventory_updates.add(inventory);
+    }
+
+    public void addInstallmentPayments(Entry payment){
+        this.installment_payments.add(payment);
+
+    }
+
+    public void addDebtors(Account account){
+        this.debtors.add(account);
 
 
+    }
 
+    public RealmResults<Account> getDebtors() {
+        return this.debtors.where().findAll();
+    }
 
+    public ArrayList<String> getCustomerNumbers() {
+        ArrayList<String> mobiles = new ArrayList<String>();
 
+        if(this.debtors == null) {
+            return new ArrayList<String>();
+        }
+
+        for (Account acc : this.debtors.where().findAll()) {
+            mobiles.add(acc.getName());
+
+        }
+        return mobiles;
+    }
 }
+
+

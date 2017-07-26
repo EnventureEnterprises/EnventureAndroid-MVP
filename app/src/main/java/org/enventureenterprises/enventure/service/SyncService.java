@@ -8,6 +8,7 @@ import org.enventureenterprises.enventure.BaseApplication;
 import org.enventureenterprises.enventure.data.model.Entry;
 import org.enventureenterprises.enventure.data.model.Item;
 import org.enventureenterprises.enventure.data.remote.EnventureApi;
+import org.enventureenterprises.enventure.util.PrefUtils;
 import org.enventureenterprises.enventure.util.rx.Transformers;
 
 import javax.inject.Inject;
@@ -63,6 +64,7 @@ public class SyncService extends GcmTaskService {
     public int onRunTask(TaskParams taskParams) {
         Timber.i("sync service running on waragi");
         realm = realm.getDefaultInstance();
+        String mobile = PrefUtils.getMobile(getApplicationContext());
 
         RealmResults<Entry> entries = realm.where(Entry.class)
                 .equalTo("synced", false)
@@ -87,6 +89,7 @@ public class SyncService extends GcmTaskService {
             client.createItem(item)
                     .compose(Transformers.neverError()).subscribe(k ->setSynced(item,realm));
         }
+        realm.close();
 
         return GcmNetworkManager.RESULT_SUCCESS;
     }

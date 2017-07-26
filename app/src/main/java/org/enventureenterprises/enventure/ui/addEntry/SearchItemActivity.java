@@ -42,7 +42,7 @@ public class SearchItemActivity extends BaseActivity implements SearchView.OnQue
         recyclerView = (RecyclerView) findViewById(R.id.search_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        realm = Realm.getDefaultInstance();
+        realm = getRealm();
 
 
         adapter = new SearchAdapter(SearchItemActivity.this, realm,"name");

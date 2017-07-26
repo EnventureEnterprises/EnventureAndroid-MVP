@@ -34,10 +34,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import org.enventureenterprises.enventure.R;
-import org.enventureenterprises.enventure.data.model.DailyReport;
 import org.enventureenterprises.enventure.data.model.Entry;
 import org.enventureenterprises.enventure.data.model.Item;
-import org.enventureenterprises.enventure.data.model.MonthlyReport;
 import org.enventureenterprises.enventure.data.model.WeeklyReport;
 import org.enventureenterprises.enventure.data.remote.EnventureApi;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
@@ -46,7 +44,6 @@ import org.enventureenterprises.enventure.util.Config;
 import org.enventureenterprises.enventure.util.GeneralUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.io.File;
 import java.io.IOException;
@@ -197,7 +194,7 @@ public class AddItemActivity extends BaseActivity {
                 quantityEditText.setText(item.getQuantity().toString());
                 totalCostEditText.setText(item.getTotalCost().toString());
 
-                entry_to_edit = item.inventory_updates.where().findAllSorted("created", Sort.DESCENDING).first();
+                entry_to_edit = item.getInventories().where().findAllSorted("created", Sort.DESCENDING).first();
                 if(item.getImage() != null) {
                     Glide.with(AddItemActivity.this).load(new File(Uri.parse(item.getImage()).getPath())).placeholder(new ColorDrawable(Color.GRAY)).into(imageView);
                 }
@@ -441,36 +438,14 @@ public class AddItemActivity extends BaseActivity {
                     return false;
                 }
 
+                Item toret = item;
+
                 DateTime d = new DateTime();
                 String day_name = d.toString(DateTimeFormat.mediumDate().withLocale(Locale.getDefault()).withZoneUTC());
                 String week_name =  WeeklyReport.getWeekName(d);
                 String month_name = d.toString("MMM-Y");
 
-                DateTimeFormatter fmt = DateTimeFormat.forPattern("EEEE");
 
-                DailyReport drep = realm.where(DailyReport.class)
-                        .equalTo("name", d.toString(DateTimeFormat.mediumDate().withLocale(Locale.getDefault()).withZoneUTC()))
-                        .findFirst();
-                WeeklyReport wrep = WeeklyReport.byName(realm, WeeklyReport.getWeekName(d));
-                MonthlyReport mrep = realm.where(MonthlyReport.class)
-                        .equalTo("name", d.toString("MMM-Y"))
-                        .findFirst();
-
-
-                if (drep == null) {
-                    drep = new DailyReport();
-                    drep.setName(d.toString(DateTimeFormat.mediumDate().withLocale(Locale.getDefault()).withZoneUTC()));
-                }
-                if (wrep == null) {
-                    wrep = new WeeklyReport();
-
-                    wrep.setName(WeeklyReport.getWeekName(d));
-                }
-
-                if (mrep == null) {
-                    mrep = new MonthlyReport();
-                    mrep.setName(d.toString("MMM-Y"));
-                }
 
                 if (is_edit == true)
                 {
@@ -479,12 +454,9 @@ public class AddItemActivity extends BaseActivity {
                     entry_to_edit.setAmount(Double.parseDouble(totalCostEditText.getText().toString()));
                     entry_to_edit.setSynced(false);
                     realm.copyToRealmOrUpdate(entry_to_edit);
-                    Intent intent = new Intent(AddItemActivity.this, ItemDetail.class);
-                    intent.putExtra("item_id", item.getCreatedTs());
-                    intent.putExtra("item", item.getCreatedTs());
-                    intent.putExtra("item_name", item.getName());
-                    startActivityWithTransition(intent, R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
                     realm.commitTransaction();
+
+
                 }
                 else if (is_add == true)
                 {
@@ -498,23 +470,12 @@ public class AddItemActivity extends BaseActivity {
                     entry.setEntryMonth(month_name);
                     entry.setEntryWeek(week_name);
                     entry.setEntryDay(day_name);
-                    //entry.setCreatedTs(d.getMillis());
+                    entry.setCreated(d.toDate());
                     entry.setSynced(false);
                     entry.setTransactionType("inventory");
-                    item.inventory_updates.add(entry);
-
-
-
-                    drep.updateProfit(d,realm);
-                    wrep.updateProfit(d,realm);
-                    mrep.updateProfit(d,realm);
+                    item.addInventoryUpdate(entry);
                     realm.commitTransaction();
 
-                    Intent intent = new Intent(AddItemActivity.this, ItemDetail.class);
-                    intent.putExtra("item_id", item.getCreatedTs());
-                    intent.putExtra("item", item.getCreatedTs());
-                    intent.putExtra("item_name", item.getName());
-                    startActivityWithTransition(intent, R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
 
                 }
 
@@ -537,6 +498,12 @@ public class AddItemActivity extends BaseActivity {
                     entry.setQuantity(Integer.parseInt(quantityEditText.getText().toString()));
                     entry.setAmount(Double.parseDouble(totalCostEditText.getText().toString()));
                     entry.setCreated(d.toDateTime().toDate());
+                    entry.setCreated(d.toDate());
+                    entry.setEntryMonth(month_name);
+                    //entry.setEntryYear(d.);
+                    entry.setEntryWeek(week_name);
+                    entry.setEntryDay(day_name);
+                    //entry.setCreatedTs(d.getMillis());
 
                     //entry.setCreatedTs(d.getMillis());
                     entry.setSynced(false);
@@ -550,44 +517,24 @@ public class AddItemActivity extends BaseActivity {
                     inventoryItem.setCreated(d.toDate());
 
                     inventoryItem.setCreatedTs(d.getMillis());
-
-                    mrep.setTotalSpent(Double.parseDouble(totalCostEditText.getText().toString()));
-                    mrep.setUpdated(d.toDate());
-
-
-                    drep.setTotalSpent(Double.parseDouble(totalCostEditText.getText().toString()));
-                    drep.setUpdated(d.toDate());
-
-
-                    wrep.setTotalSpent(Double.parseDouble(totalCostEditText.getText().toString()));
-                    wrep.setUpdated(d.toDate());
-
                     inventoryItem.inventory_updates.add(entry);
                     realm.copyToRealmOrUpdate(inventoryItem);
                     realm.commitTransaction();
-                    realm.beginTransaction();
 
-                    drep.updateProfit(d,realm);
-                    wrep.updateProfit(d,realm);
-                    mrep.updateProfit(d,realm);
-
-                    realm.copyToRealmOrUpdate(drep);
-                    realm.copyToRealmOrUpdate(mrep);
-                    realm.copyToRealmOrUpdate(wrep);
+                    toret = inventoryItem;
 
 
-                    realm.commitTransaction();
+                }
 
 
-                    //client.createItem(inventoryItem).compose(Transformers.neverError()).subscribe();
 
 
                     Intent intent = new Intent(AddItemActivity.this, ItemDetail.class);
-                    intent.putExtra("item_id", inventoryItem.getCreatedTs());
-                    intent.putExtra("item", inventoryItem.getCreatedTs());
-                    intent.putExtra("item_name", inventoryItem.getName());
+                    intent.putExtra("item_id", toret.getCreatedTs());
+                    intent.putExtra("item", toret.getCreatedTs());
+                    intent.putExtra("item_name", toret.getName());
                     startActivityWithTransition(intent, R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
-                }
+
 
                 break;
             case android.R.id.home:

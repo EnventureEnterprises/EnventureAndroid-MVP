@@ -13,13 +13,11 @@ import com.google.android.gms.gcm.PeriodicTask;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
-import org.enventureenterprises.enventure.data.model.Account;
 import org.enventureenterprises.enventure.data.model.Migration;
 import org.enventureenterprises.enventure.data.remote.AccessToken;
 import org.enventureenterprises.enventure.data.remote.EnventureApi;
 import org.enventureenterprises.enventure.service.SyncService;
 import org.enventureenterprises.enventure.util.PrefUtils;
-import org.joda.time.DateTime;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -42,6 +40,7 @@ public class BaseApplication extends MultiDexApplication {
 
     private static ApplicationComponent mApplicationComponent;
     private static final String INIT_SYNC_ON_INSTALL = "org.enventureenterprises.enventure.INIT_SYNC_ON_INSTALL";
+    private static final String SETUP_REALM = "org.enventureenterprises.enventure.SETUP_REALM";
 
     public final static String EVENTURE_PIC_DIR = "enventure";
 
@@ -101,31 +100,8 @@ public class BaseApplication extends MultiDexApplication {
                 .build()
         );
 
-        Realm.init(this);
-
-        String mobile = PrefUtils.getMobile(getApplicationContext());
-        String databasename ="enventure_p.realm.dbd";
-
-        if (mobile != null)
-        {
-            databasename = mobile+".dub";
-        }
-
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder()
-                .name(databasename)
 
 
-                .schemaVersion(0)
-                .build();
-
-        try {
-            Realm.migrateRealm(realmConfig, new Migration());
-        } catch (FileNotFoundException ignored) {
-            // If the Realm file doesn't exist, just ignore.
-        }
-
-
-        Realm.setDefaultConfiguration(realmConfig);
 
         RxJavaPlugins.getInstance().registerErrorHandler(new RxJavaErrorHandler() {
             @Override
@@ -137,6 +113,26 @@ public class BaseApplication extends MultiDexApplication {
 
         JodaTimeAndroid.init(this);
         Once.initialise(this);
+
+        String mobile = PrefUtils.getMobile(getApplicationContext());
+
+        if (mobile != null) { //only init realm when you have a mobile number
+            Realm.init(this);
+            RealmConfiguration realmConfig = new RealmConfiguration.Builder()
+                    .name(mobile+"jk6.realm")
+                    .schemaVersion(0)
+                    .build();
+
+            try {
+                Realm.migrateRealm(realmConfig, new Migration());
+            } catch (FileNotFoundException ignored) {
+                // If the Realm file doesn't exist, just ignore.
+            }
+
+
+            Realm.setDefaultConfiguration(realmConfig);
+            //realm = Realm.getInstance(realmConfig);
+        }
 
 
 
@@ -259,7 +255,6 @@ public class BaseApplication extends MultiDexApplication {
                     .setUpdateCurrent(true)
                     .setRequiredNetwork(PeriodicTask.NETWORK_STATE_CONNECTED )
                     .build();
-            setupAccounts();
 
             mGcmNetworkManager.schedule(task);
             Once.markDone(INIT_SYNC_ON_INSTALL);
@@ -267,37 +262,10 @@ public class BaseApplication extends MultiDexApplication {
     }
 
 
-    public void setupAccounts()
-    {
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        Account salesAccount = new Account ();
-        Account accountReceivable = new Account ();
-        Account inventoryAccount = new Account ();
-        DateTime d = new DateTime();
-
-        salesAccount.setName(Account.SALES_ACCOUNT);
-        salesAccount.setBalance(0.0);
-        salesAccount.setQuantity(0);
-        salesAccount.setCreated(d.toDate());
-        accountReceivable.setName(Account.ACCOUNT_RECEIVABLE);
-        accountReceivable.setBalance(0.0);
-        accountReceivable.setQuantity(0);
-        accountReceivable.setCreated(d.toDate());
-        inventoryAccount.setName(Account.INVENTORY_ACCOUNT);
-        inventoryAccount.setBalance(0.0);
-        inventoryAccount.setQuantity(0);
-        inventoryAccount.setCreated(d.toDate());
-
-        realm.copyToRealmOrUpdate (salesAccount);
-        realm.copyToRealmOrUpdate (accountReceivable);
-        realm.copyToRealmOrUpdate (inventoryAccount);
-
-        realm.commitTransaction();
 
 
 
-    }
+
 
 
 

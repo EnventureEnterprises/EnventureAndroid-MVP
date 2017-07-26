@@ -9,6 +9,7 @@ import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
 import io.realm.annotations.PrimaryKey;
 
 /**
@@ -217,15 +218,14 @@ public class Entry extends RealmObject {
         this.amount_remaining=amount_remaining;
     }
 
-
-    public static void newSale(Item item, DateTime d, String paymentType,Integer quantity,Double amount,String customer_mobile,Double total_price,Realm realm) {
+    public static void newSale(Item item, DateTime d, String paymentType,Integer quantity,Double amount,String customer_mobile,Double total_price,Double amount_paid,Realm realm) {
         realm.beginTransaction();
 
 
 
 
         DateTimeFormatter fmt = DateTimeFormat.forPattern("EEEE");
-        Entry entry = new Entry ();
+        Entry entry =  realm.createObject(Entry.class, d.getMillis());
 
         String day_name = d.toString(DateTimeFormat.mediumDate().withLocale(Locale.getDefault()).withZoneUTC());
         String week_name =  WeeklyReport.getWeekName(d);
@@ -240,7 +240,7 @@ public class Entry extends RealmObject {
         //entry.setEntryYear(d.);
         entry.setEntryWeek(week_name);
         entry.setEntryDay(day_name);
-        entry.setCreatedTs(d.getMillis());
+        //entry.setCreatedTs(d.getMillis());
         entry.setSynced(false);
 
 
@@ -267,8 +267,10 @@ public class Entry extends RealmObject {
                 entry.setTotalPrice(total_price);
                 entry.setCustomerMobile(customer_mobile);
                 entry.setTransactionType("sale");
-                item.installment_payments.add(entry);
-                item.sales.add(entry);
+                item.addInstallmentPayments(entry);
+                item.addSale(entry);
+                Account acc2 = Account.byName(realm,customer_mobile);
+                acc2.setInstallment(entry);
 
 
                 break;
@@ -276,7 +278,7 @@ public class Entry extends RealmObject {
                 entry.setType("Cash");
                 entry.setAmount(amount);
                 entry.setTransactionType("sale");
-                item.sales.add(entry);
+                item.addSale(entry);
 
                 break;
             case "Installment":
@@ -286,8 +288,12 @@ public class Entry extends RealmObject {
                 entry.setTotalPrice(total_price);
                 entry.setCustomerMobile(customer_mobile);
                 entry.setTransactionType("sale");
-                Account acc = Account.getOrCreate(realm, customer_mobile);
-                item.debtors.add(acc);
+                Account acc = realm.createObject(Account.class,customer_mobile);
+                acc.setTotalPrice(total_price);
+                acc.setBalance(total_price-amount);
+                acc.setInstallment(entry);
+                item.addDebtors(acc);
+                item.addSale(entry);
 
 
                 break;
@@ -308,7 +314,7 @@ public class Entry extends RealmObject {
 
             entry.setSaleValue(current_value_minus);
 
-            Double items_in_stock = item.inventory_updates.where().sum("quantity").doubleValue();
+            Double items_in_stock = item.getInventories().where().sum("quantity").doubleValue();
 
 
 
@@ -327,53 +333,115 @@ public class Entry extends RealmObject {
 
 
 
-    public static void newInstallment(final Transaction transaction) {
-        try(Realm realm = Realm.getDefaultInstance()) {
-            realm.executeTransactionAsync(new Realm.Transaction() {
-                @Override
-                public void execute(Realm bgRealm) {
-                    //Score score = new Score();
-                    //score.setName(winnerName);
-                    //score.setTime(finishTime);
-                    //bgRealm.copyToRealm(score);
-                }
-            });
-        }
-    }
-
-    public static void newInstallmentAddon(final Transaction transaction) {
-        try(Realm realm = Realm.getDefaultInstance()) {
-            realm.executeTransactionAsync(new Realm.Transaction() {
-                @Override
-                public void execute(Realm bgRealm) {
-                    //Score score = new Score();
-                    //score.setName(winnerName);
-                    //score.setTime(finishTime);
-                    //bgRealm.copyToRealm(score);
-                }
-            });
-        }
-    }
-
-    public static void newInventoryAddon(final Transaction transaction) {
-        try(Realm realm = Realm.getDefaultInstance()) {
-            realm.executeTransactionAsync(new Realm.Transaction() {
-                @Override
-                public void execute(Realm bgRealm) {
-                    //Score score = new Score();
-                    //score.setName(winnerName);
-                    //score.setTime(finishTime);
-                    //bgRealm.copyToRealm(score);
-                }
-            });
-        }
-    }
-
-
     public static String getWeekName(int week){
         DateTime weekStartDate = new DateTime().withWeekOfWeekyear(week);
         DateTime weekEndDate = new DateTime().withWeekOfWeekyear(week + 1);
         return String.format("%s - %s",weekStartDate,weekEndDate);
+
+    }
+
+
+
+    public static void updateReports(DateTime d){
+        Realm realm = Realm.getDefaultInstance();
+        if(d == null) {
+            d = new DateTime();
+        }
+        String day_name = d.toString(DateTimeFormat.mediumDate().withLocale(Locale.getDefault()).withZoneUTC());
+        String week_name =  WeeklyReport.getWeekName(d);
+        String month_name = d.toString("MMM-Y");
+
+        DailyReport drep = DailyReport.getOrCreate(realm,day_name);
+        WeeklyReport wrep = WeeklyReport.getOrCreate(realm,week_name);
+        MonthlyReport mrep = MonthlyReport.getOrCreate(realm,month_name);
+
+        RealmResults<Item> items = realm.where(Item.class).findAll();
+        Double profit_today = 0.0;
+
+        Double total_earned_today = 0.0;
+
+        Double total_spent_today = 0.0;
+
+        Double profit_thisweek = 0.0;
+
+        Double total_earned_thisweek = 0.0;
+
+        Double total_spent_thisweek = 0.0;
+
+        Double profit_thismonth = 0.0;
+
+        Double total_earned_thismonth = 0.0;
+
+        Double total_spent_thismonth = 0.0;
+
+
+
+
+            for (Item item : items) {
+                Long items_stocked_today = item.getInventories().where().equalTo("entry_day", day_name).sum("quantity").longValue();
+                Double amount_spent_today = item.getInventories().where().equalTo("entry_day", day_name).sum("amount").doubleValue();
+                Long items_sold_today = item.getSales().where().equalTo("entry_day", day_name).sum("quantity").longValue();
+                Double amount_earned_today = item.getSales().where().equalTo("entry_day", day_name).sum("amount").doubleValue();
+                total_spent_today = total_spent_today+amount_spent_today;
+
+                Long items_stocked_thisweek = item.getInventories().where().equalTo("entry_week",week_name).sum("quantity").longValue();
+                Double amount_spent_thisweek = item.getInventories().where().equalTo("entry_week",week_name).sum("amount").doubleValue();
+                Long items_sold_thisweek = item.getSales().where().equalTo("entry_week",week_name).sum("quantity").longValue();
+                Double amount_earned_thisweek = item.getSales().where().equalTo("entry_week",week_name).sum("amount").doubleValue();
+
+                total_spent_thisweek = total_spent_thisweek+amount_spent_thisweek;
+
+                Long items_stocked_thismonth = item.getInventories().where().equalTo("entry_month",month_name).sum("quantity").longValue();
+                Double amount_spent_thismonth = item.getInventories().where().equalTo("entry_month",month_name).sum("amount").doubleValue();
+                Long items_sold_thismonth = item.getSales().where().equalTo("entry_month",month_name).sum("quantity").longValue();
+                Double amount_earned_thismonth = item.getSales().where().equalTo("entry_month",month_name).sum("amount").doubleValue();
+
+                total_spent_thismonth = total_spent_thismonth+amount_spent_thismonth;
+
+
+                RealmResults<Entry> purchases = item.getInventories().where().findAll();
+
+                Double sum = 0.0;
+
+                for (Entry entry : purchases) {
+                    Double unitcost = entry.getAmount() / entry.getQuantity();
+                    sum += unitcost;
+                }
+                Double standardized_unitcost = sum / purchases.size();
+
+                profit_today = profit_today+amount_earned_today - (standardized_unitcost * items_sold_today);
+                profit_thisweek = profit_thisweek+amount_earned_thisweek - (standardized_unitcost * items_sold_thisweek);
+                profit_thismonth = profit_thismonth+amount_earned_thismonth - (standardized_unitcost * items_sold_thismonth);
+                total_earned_today = total_earned_today+amount_earned_today;
+                total_earned_thisweek = total_earned_thisweek+amount_earned_thisweek;
+                total_earned_thismonth = total_earned_thismonth+amount_earned_thismonth;
+
+
+            }
+        realm.beginTransaction();
+
+             drep.setProfit(profit_today);
+             drep.setTotalEarned(total_earned_today);
+             drep.setTotalSpent(total_spent_today);
+             mrep.setUpdated(d.toDate());
+
+            drep.setUpdated(d.toDate());
+
+           wrep.setUpdated(d.toDate());
+
+
+             wrep.setProfit(profit_thisweek);
+             wrep.setTotalEarned(total_earned_thisweek);
+             wrep.setTotalSpent(total_spent_thisweek);
+
+             mrep.setProfit(profit_thismonth);
+             mrep.setTotalEarned(total_earned_thismonth);
+             mrep.setTotalSpent(total_spent_thismonth);
+             realm.copyToRealmOrUpdate(drep);
+            realm.copyToRealmOrUpdate(wrep);
+          realm.copyToRealmOrUpdate(mrep);
+        realm.commitTransaction();
+        realm.close();
 
     }
 

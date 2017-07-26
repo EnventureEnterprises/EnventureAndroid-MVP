@@ -83,6 +83,11 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
         //holder.hexColorView.setBackgroundColor(Color.parseColor(item.profile.hexColor));
 
 
+        Long items_stocked = item.getInventories().where().sum("quantity").longValue();
+        Long items_sold  = item.getSales().where().sum("quantity").longValue();
+
+        Long items_in_stock = items_stocked - items_sold;
+
         holder.itemTextView.setText(String.format("%s",
                 item.getName()));
 
@@ -91,7 +96,7 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
 
 
         holder.quantityTextView.setText(String.format("%s Products",
-                item.getQuantity()));
+                items_in_stock));
 
         holder.itemView.setOnClickListener(
                 new View.OnClickListener() {

@@ -18,20 +18,17 @@ import android.widget.Toast;
 
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import com.reginald.editspinner.EditSpinner;
 
 import org.enventureenterprises.enventure.R;
-import org.enventureenterprises.enventure.data.model.DailyReport;
 import org.enventureenterprises.enventure.data.model.Entry;
 import org.enventureenterprises.enventure.data.model.Item;
-import org.enventureenterprises.enventure.data.model.MonthlyReport;
-import org.enventureenterprises.enventure.data.model.WeeklyReport;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
+import org.enventureenterprises.enventure.ui.general.HomeActivity;
 import org.enventureenterprises.enventure.ui.general.ProgressDialogFragment;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
-import java.util.Locale;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,8 +45,9 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
     private Long item_id;
     private String item_name;
     private String paymentType;
-    private Item item;
+    private static Item item;
     private ProgressDialogFragment progressFragment;
+    private PhoneNumberUtil phoneUtil ;
     
 
     @BindView(R.id.quantity)
@@ -99,6 +97,12 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
     @BindView(R.id.totalcost_layout)
     TextInputLayout totalcostLayout;
 
+    @BindView(R.id.installment_mobile)
+    EditSpinner mobileNumbers;
+
+    @BindView(R.id.installment_mobile_layout)
+    TextInputLayout mobileNumbersLayout;
+
 
 
 
@@ -113,7 +117,8 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
         ButterKnife.bind(this);
 
 
-        realm = Realm.getDefaultInstance();
+        realm = getRealm();
+        phoneUtil = PhoneNumberUtil.getInstance();
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -156,6 +161,12 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
         totalPriceEditText.addTextChangedListener(new FormTextWatcher(totalPriceEditText));
 
 
+
+
+
+
+
+
     }
 
 
@@ -183,9 +194,6 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                     break;
                 case R.id.amount_paying:
                     validateAmountPaying ();
-                    break;
-                case R.id.amount_remaining:
-                    validateAmountRemaining ();
                     break;
                 case R.id.phone:
                     validatePhone ();
@@ -244,9 +252,6 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                     return false;
                 }
 
-                if (!validateAmountRemaining()) {
-                    return false;
-                }
 
                 if (!validateAmountPaying()) {
                     return false;
@@ -266,26 +271,49 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                     return false;
                 }
 
-                Double amount;
+                Double amount = 0.0;
+                String customer_mobile = "";
+                Double amount_paid = 0.0;
+                Double total_cost = 0.0;
+
 
 
                 switch (paymentType.toString()) {
 
                     case "Installment Addon":
-                        amount = parseDouble(amountPayingEditText.getText().toString());
+                        //amount = parseDouble(amountPayingEditText.getText().toString());
+                        amount = 0.0; //amount is 0 because we track debts as profit
+                        total_cost = amount;
+                        customer_mobile = "";
+                        amount_paid = _parseDouble(amountPayingEditText.getText().toString());
 
                         break;
                     case "Cash":
 
-                        amount = parseDouble(totalcostEditText.getText().toString());
+                        amount = _parseDouble(totalcostEditText.getText().toString());
+                        total_cost = amount;
+                        customer_mobile = "";
+                        amount_paid = amount;
                         break;
                     case "Installment":
                         //create account with phone number and add as entry
-                        amount = parseDouble(amountPaidEditText.getText().toString());
+                        //amount = parseDouble(amountPaidEditText.getText().toString());
+                        amount = _parseDouble(totalPriceEditText.getText().toString());
+                        total_cost = amount;
+                        amount_paid =  _parseDouble(amountPayingEditText.getText().toString());
+                        try {
+
+                            Phonenumber.PhoneNumber ugNumberProto = phoneUtil.parse(phoneEditText.getText().toString(), "UG");
+                            customer_mobile = "0"+ugNumberProto.getNationalNumber();
+                        }   catch (Exception e) {
+                            return false;
+                        }
+
+
 
                         break;
                     default:
-                        amount = parseDouble(totalcostEditText.getText().toString());
+                        //amount = parseDouble(totalcostEditText.getText().toString());
 
                         break;
                 }
@@ -295,157 +323,20 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                 int quantity=0;
 
                 String qty = quantityEditText.getText().toString().trim();
-                String tt = totalcostEditText.getText().toString().trim();
-                Double totalCost = 0.0;
+
+
                 if(!qty.isEmpty()||qty != null){
                     quantity = Integer.parseInt(quantityEditText.getText().toString());
                 }
 
-                if(!tt.isEmpty()||tt != null)
-                {
-                    totalCost = parseDouble(tt);
-                }
 
 
                 //Entry.newSale(item, d, paymentType,Integer.parseInt(quantityEditText.getText().toString()),amount,phoneEditText.getText().toString(),Double.parseDouble(totalcostEditText.getText().toString()),getRealm());
-                Entry.newSale(item, d, paymentType,quantity,amount,phoneEditText.getText().toString(),totalCost,realm);
+                Entry.newSale(item, d, paymentType,quantity,amount,customer_mobile,total_cost,amount_paid,realm);
 
 
-                String day_name = d.toString(DateTimeFormat.mediumDate().withLocale(Locale.getDefault()).withZoneUTC());
-                String week_name =  WeeklyReport.getWeekName(d);
-                String month_name = d.toString("MMM-Y");
-
-                DateTimeFormatter fmt = DateTimeFormat.forPattern("EEEE");
-
-                DailyReport drep = realm.where(DailyReport.class)
-                        .equalTo("name", d.toString(DateTimeFormat.mediumDate().withLocale(Locale.getDefault()).withZoneUTC()))
-                        .findFirst();
-                WeeklyReport wrep = WeeklyReport.byName(realm, WeeklyReport.getWeekName(d));
-                MonthlyReport mrep = realm.where(MonthlyReport.class)
-                        .equalTo("name", d.toString("MMM-Y"))
-                        .findFirst();
-
-                realm.beginTransaction();
-
-
-                if (drep == null) {
-                    drep = new DailyReport();
-                    drep.setName(d.toString(DateTimeFormat.mediumDate().withLocale(Locale.getDefault()).withZoneUTC()));
-                }
-                if (wrep == null) {
-                    wrep = new WeeklyReport();
-
-                    wrep.setName(WeeklyReport.getWeekName(d));
-                }
-
-                if (mrep == null) {
-                    mrep = new MonthlyReport();
-                    mrep.setName(d.toString("MMM-Y"));
-                }
-
-
-
-
-                drep.updateProfit(d,realm);
-                wrep.updateProfit(d,realm);
-                mrep.updateProfit(d,realm);
-
-
-
-                realm.copyToRealmOrUpdate (drep);
-                realm.copyToRealmOrUpdate (mrep);
-                realm.copyToRealmOrUpdate (wrep);
-                realm.commitTransaction();
-
-
-
-              /*  DateTimeFormatter fmt = DateTimeFormat.forPattern("EEEE");
-                Entry entry = new Entry ();
-                DailyReport drep = realm.where(DailyReport.class)
-                        .equalTo("name", fmt.withLocale(Locale.getDefault()).print(d))
-                        .findFirst();
-                WeeklyReport wrep = realm.where(WeeklyReport.class)
-                        .equalTo("name", Integer.toString(d.getWeekOfWeekyear()))
-                        .findFirst();
-                MonthlyReport mrep = realm.where(MonthlyReport.class)
-                        .equalTo("name", d.toString("MMM"))
-                        .findFirst();
-
-
-                if (drep == null) {
-                    drep = new DailyReport();
-                    drep.setName(fmt.withLocale(Locale.getDefault()).print(d));
-
-                }
-                if (wrep == null) {
-                    wrep = new WeeklyReport();
-                    wrep.setName(Integer.toString(d.getWeekOfWeekyear()));
-
-                }
-
-                if (mrep == null) {
-                    mrep = new MonthlyReport();
-                    mrep.setName(d.toString("MMM"));
-
-                }
-
-                entry.setName(nameEditText.getText().toString());
-                entry.setType(paymentType);
-                entry.setItem(item);
-
-                Integer current_quantity = item.getQuantity();
-                Double current_total_stock = item.getTotalCost();
-
-                Double unit_cost  =  current_total_stock/current_quantity;
-
-                Double current_value_minus = (Double.parseDouble(quantityEditText.getText().toString())*unit_cost);
-
-                Double  current_value = item.getTotalCost() - current_value_minus;
-
-                item.setTotalCost(current_value);
-                item.setQuantity(current_quantity-Integer.parseInt(quantityEditText.getText().toString()));
-
-
-                entry.setCreated(d.toDate());
-                entry.setEntryMonth(d.getDayOfMonth());
-                entry.setEntryYear(d.getYear());
-                entry.setEntryWeek(d.getWeekOfWeekyear());
-                entry.setCreatedTs(d.getMillis());
-                entry.setSynced(false);
-
-
-
-                mrep.setProfit(Double.parseDouble(totalcostEditText.getText().toString()),item);
-                mrep.setTotalEarned(Double.parseDouble(totalcostEditText.getText().toString()));
-                mrep.setUpdated(d.toDate());
-
-
-                drep.setProfit(Double.parseDouble(totalcostEditText.getText().toString()),item);
-                drep.setTotalEarned(Double.parseDouble(totalcostEditText.getText().toString()));
-                drep.setUpdated(d.toDate());
-
-
-                wrep.setProfit(Double.parseDouble(totalcostEditText.getText().toString()),item);
-                wrep.setTotalEarned(Double.parseDouble(totalcostEditText.getText().toString()));
-                wrep.setUpdated(d.toDate());
-
-
-                entry.setQuantity(Integer.parseInt(quantityEditText.getText().toString()));
-                entry.setAmount(Double.parseDouble(totalcostEditText.getText().toString()));
-                realm.copyToRealmOrUpdate (entry);
-                realm.copyToRealmOrUpdate (drep);
-                realm.copyToRealmOrUpdate (mrep);
-                realm.copyToRealmOrUpdate (wrep);
-                realm.copyToRealmOrUpdate (item);
-
-
-
-
-                realm.commitTransaction();
-*/
-
-
-                final Intent intent = new Intent(NewSaleActivity.this, NewSaleActivity.class);
+                final Intent intent = new Intent(NewSaleActivity.this, HomeActivity.class);
+                intent.putExtra("navTab", HomeActivity.SALES);
                 Toast.makeText(
                         NewSaleActivity.this,
                         "Sale Added Successfully",
@@ -504,13 +395,25 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
         quantityEditText.setVisibility(View.GONE);
         totalcostEditText.setVisibility(View.GONE);
         amountPayingEditText.setVisibility(View.VISIBLE);
-        amountRemainingEditText.setVisibility(View.VISIBLE);
-        phoneEditText.setVisibility(View.VISIBLE);
-        phoneLayout.setVisibility(View.VISIBLE);
+        amountRemainingEditText.setEnabled(false);
+        phoneEditText.setVisibility(View.GONE);
+        phoneLayout.setVisibility(View.GONE);
         amountPayingLayout.setVisibility(View.VISIBLE);
         amountRemainingLayout.setVisibility(View.VISIBLE);
         quantityLayout.setVisibility(View.GONE);
         totalcostLayout.setVisibility(View.GONE);
+        mobileNumbers.setVisibility(View.VISIBLE);
+        mobileNumbersLayout.setVisibility(View.VISIBLE);
+        amountRemainingEditText.setVisibility(View.VISIBLE);
+
+        ArrayList<String> mobiles = item.getCustomerNumbers();
+
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line, mobiles);
+
+        mobileNumbers.setAdapter(adapter);
 
     }
 
@@ -529,6 +432,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
         amountRemainingLayout.setVisibility(View.GONE);
         quantityLayout.setVisibility(View.VISIBLE);
         totalcostLayout.setVisibility(View.VISIBLE);
+        mobileNumbers.setVisibility(View.GONE);
 
     }
 
@@ -547,6 +451,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
         amountRemainingLayout.setVisibility(View.GONE);
         totalcostEditText.setVisibility(View.GONE);
         totalcostLayout.setVisibility(View.GONE);
+        mobileNumbers.setVisibility(View.GONE);
 
 
     }
@@ -567,7 +472,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                 quantityEditText.setError("Quantity is a required Field");
                 requestFocus(quantityEditText);
                 return false;
-            } else if (parseDouble(quantity) == Double.NaN) {
+            } else if (_parseDouble(quantity) == Double.NaN) {
                 quantityLayout.setErrorEnabled(true);
                 quantityEditText.setError("Invalid entry. Enter numbers only");
                 requestFocus(quantityEditText);
@@ -575,10 +480,10 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
             } else {
 
 
-                Long items_stocked = item.inventory_updates.where().sum("quantity").longValue();
-                Long items_sold  = item.sales.where().sum("quantity").longValue();
+                Long items_stocked = item.getInventories().where().sum("quantity").longValue();
+                Long items_sold  = item.getSales().where().sum("quantity").longValue();
                 Long quantity_in_stock =  items_stocked - items_sold;
-                Double val = Double.parseDouble(quantity);
+                Double val = _parseDouble(quantity);
 
                 String error_message = "";
 
@@ -618,7 +523,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                 totalcostEditText.setError("Total Cost is a required Field");
                 requestFocus(totalcostEditText);
                 return false;
-            } else if (parseDouble(totalcost) == Double.NaN) {
+            } else if (_parseDouble(totalcost) == Double.NaN) {
                 totalcostLayout.setErrorEnabled(true);
                 totalcostEditText.setError("Invalid entry. Enter numbers only");
                 requestFocus(totalcostEditText);
@@ -644,7 +549,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                 totalPriceEditText.setError("Total Price is a required Field");
                 requestFocus(totalPriceEditText);
                 return false;
-            } else if (parseDouble(totalprice) == Double.NaN) {
+            } else if (_parseDouble(totalprice) == Double.NaN) {
                 totalPriceLayout.setErrorEnabled(true);
                 totalPriceEditText.setError("Invalid entry. Enter numbers only");
                 requestFocus(totalPriceEditText);
@@ -670,7 +575,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                 amountPaidEditText.setError("Amount Paid is a required Field");
                 requestFocus(amountPaidEditText);
                 return false;
-            } else if (parseDouble(amuntPaid) == Double.NaN) {
+            } else if (_parseDouble(amuntPaid) == Double.NaN) {
                 amountPaidLayout.setErrorEnabled(true);
                 amountPaidEditText.setError("Invalid entry. Enter numbers only");
                 requestFocus(amountPaidEditText);
@@ -696,7 +601,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                 amountPayingEditText.setError("Total Cost is a required Field");
                 requestFocus(amountPayingEditText);
                 return false;
-            } else if (parseDouble(amountPaying) == Double.NaN) {
+            } else if (_parseDouble(amountPaying) == Double.NaN) {
                 amountPayingLayout.setErrorEnabled(true);
                 amountPayingEditText.setError("Invalid entry. Enter numbers only");
                 requestFocus(amountPayingEditText);
@@ -704,6 +609,8 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
 
             } else {
                 amountPayingLayout.setErrorEnabled(false);
+
+                amountRemainingEditText.setText("");
             }
 
             return true;
@@ -713,34 +620,9 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
 
     }
 
-    private boolean validateAmountRemaining (){
-        if(paymentType.toString().equals("Installment Addon")) {
-            String amountRemaining = amountRemainingEditText.getText().toString().trim();
-            if (amountRemaining.isEmpty()) {
-                amountRemainingLayout.setErrorEnabled(true);
-                amountRemainingEditText.setError("Amount Remaining is required");
-                requestFocus(amountRemainingEditText);
-                return false;
-            } else if (parseDouble(amountRemaining) == Double.NaN) {
-                amountRemainingLayout.setErrorEnabled(true);
-                amountRemainingEditText.setError("Invalid entry. Enter numbers only");
-                requestFocus(amountRemainingEditText);
-                return false;
-
-            } else {
-                amountRemainingLayout.setErrorEnabled(false);
-            }
-
-            return true;
-        }
-        else{
-            return true;
-        }
-
-    }
 
     private boolean validatePhone (){
-        if(paymentType.toString().equals("Installment Addon") || paymentType.toString().equals("Installment")) {
+        if( paymentType.toString().equals("Installment")) {
 
 
             String phone = phoneEditText.getText().toString();
@@ -752,7 +634,6 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
 
             } else {
 
-                PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
                 try {
                     Phonenumber.PhoneNumber ugNumberProto = phoneUtil.parse(phone, "UG");
                     if (Long.toString(ugNumberProto.getNationalNumber()).length()>=9 ) {
@@ -794,6 +675,21 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
         if (view.requestFocus()) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
+    }
+
+    private Double _parseDouble(String value){
+        Double toret = 0.0;
+        if( value != null || !value.trim().isEmpty())
+        {
+            try {
+                toret = parseDouble(value);
+            }catch (Exception e)
+            {
+
+            }
+        }
+
+        return toret;
     }
 
 
