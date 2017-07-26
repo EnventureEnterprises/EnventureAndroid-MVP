@@ -33,7 +33,8 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
     public static final int INVENTORY =0;
     public static final int REPORTS = 2;
     public static final int PROFILE = 3;
-    private int navType;
+    private int navTab;
+    private int navType = INVENTORY;
     private int currentSelected = 0;
 
     @Override
@@ -55,13 +56,13 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
-                navType = extras.getInt("navTab");
+                navTab = extras.getInt("navTab");
 
 
             }
 
         } else {
-            navType = savedInstanceState.getInt("navTab");
+            navTab = savedInstanceState.getInt("navTab");
 
 
         }
@@ -84,13 +85,14 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
 
         }
 
-        if (navType == SALES){
+        if (navTab == SALES){
              currentSelected = SALES;
+            this.navType = SALES;
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.home_container, SalesFragment.newInstance(), SalesFragment.TAG)
                     .commit();
-            bottomNavigation.setCurrentItem(SALES);
+            //bottomNavigation.setCurrentItem(SALES);
 
 
         }
@@ -116,7 +118,10 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
 
                 break;
             case R.id.sales:
-                onNavigationChanged(SALES);
+                if (navTab != SALES) {
+
+                    onNavigationChanged(SALES);
+                }
 
                 break;
             case R.id.reports:
@@ -157,6 +162,7 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
         switch (type) {
             case SALES:
                 currentSelected =SALES;
+
                 if (salesFrag== null) {
                     onAddAndHide(fragmentManager, SalesFragment.newInstance(), currentVisible);
                 } else {
@@ -214,6 +220,8 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
         toAdd.onHiddenChanged(false);
     }
 
+
+    
 
 
 
