@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
@@ -86,12 +87,8 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
         }
 
         if (navTab == SALES){
-             currentSelected = SALES;
-            this.navType = SALES;
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.home_container, SalesFragment.newInstance(), SalesFragment.TAG)
-                    .commit();
+            Menu menu = bottomNavigation.getMenu();
+            menu.findItem(R.id.sales).setChecked(true);
             //bottomNavigation.setCurrentItem(SALES);
 
 
@@ -118,10 +115,10 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
 
                 break;
             case R.id.sales:
-                if (navTab != SALES) {
 
-                    onNavigationChanged(SALES);
-                }
+
+                onNavigationChanged(SALES);
+
 
                 break;
             case R.id.reports:
@@ -221,7 +218,7 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
     }
 
 
-    
+
 
 
 
