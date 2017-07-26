@@ -269,7 +269,7 @@ public class Entry extends RealmObject {
                 entry.setTransactionType("sale");
                 item.addInstallmentPayments(entry);
                 item.addSale(entry);
-                Account acc2 = Account.byName(realm,customer_mobile);
+                Account acc2 = item.getDebtors().where().equalTo("name",customer_mobile).findFirst();
                 acc2.setInstallment(entry);
 
 
@@ -290,7 +290,7 @@ public class Entry extends RealmObject {
                 entry.setTransactionType("sale");
                 Account acc = realm.createObject(Account.class,customer_mobile);
                 acc.setTotalPrice(total_price);
-                acc.setBalance(total_price-amount);
+                acc.setBalance(total_price-amount_paid);
                 acc.setInstallment(entry);
                 item.addDebtors(acc);
                 item.addSale(entry);

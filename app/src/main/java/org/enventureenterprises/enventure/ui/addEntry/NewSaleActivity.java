@@ -285,7 +285,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                         //amount = parseDouble(amountPayingEditText.getText().toString());
                         amount = 0.0; //amount is 0 because we track debts as profit
                         total_cost = amount;
-                        customer_mobile = "";
+                        customer_mobile = mobileNumbers.getText().toString();
                         amount_paid = _parseDouble(amountPayingEditText.getText().toString());
 
 
