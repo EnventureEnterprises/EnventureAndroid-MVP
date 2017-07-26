@@ -275,6 +275,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                 String customer_mobile = "";
                 Double amount_paid = 0.0;
                 Double total_cost = 0.0;
+                int quantity = 0;
 
 
 
@@ -287,6 +288,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                         customer_mobile = "";
                         amount_paid = _parseDouble(amountPayingEditText.getText().toString());
 
+
                         break;
                     case "Cash":
 
@@ -294,6 +296,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                         total_cost = amount;
                         customer_mobile = "";
                         amount_paid = amount;
+                        quantity = Integer.parseInt(quantityEditText.getText().toString());
                         break;
                     case "Installment":
                         //create account with phone number and add as entry
@@ -301,6 +304,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                         amount = _parseDouble(totalPriceEditText.getText().toString());
                         total_cost = amount;
                         amount_paid =  _parseDouble(amountPayingEditText.getText().toString());
+                        quantity = Integer.parseInt(quantityEditText.getText().toString());
                         try {
 
                             Phonenumber.PhoneNumber ugNumberProto = phoneUtil.parse(phoneEditText.getText().toString(), "UG");
@@ -320,14 +324,11 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
 
                 realm = getRealm();
                 DateTime d = new DateTime();
-                int quantity=0;
+
 
                 String qty = quantityEditText.getText().toString().trim();
 
 
-                if(!qty.isEmpty()||qty != null){
-                    quantity = Integer.parseInt(quantityEditText.getText().toString());
-                }
 
 
 
@@ -609,8 +610,15 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
 
             } else {
                 amountPayingLayout.setErrorEnabled(false);
+                Double rt = 0.0;
+                String mobile = mobileNumbers.getText().toString();
+                if(!mobile.isEmpty()) {
+                    Double balance = item.getDebtors().where().equalTo("name", mobile).findFirst().getBalance();
+                    Double am = _parseDouble(amountPayingEditText.getText().toString());
+                    rt = balance - am;
+                }
 
-                amountRemainingEditText.setText("");
+                amountRemainingEditText.setText(rt.toString());
             }
 
             return true;

@@ -51,6 +51,7 @@ import org.enventureenterprises.enventure.data.model.Account;
 import org.enventureenterprises.enventure.data.model.Entry;
 import org.enventureenterprises.enventure.data.model.Item;
 import org.enventureenterprises.enventure.ui.general.HomeActivity;
+import org.enventureenterprises.enventure.util.PrefUtils;
 import org.joda.time.DateTime;
 
 import io.realm.Realm;
@@ -108,7 +109,9 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
 
 
 
+        String mobile = PrefUtils.getMobile(getApplicationContext());
 
+        if (mobile != null) {
 
 
 
@@ -133,6 +136,7 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
                     Entry.updateReports(new DateTime());
                 }
             });
+        }
         }
     }
 

@@ -85,7 +85,14 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
         }
 
         if (navType == SALES){
-            onNavigationChanged(SALES);
+             currentSelected = SALES;
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.home_container, SalesFragment.newInstance(), SalesFragment.TAG)
+                    .commit();
+            bottomNavigation.setCurrentItem(SALES);
+
+
         }
 
 

@@ -113,11 +113,12 @@ public class BaseApplication extends MultiDexApplication {
 
         JodaTimeAndroid.init(this);
         Once.initialise(this);
+        Realm.init(this);
 
         String mobile = PrefUtils.getMobile(getApplicationContext());
 
         if (mobile != null) { //only init realm when you have a mobile number
-            Realm.init(this);
+
             RealmConfiguration realmConfig = new RealmConfiguration.Builder()
                     .name(mobile+"jk6.realm")
                     .schemaVersion(0)
