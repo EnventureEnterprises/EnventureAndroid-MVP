@@ -89,6 +89,10 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
         if (navTab == SALES){
             Menu menu = bottomNavigation.getMenu();
             menu.findItem(R.id.sales).setChecked(true);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.home_container, SalesFragment.newInstance(), SalesFragment.TAG)
+                    .commit();
             //bottomNavigation.setCurrentItem(SALES);
 
 
