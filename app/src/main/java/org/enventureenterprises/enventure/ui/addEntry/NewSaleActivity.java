@@ -266,6 +266,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                     return false;
                 }
 
+
                 if(!validateAmountPaid())
                 {
                     return false;
@@ -283,10 +284,11 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
 
                     case "Installment Addon":
                         //amount = parseDouble(amountPayingEditText.getText().toString());
-                        amount = 0.0; //amount is 0 because we track debts as profit
+                        amount = _parseDouble(amountPayingEditText.getText().toString());
                         total_cost = amount;
                         customer_mobile = mobileNumbers.getText().toString();
                         amount_paid = _parseDouble(amountPayingEditText.getText().toString());
+
 
 
                         break;
@@ -301,8 +303,8 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                     case "Installment":
                         //create account with phone number and add as entry
                         //amount = parseDouble(amountPaidEditText.getText().toString());
-                        amount = _parseDouble(totalPriceEditText.getText().toString());
-                        total_cost = amount;
+                        amount = _parseDouble(amountPayingEditText.getText().toString());
+                        total_cost = _parseDouble(totalPriceEditText.getText().toString());
                         amount_paid =  _parseDouble(amountPayingEditText.getText().toString());
                         quantity = Integer.parseInt(quantityEditText.getText().toString());
                         try {
@@ -517,26 +519,46 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
     }
 
     private boolean validateTotalCost() {
+        Boolean error = false;
+        String error_message= "";
         if(paymentType.toString().equals("Cash")) {
             String totalcost = totalcostEditText.getText().toString();
             if (totalcostEditText.getText().toString().trim().isEmpty()) {
-                totalcostLayout.setErrorEnabled(true);
-                totalcostEditText.setError("Total Cost is a required Field");
-                requestFocus(totalcostEditText);
-                return false;
+                error = true;
+                error_message = "Total Cost is a required Field";
             } else if (_parseDouble(totalcost) == Double.NaN) {
-                totalcostLayout.setErrorEnabled(true);
-                totalcostEditText.setError("Invalid entry. Enter numbers only");
-                requestFocus(totalcostEditText);
-                return false;
+                error = true;
+                error_message = "Invalid entry. Enter numbers only";
+
 
             } else {
-                totalcostLayout.setErrorEnabled(false);
+                if (_parseDouble(totalcost) < 100){
+                    error=true;
+                    error_message = "Price has to be greater than 100";
+
+                }
+
             }
 
+
+
+        }
+        else{
+            error = false;
+        }
+
+        if (error == true){
+            totalcostLayout.setErrorEnabled(true);
+            totalcostEditText.setError(error_message);
+            requestFocus(totalcostEditText);
+            return false;
+
+        }
+        else{
+            totalcostLayout.setErrorEnabled(false);
+
             return true;
-        }else{
-            return true;
+
         }
     }
 

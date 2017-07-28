@@ -25,6 +25,8 @@ public class Item extends RealmObject {
     @PrimaryKey
     private String name;
 
+    private Boolean enabled;
+
     public  RealmList<Entry> sales;
     public  RealmList<Entry> inventory_updates;
     public  RealmList<Account> debtors;
@@ -178,6 +180,19 @@ public class Item extends RealmObject {
         }
         return mobiles;
     }
+
+
+
+
+    public Boolean getEnabled(){
+        return this.enabled;
+    }
+    public void setEnabled(Boolean enabled){
+        this.enabled=enabled;
+    }
+
+
+
 }
 
 

@@ -120,7 +120,7 @@ public class BaseApplication extends MultiDexApplication {
         if (mobile != null) { //only init realm when you have a mobile number
 
             RealmConfiguration realmConfig = new RealmConfiguration.Builder()
-                    .name(mobile+"jk6.realm")
+                    .name(mobile+"jk7.realm")
                     .schemaVersion(0)
                     .build();
 

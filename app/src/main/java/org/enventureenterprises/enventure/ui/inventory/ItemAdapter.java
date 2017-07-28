@@ -88,6 +88,8 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
 
         Long items_in_stock = items_stocked - items_sold;
 
+
+
         holder.itemTextView.setText(String.format("%s",
                 item.getName()));
 
@@ -202,6 +204,23 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
         public ItemViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            itemView.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            final Item item = realmResults.get(getPosition());
+
+                            Intent intent = new Intent(v.getContext (), ItemDetail.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra("item",item.getId ());
+                            v.getContext ().startActivity (intent);
+                        }
+                    }
+            );
+
+
+
 
 
         }

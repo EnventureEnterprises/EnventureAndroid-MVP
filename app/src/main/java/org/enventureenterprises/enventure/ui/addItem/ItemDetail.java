@@ -170,8 +170,8 @@ public class ItemDetail extends BaseActivity{
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                RealmResults<Item> result = realm.where(Item.class).equalTo("created_ts",item.getCreatedTs()).findAll();
-                result.deleteAllFromRealm();
+                item.setEnabled(false);
+                realm.copyToRealmOrUpdate(item);
                 final Intent intent = new Intent(ItemDetail.this, HomeActivity.class);
                 startActivityWithTransition(intent, R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
             }

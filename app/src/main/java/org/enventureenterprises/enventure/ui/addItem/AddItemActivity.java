@@ -1,5 +1,4 @@
 package org.enventureenterprises.enventure.ui.addItem;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -28,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +48,7 @@ import org.joda.time.format.DateTimeFormat;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -57,6 +58,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
+import io.realm.RealmResults;
 import io.realm.Sort;
 import timber.log.Timber;
 
@@ -70,6 +72,9 @@ public class AddItemActivity extends BaseActivity {
     private String item_name;
     private ActionBar actionBar;
     private ProgressDialogFragment progressFragment;
+
+    Double current_stock_value;
+    int current_quantity;
 
     @Inject
     EnventureApi client;
@@ -95,8 +100,6 @@ public class AddItemActivity extends BaseActivity {
     @BindView(R.id.selected_photo)
     ImageView imageView;
 
-    @BindView(R.id.no_photo)
-    TextView noPhoto;
 
     @BindView(R.id.name_layout)
     TextInputLayout nameLayout;
@@ -106,6 +109,14 @@ public class AddItemActivity extends BaseActivity {
 
     @BindView(R.id.totalcost_layout)
     TextInputLayout totalcostLayout;
+
+
+
+
+    @BindView(R.id.camera_container)
+    LinearLayout cameraLayout;
+    @BindView(R.id.no_photo)
+    TextView noPhoto;
 
 
 
@@ -190,9 +201,33 @@ public class AddItemActivity extends BaseActivity {
             {
                 nameEditText.setEnabled(false);
                 //get last entry
+
+                int items_stocked = item.getInventories().where().sum("quantity").intValue();
+                int items_sold  = item.getSales().where().sum("quantity").intValue();
+
+                Double value_of_purchase = item.getInventories().where().sum("amount").doubleValue();
+
+                RealmResults<Entry> purchases = item.getInventories().where().findAll();
+                ArrayList<Double> costPrices = new ArrayList<Double>();
+                Double sum = 0.0;
+
+                for (int i = 0; i<purchases.size(); i++) {
+                    Double unitcost = purchases.get(i).getAmount()/purchases.get(i).getQuantity();
+                    sum+=unitcost;
+                }
+                Double standardized_unitcost = sum/purchases.size();
+
+                int items_in_stock = items_stocked - items_sold;
+                Double value_of_stock = standardized_unitcost*items_in_stock;
+                current_quantity = items_in_stock;
+                current_stock_value = value_of_stock;
+
+
+                cameraLayout.setEnabled(false);
                 getSupportActionBar().setTitle(String.format("Editing Item  %s",item.getName()));
-                quantityEditText.setText(item.getQuantity().toString());
-                totalCostEditText.setText(item.getTotalCost().toString());
+                quantityEditText.setText(items_in_stock);
+                totalCostEditText.setText(value_of_stock.toString());
+
 
                 entry_to_edit = item.getInventories().where().findAllSorted("created", Sort.DESCENDING).first();
                 if(item.getImage() != null) {
@@ -203,14 +238,9 @@ public class AddItemActivity extends BaseActivity {
 
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-
         nameEditText.addTextChangedListener(new FormTextWatcher(nameEditText));
         quantityEditText.addTextChangedListener(new FormTextWatcher(quantityEditText));
         totalCostEditText.addTextChangedListener(new FormTextWatcher(totalCostEditText));
-
-
-
     }
 
     private void dispatchTakePictureIntent() {
@@ -450,10 +480,19 @@ public class AddItemActivity extends BaseActivity {
                 if (is_edit == true)
                 {
                     realm.beginTransaction();
-                    entry_to_edit.setQuantity(Integer.parseInt(quantityEditText.getText().toString()));
-                    entry_to_edit.setAmount(Double.parseDouble(totalCostEditText.getText().toString()));
-                    entry_to_edit.setSynced(false);
-                    realm.copyToRealmOrUpdate(entry_to_edit);
+                    Entry nEntry = realm.createObject(Entry.class, d.getMillis());
+
+                    nEntry.setQuantity(Integer.parseInt(quantityEditText.getText().toString())  - current_quantity);
+                    nEntry.setAmount(Double.parseDouble(totalCostEditText.getText().toString())-current_stock_value);
+                    nEntry.setSynced(false);
+                    nEntry.setCreated(d.toDateTime().toDate());
+                    nEntry.setEntryMonth(month_name);
+                    nEntry.setEntryWeek(week_name);
+                    nEntry.setEntryDay(day_name);
+                    nEntry.setCreated(d.toDate());
+                    nEntry.setTransactionType("inventory");
+                    item.addInventoryUpdate(nEntry);
+                    realm.copyToRealmOrUpdate(nEntry);
                     realm.commitTransaction();
 
 
@@ -490,6 +529,7 @@ public class AddItemActivity extends BaseActivity {
                     //inventoryItem.setName(nameEditText.getText().toString());
                     inventoryItem.setQuantity(Integer.parseInt(quantityEditText.getText().toString()));
                     inventoryItem.setTotalCost(Double.parseDouble(totalCostEditText.getText().toString()));
+                    inventoryItem.setEnabled(true);
 
                     Entry entry = realm.createObject(Entry.class, d.getMillis());
                     realm.copyToRealmOrUpdate(inventoryItem);
@@ -706,6 +746,8 @@ public class AddItemActivity extends BaseActivity {
         imageView.setVisibility(View.VISIBLE);
 
     }
+
+
 
 
 
