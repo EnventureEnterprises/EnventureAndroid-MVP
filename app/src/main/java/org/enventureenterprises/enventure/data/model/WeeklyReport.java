@@ -119,7 +119,7 @@ public class WeeklyReport extends RealmObject {
     public static String getWeekName(DateTime d){
         DateTime start  = new DateTime().withWeekOfWeekyear(d.getWeekOfWeekyear());
         DateTime end  = new DateTime().withWeekOfWeekyear(d.getWeekOfWeekyear() + 1);
-        return String.format("%s to %s",start.toString("dd-M-YY"),end.toString("dd-M-YY"));
+        return String.format("%s to %s",DailyReport.mediumDate(start),DailyReport.mediumDate(end));
 
     }
 
