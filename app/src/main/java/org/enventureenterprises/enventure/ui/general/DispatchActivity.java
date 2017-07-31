@@ -17,9 +17,6 @@ public class DispatchActivity extends BaseActivity {
     private CurrentUserType currentUser;
 
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +28,8 @@ public class DispatchActivity extends BaseActivity {
             goToHome();
         }
         else{
-            goToLogin();
+            //goToLogin();
+            goToHome();
         }
 
 

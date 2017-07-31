@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
+import com.facebook.accountkit.AccountKit;
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.PeriodicTask;
 
@@ -114,6 +115,7 @@ public class BaseApplication extends MultiDexApplication {
         JodaTimeAndroid.init(this);
         Once.initialise(this);
         Realm.init(this);
+        AccountKit.initialize(this);
 
         String mobile = PrefUtils.getMobile(getApplicationContext());
 

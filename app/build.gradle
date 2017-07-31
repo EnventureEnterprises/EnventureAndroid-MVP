@@ -148,7 +148,6 @@ dependencies {
     compile 'io.reactivex:rxjava:1.1.5'
     compile 'com.jakewharton:butterknife:8.1.0'
     compile 'com.jakewharton.timber:timber:4.1.0'
-    compile "com.google.firebase:firebase-auth:$PLAY_SERVICES_VERSION"
 
     compile 'com.jakewharton.rxbinding:rxbinding:0.3.0'
     compile 'com.jakewharton.rxbinding:rxbinding-recyclerview-v7:0.3.0'
@@ -180,7 +179,7 @@ configurations.all {
         force "com.android.support:recyclerview-v7:25.1.0"
         force "com.google.code.findbugs:jsr305:3.0.1"
         force "com.squareup.okhttp3:okhttp:3.3.0"
-        force 'com.google.android.gms:play-services-gcm:11.0.1'
+        force 'com.google.android.gms:play-services-gcm:11.0.2'
     }
 }
 

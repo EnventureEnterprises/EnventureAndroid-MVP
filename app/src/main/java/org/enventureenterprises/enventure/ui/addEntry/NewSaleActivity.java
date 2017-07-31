@@ -303,9 +303,9 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                     case "Installment":
                         //create account with phone number and add as entry
                         //amount = parseDouble(amountPaidEditText.getText().toString());
-                        amount = _parseDouble(amountPayingEditText.getText().toString());
+                        amount = _parseDouble(amountPaidEditText.getText().toString());
                         total_cost = _parseDouble(totalPriceEditText.getText().toString());
-                        amount_paid =  _parseDouble(amountPayingEditText.getText().toString());
+                        amount_paid =  _parseDouble(amountPaidEditText.getText().toString());
                         quantity = Integer.parseInt(quantityEditText.getText().toString());
                         try {
 
