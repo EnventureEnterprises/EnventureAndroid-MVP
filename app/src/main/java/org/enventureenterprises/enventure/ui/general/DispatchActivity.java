@@ -28,8 +28,8 @@ public class DispatchActivity extends BaseActivity {
             goToHome();
         }
         else{
-            //goToLogin();
-            goToHome();
+            goToLogin();
+            //goToHome();
         }
 
 

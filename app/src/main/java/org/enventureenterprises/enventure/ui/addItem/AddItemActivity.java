@@ -225,7 +225,7 @@ public class AddItemActivity extends BaseActivity {
 
                 cameraLayout.setEnabled(false);
                 getSupportActionBar().setTitle(String.format("Editing Item  %s",item.getName()));
-                quantityEditText.setText(items_in_stock);
+                quantityEditText.setText(String.format("%s",items_in_stock));
                 totalCostEditText.setText(value_of_stock.toString());
 
 
@@ -601,7 +601,7 @@ public class AddItemActivity extends BaseActivity {
         }
         else if(Item.byName(getRealm(),nameEditText.getText().toString()) !=null)
         {
-            nameLayout.setErrorEnabled(true);
+            //nameLayout.setErrorEnabled(true);
             nameEditText.setError("A Product with a similar name already exists");
             requestFocus(nameEditText);
             return false;

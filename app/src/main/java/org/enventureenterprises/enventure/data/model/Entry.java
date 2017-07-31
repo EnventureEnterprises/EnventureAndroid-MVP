@@ -256,8 +256,6 @@ public class Entry extends RealmObject {
         MonthlyReport mrep = MonthlyReport.getOrCreate(realm,monthly_report_name);
 
 
-
-
         switch (paymentType) {
 
             case "Installment Addon":

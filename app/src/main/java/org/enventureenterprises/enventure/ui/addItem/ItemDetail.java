@@ -185,6 +185,7 @@ public class ItemDetail extends BaseActivity{
         Intent intent = new Intent(getApplicationContext(), AddItemActivity.class);
         intent.putExtra("item",item.getId ());
         intent.putExtra("edit",true);
+        intent.putExtra("add",false);
         startActivity (intent);
 
     }
@@ -192,9 +193,11 @@ public class ItemDetail extends BaseActivity{
     @OnClick(R.id.fab)
     public void addItem(){
 
+
         Intent intent = new Intent(getApplicationContext(), AddItemActivity.class);
         intent.putExtra("item",item.getId ());
         intent.putExtra("add",true);
+        intent.putExtra("edit",false);
         startActivity (intent);
 
     }
