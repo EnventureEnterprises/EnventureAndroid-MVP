@@ -211,11 +211,8 @@ public class AddItemActivity extends BaseActivity {
                 ArrayList<Double> costPrices = new ArrayList<Double>();
                 Double sum = 0.0;
 
-                for (int i = 0; i<purchases.size(); i++) {
-                    Double unitcost = purchases.get(i).getAmount()/purchases.get(i).getQuantity();
-                    sum+=unitcost;
-                }
-                Double standardized_unitcost = sum/purchases.size();
+
+                Double standardized_unitcost =  value_of_purchase/items_stocked;
 
                 int items_in_stock = items_stocked - items_sold;
                 Double value_of_stock = standardized_unitcost*items_in_stock;
@@ -481,6 +478,7 @@ public class AddItemActivity extends BaseActivity {
                 {
                     realm.beginTransaction();
                     Entry nEntry = realm.createObject(Entry.class, d.getMillis());
+
 
                     nEntry.setQuantity(Integer.parseInt(quantityEditText.getText().toString())  - current_quantity);
                     nEntry.setAmount(Double.parseDouble(totalCostEditText.getText().toString())-current_stock_value);
