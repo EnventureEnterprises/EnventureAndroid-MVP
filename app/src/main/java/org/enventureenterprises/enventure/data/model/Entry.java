@@ -218,7 +218,33 @@ public class Entry extends RealmObject {
         this.amount_remaining=amount_remaining;
     }
 
-    public static void newSale(Item item, DateTime d, String paymentType,Integer quantity,Double amount,String customer_mobile,Double total_price,Double amount_paid,Realm realm) {
+    public static void  newEntry(Entry entry,Realm realm){
+        if (entry.getTransactionType() == "sale") {
+            newSale(entry.getItem(),new DateTime(entry.getCreated()),entry.getType(),entry.getQuantity(),entry.getAmount(),entry.getCustomerMobile(),entry.getTotalPrice(),entry.getAmountPaid(),realm)
+        }
+        else{
+            realm.beginTransaction();
+            DateTime d = new DateTime(entry.getCreated());
+            DateTimeFormatter fmt = DateTimeFormat.forPattern("EEEE");
+
+            String day_name = d.toString(DateTimeFormat.mediumDate().withLocale(Locale.getDefault()).withZoneUTC());
+            String week_name =  WeeklyReport.getWeekName(d);
+            String month_name = d.toString("MMM-Y");
+            Item item = entry.getItem();
+            entry.setCreated(d.toDateTime().toDate());
+            entry.setCreated(d.toDate());
+            entry.setEntryMonth(month_name);
+            //entry.setEntryYear(d.);
+            entry.setEntryWeek(week_name);
+            entry.setEntryDay(day_name);
+            item.inventory_updates.add(entry);
+            realm.copyToRealmOrUpdate(item);
+            realm.commitTransaction();
+        }
+    }
+
+    public static Entry newSale(Item item, DateTime d, String paymentType,Integer quantity,Double amount,String customer_mobile,Double total_price,Double amount_paid,Realm realm) {
+        Entry toret;
         realm.beginTransaction();
 
 
@@ -318,9 +344,12 @@ public class Entry extends RealmObject {
 
         entry.setQuantity(quantity);
             entry.setAmount(amount);
+            toret = entry;
             realm.copyToRealmOrUpdate (entry);
+
             realm.copyToRealmOrUpdate (item);
             realm.commitTransaction();
+            return toret;
 
 
 
@@ -376,6 +405,7 @@ public class Entry extends RealmObject {
 
 
             for (Item item : items) {
+                Long items_stocked = item.getInventories().where().sum("quantity").longValue();
                 Long items_stocked_today = item.getInventories().where().equalTo("entry_day", day_name).sum("quantity").longValue();
                 Double amount_spent_today = item.getInventories().where().equalTo("entry_day", day_name).sum("amount").doubleValue();
                 Long items_sold_today = item.getSales().where().equalTo("entry_day", day_name).sum("quantity").longValue();
@@ -399,13 +429,7 @@ public class Entry extends RealmObject {
 
                 RealmResults<Entry> purchases = item.getInventories().where().findAll();
 
-                Double sum = 0.0;
-
-                for (Entry entry : purchases) {
-                    Double unitcost = entry.getAmount() / entry.getQuantity();
-                    sum += unitcost;
-                }
-                Double standardized_unitcost = sum / purchases.size();
+                Double standardized_unitcost =  purchases.where().sum("amount").doubleValue()/items_stocked;
 
                 profit_today = profit_today+amount_earned_today - (standardized_unitcost * items_sold_today);
                 profit_thisweek = profit_thisweek+amount_earned_thisweek - (standardized_unitcost * items_sold_thisweek);

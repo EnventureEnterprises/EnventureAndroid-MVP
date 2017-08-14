@@ -13,10 +13,9 @@ import org.enventureenterprises.enventure.util.PrefUtils;
 import org.enventureenterprises.enventure.util.rx.ApiErrorOperator;
 import org.enventureenterprises.enventure.util.rx.Operators;
 
-import java.util.Date;
+import java.util.List;
 
 import io.realm.Realm;
-import io.realm.annotations.PrimaryKey;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -73,14 +72,15 @@ public class EnventureApi  {
                 .subscribeOn(Schedulers.io());
     }
 
-    private  long id;
-    private Date created;
-    private Double amount;
-    private Double totalCost;
-    private Integer quantity;
-    private String image;
-    @PrimaryKey
-    private String name;
+    public @NonNull Observable<AccessToken> SyncItems(final @NonNull String fbAccessToken) {
+
+        return service
+                .getAccessToken(_clientID, fbAccessToken, "convert_token", "facebook")
+                .lift(apiErrorOperator())
+                .subscribeOn(Schedulers.io());
+    }
+
+
 
 
     public @NonNull Observable<BaseResponse> createItem(final @NonNull Item item) {
@@ -144,10 +144,73 @@ public class EnventureApi  {
     }
 
     public @NonNull Observable<BaseResponse> createEntry(final @NonNull Entry entry) {
-        String mobile = PrefUtils.getMobile(mContext);
+        RequestBody mobile = RequestBody.create(
+                MediaType.parse("multipart/form-data"), PrefUtils.getMobile(mContext));
+
+        RequestBody name;
+        RequestBody amount;
+        RequestBody quantity;
+        RequestBody created;
+        RequestBody total_price;
+        RequestBody transaction_type;
+        RequestBody customer_mobile;
+
+        if (entry.getTotalPrice() != null) {
+
+            total_price =
+                    RequestBody.create(
+                            MediaType.parse("multipart/form-data"), entry.getTotalPrice().toString());
+        } else {
+            total_price =
+                    RequestBody.create(
+                            MediaType.parse("multipart/form-data"), "0.0");
+
+        }
+
+        transaction_type =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), entry.getTransactionType());
+
+        if (entry.getCustomerMobile() != null)
+        {
+            customer_mobile =
+                    RequestBody.create(
+                            MediaType.parse("multipart/form-data"), entry.getCustomerMobile());
+    }
+    else
+
+    {
+        customer_mobile =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), "");
+
+    }
+
+
+
+
+        name =
+                RequestBody.create (
+                        MediaType.parse ("multipart/form-data"), entry.getName());
+
+        created =
+                RequestBody.create (
+                        MediaType.parse ("multipart/form-data"), entry.getCreated().toString());
+
+        amount =
+                RequestBody.create (
+                        MediaType.parse ("multipart/form-data"), entry.getAmount().toString());
+
+        quantity =
+                RequestBody.create (
+                        MediaType.parse ("multipart/form-data"), entry.getQuantity().toString());
+
+        RequestBody type =
+                RequestBody.create (
+                        MediaType.parse ("multipart/form-data"), entry.getType());
 
         return service
-                .createEntry(entry.getName(), entry.getCreated(), mobile, entry.getAmount(),entry.getQuantity(),entry.getType())
+                .createEntry(name, created, mobile, amount,quantity,type,customer_mobile,total_price,transaction_type)
                 .lift(apiErrorOperator())
                 .subscribeOn(Schedulers.io());
     }
@@ -159,7 +222,7 @@ public class EnventureApi  {
     }
 
 
-    public @NonNull Observable<BaseResponse> syncItem(Item item) {
+    public @NonNull Observable<BaseResponse> syncItem(Item item,Realm realm) {
         final int relationshipsDepthLevel = 0;
        Item tosync_item = realm.copyFromRealm(item, relationshipsDepthLevel);
 
@@ -170,8 +233,9 @@ public class EnventureApi  {
     }
 
 
-    public @NonNull Observable<BaseResponse> syncEntry(Entry entry) {
-        final int relationshipsDepthLevel = 3;
+    public @NonNull Observable<BaseResponse> syncEntry(Entry entry,Realm realm) {
+        final int relationshipsDepthLevel = 2;
+
         Entry tosync_entry = realm.copyFromRealm(entry, relationshipsDepthLevel);
 
         return service
@@ -179,6 +243,27 @@ public class EnventureApi  {
                 .lift(apiErrorOperator())
                 .subscribeOn(Schedulers.io());
     }
+
+
+
+    public @NonNull Observable<List<Item>> getItems(final @NonNull String mobile) {
+
+        return service
+                .getItems(mobile)
+                .lift(apiErrorOperator())
+                .subscribeOn(Schedulers.io());
+    }
+
+    public @NonNull Observable<List<Entry>> getEntries(final @NonNull String mobile) {
+
+        return service
+                .getEntries(mobile)
+                .lift(apiErrorOperator())
+                .subscribeOn(Schedulers.io());
+    }
+
+
+
 
 
 

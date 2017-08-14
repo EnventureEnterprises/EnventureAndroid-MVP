@@ -1,4 +1,5 @@
 package org.enventureenterprises.enventure.ui.addItem;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -42,6 +43,7 @@ import org.enventureenterprises.enventure.ui.base.BaseActivity;
 import org.enventureenterprises.enventure.ui.general.ProgressDialogFragment;
 import org.enventureenterprises.enventure.util.Config;
 import org.enventureenterprises.enventure.util.GeneralUtils;
+import org.enventureenterprises.enventure.util.rx.Transformers;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
@@ -560,6 +562,7 @@ public class AddItemActivity extends BaseActivity {
                     realm.commitTransaction();
 
                     toret = inventoryItem;
+                    client.createItem(inventoryItem).compose(Transformers.neverError()).subscribe();
 
 
                 }

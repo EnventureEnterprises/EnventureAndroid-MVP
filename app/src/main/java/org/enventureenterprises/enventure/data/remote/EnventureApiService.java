@@ -6,7 +6,7 @@ import org.enventureenterprises.enventure.data.model.Entry;
 import org.enventureenterprises.enventure.data.model.Item;
 import org.enventureenterprises.enventure.data.model.User;
 
-import java.util.Date;
+import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -87,13 +87,18 @@ public interface EnventureApiService {
 
 
     @POST("entries")
-    @FormUrlEncoded
-    Observable<Response<BaseResponse>> createEntry(@Field("name") String name,
-                                                   @Field("created") Date created,
-                                                   @Field("mobile") String mobile,
-                                                   @Field("amount") Double amount,
-                                                   @Field("quantity") Integer quantity,
-                                                      @Field("type") String type);
+    @Multipart
+    Observable<Response<BaseResponse>> createEntry( @Part("name") RequestBody name,
+                                                   @Part("created") RequestBody created,
+                                                   @Part("mobile") RequestBody mobile,
+                                                   @Part("amount") RequestBody amount,
+                                                   @Part("quantity") RequestBody quantity,
+                                                   @Part("type") RequestBody type,
+                                                    @Part("customer_mobile") RequestBody customer_mobile,
+                                                    @Part("customer_mobile") RequestBody total_price,
+                                                    @Part("transaction_type") RequestBody transaction_type
+
+    );
 
 
     @POST("entries")
@@ -102,4 +107,17 @@ public interface EnventureApiService {
 
     @POST("items")
     Observable<Response<BaseResponse>> syncItem(@Body Item item);
+
+
+    @GET("entries/{mobile}/")
+    Observable<Response<List<Entry>>> getEntries(@Path("mobile") String mobile);
+
+    @GET("entries/{mobile}/{item}/")
+    Observable<Response<List<Entry>>> getSales(@Path("mobile") String mobile,@Path("item") String item);
+
+    @GET("entries/{mobile}/{item}/")
+    Observable<Response<List<Entry>>> getInventories(@Path("mobile") String mobile,@Path("item") String item);
+
+    @GET("items/{mobile}/")
+    Observable<Response<List<Item>>> getItems(@Path("mobile") String mobile);
 }

@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
+import android.widget.TextView;
 
 import com.facebook.accountkit.AccountKit;
 import com.google.android.gms.gcm.GcmNetworkManager;
@@ -22,12 +23,16 @@ import org.enventureenterprises.enventure.util.PrefUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import jonathanfinerty.once.Once;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.plugins.RxJavaErrorHandler;
 import rx.plugins.RxJavaPlugins;
 import timber.log.Timber;
@@ -122,7 +127,7 @@ public class BaseApplication extends MultiDexApplication {
         if (mobile != null) { //only init realm when you have a mobile number
 
             RealmConfiguration realmConfig = new RealmConfiguration.Builder()
-                    .name(mobile+"jk7.realm")
+                    .name(mobile+"jk8.realm")
                     .schemaVersion(0)
                     .build();
 
@@ -263,6 +268,8 @@ public class BaseApplication extends MultiDexApplication {
             Once.markDone(INIT_SYNC_ON_INSTALL);
         }
     }
+
+
 
 
 

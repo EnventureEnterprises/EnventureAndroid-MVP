@@ -32,6 +32,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
@@ -50,18 +51,27 @@ import org.enventureenterprises.enventure.data.local.SectionsPagerAdapter;
 import org.enventureenterprises.enventure.data.model.Account;
 import org.enventureenterprises.enventure.data.model.Entry;
 import org.enventureenterprises.enventure.data.model.Item;
+import org.enventureenterprises.enventure.data.remote.EnventureApi;
 import org.enventureenterprises.enventure.ui.general.HomeActivity;
 import org.enventureenterprises.enventure.util.PrefUtils;
 import org.joda.time.DateTime;
+
+import java.util.List;
+import java.util.Locale;
+
+import javax.inject.Inject;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.subjects.BehaviorSubject;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
@@ -77,6 +87,9 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
     private Integer SYNC_INTERVAL = 30;
 
     private static final int REQUEST_INVITE = 30;
+    private Subscription subscription;
+    @Inject
+    EnventureApi client;
 
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
@@ -520,6 +533,69 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
 
 
     }
+
+
+    public void getitems(){
+        client.getItems(PrefUtils.getMobile(getApplicationContext())).subscribe (new Action1<List<Item>> () {
+            @Override
+            public void call(List<Item> items) {
+                realm.executeTransactionAsync (new Realm.Transaction () {
+                                                   @Override
+                                                   public void execute(Realm realm) {
+                                                       for (Item item : items) {
+                                                           realm.copyToRealmOrUpdate (item);
+                                                       }
+                                                   }
+                                               },
+                        new Realm.Transaction.OnError () {
+                            @Override
+                            public void onError(Throwable throwable) {
+                                Timber.e (throwable, "Could not save data");
+                            }
+                        }
+                );
+
+            },
+        }, new Action1<Throwable> () {
+            @Override
+            public void call(Throwable throwable) {
+                Timber.d ("Failure: Data not loaded:- %s", throwable.toString ());
+            }
+        });
+
+        client.getEntries(PrefUtils.getMobile(getApplicationContext())).subscribe (new Action1<List<Entry>> () {
+            @Override
+            public void call(List<Entry> entries) {
+                realm.executeTransactionAsync (new Realm.Transaction () {
+                                                   @Override
+                                                   public void execute(Realm realm) {
+                                                       for (Entry entry : entries) {
+
+                                                          Entry.newEntry (entry,getRealm());
+                                                       }
+                                                   }
+                                               },
+                        new Realm.Transaction.OnError () {
+                            @Override
+                            public void onError(Throwable throwable) {
+                                Timber.e (throwable, "Could not save data");
+                            }
+                        }
+                );
+
+            },
+        }, new Action1<Throwable> () {
+            @Override
+            public void call(Throwable throwable) {
+                Timber.d ("Failure: Data not loaded:- %s", throwable.toString ());
+            }
+        });
+
+
+
+
+    }
+
 
 
 

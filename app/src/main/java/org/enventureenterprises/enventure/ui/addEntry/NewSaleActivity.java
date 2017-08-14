@@ -23,12 +23,16 @@ import com.reginald.editspinner.EditSpinner;
 import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.data.model.Entry;
 import org.enventureenterprises.enventure.data.model.Item;
+import org.enventureenterprises.enventure.data.remote.EnventureApi;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
 import org.enventureenterprises.enventure.ui.general.HomeActivity;
 import org.enventureenterprises.enventure.ui.general.ProgressDialogFragment;
+import org.enventureenterprises.enventure.util.rx.Transformers;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,6 +52,8 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
     private static Item item;
     private ProgressDialogFragment progressFragment;
     private PhoneNumberUtil phoneUtil ;
+    @Inject
+    EnventureApi client;
     
 
     @BindView(R.id.quantity)
@@ -330,12 +336,10 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
 
                 String qty = quantityEditText.getText().toString().trim();
 
-
-
-
-
                 //Entry.newSale(item, d, paymentType,Integer.parseInt(quantityEditText.getText().toString()),amount,phoneEditText.getText().toString(),Double.parseDouble(totalcostEditText.getText().toString()),getRealm());
-                Entry.newSale(item, d, paymentType,quantity,amount,customer_mobile,total_cost,amount_paid,realm);
+                Entry entry = Entry.newSale(item, d, paymentType,quantity,amount,customer_mobile,total_cost,amount_paid,realm);
+                client.createEntry(entry)
+                    .compose(Transformers.neverError()).subscribe();
 
 
                 final Intent intent = new Intent(NewSaleActivity.this, HomeActivity.class);

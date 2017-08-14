@@ -1,7 +1,7 @@
 
 apply plugin: 'com.android.application'
 apply plugin: 'realm-android'
-apply plugin: 'me.tatarka.retrolambda'
+//apply plugin: 'me.tatarka.retrolambda'
 
 
 
@@ -45,11 +45,14 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("$System.env.ENVENTURE_RELEASE_KEY")
 
-            keyAlias "$System.env.ENVENTURE_KEY_ALIAS"
-            storePassword "$System.env.STORE_PASS"
-            keyPassword "$System.env.KEY_PASS"
+
+            storeFile file('/Users/mossplix/Projects/Motage/EnVenture/enventure-release-beta-key.jks')
+
+
+            keyAlias "enventure-release-beta-key"
+            storePassword "enventure"
+            keyPassword "enventure"
 
         }
 
@@ -182,4 +185,4 @@ configurations.all {
     }
 }
 
-//apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.gms.google-services'
