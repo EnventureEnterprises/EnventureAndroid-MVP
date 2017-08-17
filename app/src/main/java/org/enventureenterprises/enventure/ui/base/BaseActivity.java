@@ -32,7 +32,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
@@ -51,10 +50,12 @@ import org.enventureenterprises.enventure.data.local.SectionsPagerAdapter;
 import org.enventureenterprises.enventure.data.model.Account;
 import org.enventureenterprises.enventure.data.model.Entry;
 import org.enventureenterprises.enventure.data.model.Item;
+import org.enventureenterprises.enventure.data.model.WeeklyReport;
 import org.enventureenterprises.enventure.data.remote.EnventureApi;
 import org.enventureenterprises.enventure.ui.general.HomeActivity;
 import org.enventureenterprises.enventure.util.PrefUtils;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 
 import java.util.List;
 import java.util.Locale;
@@ -117,6 +118,7 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
         super.onCreate(savedInstanceState);
         lifecycleSubject.onNext(ActivityEvent.CREATE);
         getActivityComponent().inject(this);
+        PrefUtils.setBoolean(getApplicationContext(), "sync", true);
 
 
 
@@ -151,6 +153,8 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
             });
         }
         }
+
+        getitems();
     }
 
 
@@ -535,74 +539,99 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
     }
 
 
-    public void getitems(){
-        client.getItems(PrefUtils.getMobile(getApplicationContext())).subscribe (new Action1<List<Item>> () {
-            @Override
-            public void call(List<Item> items) {
-                realm.executeTransactionAsync (new Realm.Transaction () {
+    public void getitems() {
+        Realm realm = getRealm();
+        if( PrefUtils.getBoolean(getApplicationContext(),"sync")) {
+            client.getItems(PrefUtils.getMobile(getApplicationContext()))
+                    .subscribe(new Action1<List<Item>>() {
+                                   @Override
+                                   public void call(List<Item> items) {
+                                       realm.executeTransactionAsync (new Realm.Transaction () {
+                                                                          @Override
+                                                                          public void execute(Realm realm) {
+                                                                              for (Item item : items) {
+                                                                                  realm.beginTransaction();
+                                                                                  DateTime d = new DateTime(item.getCreated());
+                                                                                  Entry nEntry = realm.createObject(Entry.class, d.getMillis());
+                                                                                  String day_name = d.toString(DateTimeFormat.mediumDate().withLocale(Locale.getDefault()).withZoneUTC());
+                                                                                  String week_name =  WeeklyReport.getWeekName(d);
+                                                                                  String month_name = d.toString("MMM-Y");
+
+
+                                                                                  nEntry.setQuantity(item.getQuantity());
+                                                                                  nEntry.setAmount(item.getAmount());
+                                                                                  nEntry.setSynced(false);
+                                                                                  nEntry.setCreated(d.toDateTime().toDate());
+                                                                                  nEntry.setEntryMonth(month_name);
+                                                                                  nEntry.setEntryWeek(week_name);
+                                                                                  nEntry.setEntryDay(day_name);
+                                                                                  nEntry.setCreated(item.getCreated());
+                                                                                  nEntry.setTransactionType("inventory");
+                                                                                  item.addInventoryUpdate(nEntry);
+                                                                                  realm.copyToRealmOrUpdate(nEntry);
+
+                                                                                  realm.copyToRealmOrUpdate(item);
+                                                                                  realm.commitTransaction();
+                                                                              }
+                                                                          }
+                                                                      },
+                                               new Realm.Transaction.OnError () {
                                                    @Override
-                                                   public void execute(Realm realm) {
-                                                       for (Item item : items) {
-                                                           realm.copyToRealmOrUpdate (item);
-                                                       }
+                                                   public void onError(Throwable throwable) {
+                                                       Timber.e (throwable, "Could not save data");
                                                    }
-                                               },
-                        new Realm.Transaction.OnError () {
-                            @Override
-                            public void onError(Throwable throwable) {
-                                Timber.e (throwable, "Could not save data");
-                            }
-                        }
-                );
+                                               }
+                                       );
 
-            },
-        }, new Action1<Throwable> () {
-            @Override
-            public void call(Throwable throwable) {
-                Timber.d ("Failure: Data not loaded:- %s", throwable.toString ());
-            }
-        });
+                                   }
+                               },
+                            new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+                                    Timber.d("Failure: Items  Data not loaded:- %s", throwable.toString());
+                                }
+                            });
 
-        client.getEntries(PrefUtils.getMobile(getApplicationContext())).subscribe (new Action1<List<Entry>> () {
-            @Override
-            public void call(List<Entry> entries) {
-                realm.executeTransactionAsync (new Realm.Transaction () {
+
+            client.getEntries(PrefUtils.getMobile(getApplicationContext()))
+                    .subscribe(new Action1<List<Entry>>() {
+                                   @Override
+                                   public void call(List<Entry> entries) {
+
+
+                                       realm.executeTransactionAsync (new Realm.Transaction () {
+                                                                          @Override
+                                                                          public void execute(Realm realm) {
+                                                                              for (Entry entry : entries) {
+
+                                                                                  Entry.newEntry(entry);
+                                                                              }
+                                                                          }
+                                                                      },
+                                               new Realm.Transaction.OnError () {
                                                    @Override
-                                                   public void execute(Realm realm) {
-                                                       for (Entry entry : entries) {
-
-                                                          Entry.newEntry (entry,getRealm());
-                                                       }
+                                                   public void onError(Throwable throwable) {
+                                                       Timber.e (throwable, "Could not save data");
                                                    }
-                                               },
-                        new Realm.Transaction.OnError () {
-                            @Override
-                            public void onError(Throwable throwable) {
-                                Timber.e (throwable, "Could not save data");
-                            }
-                        }
-                );
+                                               }
+                                       );
 
-            },
-        }, new Action1<Throwable> () {
-            @Override
-            public void call(Throwable throwable) {
-                Timber.d ("Failure: Data not loaded:- %s", throwable.toString ());
-            }
-        });
-
-
-
-
-    }
-
-
-
-
-
-
-
-
-
-
+                                   }
+                               },
+                            new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+                                    Timber.d("Failure: Entries  Data not loaded:- %s", throwable.toString());
+                                }
+                            });
+            //PrefUtils.setBoolean(getApplicationContext(), "sync", false);
+        }
 }
+}
+
+
+
+
+
+
+

@@ -106,7 +106,7 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
                     public void onClick(View v) {
 
                         Intent intent = new Intent(v.getContext (), ItemDetail.class);
-                        intent.putExtra("item",item.getId ());
+                        intent.putExtra("name",item.getName());
                         v.getContext ().startActivity (intent);
 
 
@@ -120,7 +120,7 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
                     public void onClick(View v) {
 
                         Intent intent = new Intent(v.getContext (), ItemDetail.class);
-                        intent.putExtra("item",item.getId ());
+                        intent.putExtra("name",item.getName());
                         v.getContext ().startActivity (intent);
 
 
@@ -134,7 +134,7 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
                     public void onClick(View v) {
 
                         Intent intent = new Intent(v.getContext (), ItemDetail.class);
-                        intent.putExtra("item",item.getId ());
+                        intent.putExtra("name",item.getName());
                         v.getContext ().startActivity (intent);
 
                     }
@@ -148,7 +148,7 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
 
                         Intent intent = new Intent(v.getContext (), ItemDetail.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("item",item.getId ());
+                        intent.putExtra("name",item.getName());
                         v.getContext ().startActivity (intent);
 
 
@@ -167,7 +167,7 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         final Item item = realmResults.get(position);
         Intent intent = new Intent(getContext (), NewSaleActivity.class);
-        intent.putExtra("item",item.getId ());
+        intent.putExtra("name",item.getName());
         getContext().startActivity (intent);
 
 
@@ -213,7 +213,7 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
 
                             Intent intent = new Intent(v.getContext (), ItemDetail.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra("item",item.getId ());
+                            intent.putExtra("name",item.getName());
                             v.getContext ().startActivity (intent);
                         }
                     }

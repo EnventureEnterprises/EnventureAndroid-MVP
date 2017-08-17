@@ -39,8 +39,8 @@ public class Item extends RealmObject {
     private boolean synced;
 
 
-    public long getId(){
-        return this.created_ts;
+    public String getId(){
+        return this.name;
     }
     public void setId(Long id){
         this.id=id;
@@ -143,22 +143,52 @@ public class Item extends RealmObject {
 
     public void addSale(Entry sale)
     {
+        if(this.sales == null)
+        {
+            this.sales =  new RealmList<Entry>();
+            this.sales.add(sale);
+        }
+        else {
 
-       this.sales.add(sale);
+            this.sales.add(sale);
+        }
     }
 
     public void addInventoryUpdate(Entry inventory)
     {
         this.inventory_updates.add(inventory);
+        if (this.inventory_updates == null)
+        {
+            this.inventory_updates = new RealmList<Entry>();
+            this.inventory_updates.add(inventory);
+
+        }
+        else {
+            this.inventory_updates.add(inventory);
+        }
     }
 
     public void addInstallmentPayments(Entry payment){
-        this.installment_payments.add(payment);
+        if (this.installment_payments == null)
+        {
+            this.installment_payments = new RealmList<Entry>();
+            this.installment_payments.add(payment);
+
+        }
+        else {
+            this.installment_payments.add(payment);
+        }
 
     }
 
     public void addDebtors(Account account){
-        this.debtors.add(account);
+        if(this.debtors == null) {
+            this.debtors = new RealmList<Account>();
+            this.debtors.add(account);
+        }else{
+            this.debtors.add(account);
+
+        }
 
 
     }

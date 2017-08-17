@@ -218,9 +218,11 @@ public class Entry extends RealmObject {
         this.amount_remaining=amount_remaining;
     }
 
-    public static void  newEntry(Entry entry,Realm realm){
+    public static void  newEntry(Entry entry){
+        Realm realm = Realm.getDefaultInstance();
         if (entry.getTransactionType() == "sale") {
-            newSale(entry.getItem(),new DateTime(entry.getCreated()),entry.getType(),entry.getQuantity(),entry.getAmount(),entry.getCustomerMobile(),entry.getTotalPrice(),entry.getAmountPaid(),realm)
+            Item item = realm.where(Item.class).equalTo("name",entry.getItem().getName()).findFirst();
+            newSale(item,new DateTime(entry.getCreated()),entry.getType(),entry.getQuantity(),entry.getAmount(),entry.getCustomerMobile(),entry.getTotalPrice(),entry.getAmountPaid(),realm);
         }
         else{
             realm.beginTransaction();
@@ -230,15 +232,20 @@ public class Entry extends RealmObject {
             String day_name = d.toString(DateTimeFormat.mediumDate().withLocale(Locale.getDefault()).withZoneUTC());
             String week_name =  WeeklyReport.getWeekName(d);
             String month_name = d.toString("MMM-Y");
-            Item item = entry.getItem();
+            Item item = realm.where(Item.class).equalTo("name",entry.getItem().getName()).findFirst();
             entry.setCreated(d.toDateTime().toDate());
             entry.setCreated(d.toDate());
             entry.setEntryMonth(month_name);
             //entry.setEntryYear(d.);
             entry.setEntryWeek(week_name);
             entry.setEntryDay(day_name);
-            item.inventory_updates.add(entry);
+            realm.copyToRealmOrUpdate(entry);
+            realm.commitTransaction();
+
+            realm.beginTransaction();
+            item.addInventoryUpdate(entry);
             realm.copyToRealmOrUpdate(item);
+
             realm.commitTransaction();
         }
     }
@@ -339,10 +346,7 @@ public class Entry extends RealmObject {
             entry.setSaleValue(current_value_minus);
 
             Double items_in_stock = item.getInventories().where().sum("quantity").doubleValue();
-
-
-
-        entry.setQuantity(quantity);
+            entry.setQuantity(quantity);
             entry.setAmount(amount);
             toret = entry;
             realm.copyToRealmOrUpdate (entry);

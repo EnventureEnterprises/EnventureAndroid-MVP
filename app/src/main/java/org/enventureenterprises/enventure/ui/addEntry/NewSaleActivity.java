@@ -132,13 +132,11 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
-                item_id = extras.getLong("item");
                 item_name = extras.getString("name");
 
             }
 
         } else {
-            item_id = savedInstanceState.getLong("item");
             item_name = savedInstanceState.getString("name");
         }
 
@@ -155,7 +153,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(NewSaleActivity.this);
 
-        item = realm.where(Item.class).equalTo ("created_ts",item_id).findFirst ();
+        item = realm.where(Item.class).equalTo ("name",item_name).findFirst ();
 
         quantityEditText.addTextChangedListener(new FormTextWatcher(quantityEditText));
         totalcostEditText.addTextChangedListener(new FormTextWatcher(totalcostEditText));
@@ -165,13 +163,6 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
         amountPaidEditText.addTextChangedListener(new FormTextWatcher(amountPaidEditText));
         amountPaidEditText.addTextChangedListener(new FormTextWatcher(amountPaidEditText));
         totalPriceEditText.addTextChangedListener(new FormTextWatcher(totalPriceEditText));
-
-
-
-
-
-
-
 
     }
 

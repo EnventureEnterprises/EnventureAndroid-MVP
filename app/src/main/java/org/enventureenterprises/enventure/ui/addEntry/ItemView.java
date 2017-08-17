@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -59,7 +58,7 @@ public class ItemView extends RelativeLayout
                     @Override
                     public void onClick(View v) {
 
-                        showAddEntryFragment(item.getId(), item.getName());
+                        showAddEntryFragment( item.getName());
                     }
                 }
         );
@@ -80,7 +79,7 @@ public class ItemView extends RelativeLayout
                     @Override
                     public void onClick(View v) {
 
-                        showAddEntryFragment(item.getId(), item.getName());
+                        showAddEntryFragment(item.getName());
                     }
                 }
         );
@@ -88,10 +87,9 @@ public class ItemView extends RelativeLayout
 
     }
 
-    public void showAddEntryFragment(@NonNull final Long item, String name) {
+    public void showAddEntryFragment(String name) {
 
         Intent intent = new Intent(getContext(), NewSaleActivity.class);
-        intent.putExtra("item", item);
         intent.putExtra("name", name);
 
         getContext().startActivity(intent);

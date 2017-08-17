@@ -173,7 +173,6 @@ public class AddItemActivity extends BaseActivity {
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
-                item_id = extras.getLong("item");
                 item_name = extras.getString("name");
                 is_edit = extras.getBoolean("edit");
                 is_add = extras.getBoolean("add");
@@ -182,13 +181,13 @@ public class AddItemActivity extends BaseActivity {
             }
 
         } else {
-            item_id = savedInstanceState.getLong("item");
+
             item_name = savedInstanceState.getString("name");
             is_edit = savedInstanceState.getBoolean("edit");
             is_add = savedInstanceState.getBoolean("add");
         }
 
-        item = realm.where(Item.class).equalTo ("created_ts",item_id).findFirst ();
+        item = realm.where(Item.class).equalTo ("name",item_name).findFirst ();
         if(item != null) {
 
             nameEditText.setText(item.getName());
@@ -571,9 +570,8 @@ public class AddItemActivity extends BaseActivity {
 
 
                     Intent intent = new Intent(AddItemActivity.this, ItemDetail.class);
-                    intent.putExtra("item_id", toret.getCreatedTs());
-                    intent.putExtra("item", toret.getCreatedTs());
-                    intent.putExtra("item_name", toret.getName());
+
+                    intent.putExtra("name", toret.getName());
                     startActivityWithTransition(intent, R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
 
 

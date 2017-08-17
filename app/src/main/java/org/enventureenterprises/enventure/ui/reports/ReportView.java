@@ -67,7 +67,6 @@ public class ReportView extends RelativeLayout
     public void showAddEntryFragment(@NonNull final Long item, String name) {
 
         Intent intent = new Intent(getContext(), NewSaleActivity.class);
-        intent.putExtra("item", item);
         intent.putExtra("name", name);
 
         getContext().startActivity(intent);

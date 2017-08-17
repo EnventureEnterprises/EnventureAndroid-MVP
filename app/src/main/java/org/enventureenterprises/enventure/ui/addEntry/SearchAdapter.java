@@ -74,7 +74,7 @@ public class SearchAdapter extends RealmSearchAdapter<Item, SearchAdapter.ViewHo
                     public void onClick(View v) {
 
                         Intent intent = new Intent(v.getContext (), NewSaleActivity.class);
-                        intent.putExtra("item",item.getId ());
+                        intent.putExtra("name",item.getName ());
                         context.startActivity (intent);
 
 
@@ -87,7 +87,7 @@ public class SearchAdapter extends RealmSearchAdapter<Item, SearchAdapter.ViewHo
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         final Item item = realmResults.get(position);
                         Intent intent = new Intent(getContext (), NewSaleActivity.class);
-                        intent.putExtra("item",item.getId ());
+                        intent.putExtra("name",item.getName ());
                         context.startActivity (intent);
 
 

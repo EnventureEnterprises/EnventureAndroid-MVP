@@ -89,6 +89,24 @@ public class PrefUtils {
     }
 
 
+    public static Boolean getBoolean(final Context context,final String type) {
+        SharedPreferences sp = getSharedPreferences(context);
+
+        return sp.getBoolean(type, true);
+
+    }
+
+    public static void setBoolean(final Context context,  final String type,final Boolean flag) {
+
+        SharedPreferences sp = getSharedPreferences(context);
+        sp.edit().putBoolean(type,
+                flag).apply();
+    }
+
+
+
+
+
 
 
 

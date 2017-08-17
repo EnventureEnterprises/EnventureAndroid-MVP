@@ -35,7 +35,6 @@ import static org.enventureenterprises.enventure.R.id.items_in_stock;
  */
 
 public class ItemDetail extends BaseActivity{
-    private Long item_id;
     private String item_name;
     Realm realm;
     private ActionBar actionBar;
@@ -77,29 +76,22 @@ public class ItemDetail extends BaseActivity{
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
-                item_id = extras.getLong("item");
                 item_name = extras.getString("name");
 
             }
 
         } else {
-            item_id = savedInstanceState.getLong("item");
             item_name = savedInstanceState.getString("name");
         }
 
         realm = Realm.getDefaultInstance ();
         actionBar = getSupportActionBar ();
 
-        item = realm.where(Item.class).equalTo ("created_ts",item_id).findFirst ();
+        item = realm.where(Item.class).equalTo ("name",item_name).findFirst ();
 
         productName.setText(item.getName());
 
-        totalStock.setText(item.getTotalCost().toString());
-
         Double value_in_stock=0.0;
-
-
-
 
         Long items_stocked = item.getInventories().where().sum("quantity").longValue();
         Long items_sold  = item.getSales().where().sum("quantity").longValue();
@@ -118,11 +110,6 @@ public class ItemDetail extends BaseActivity{
 
         Long items_in_stock = items_stocked - items_sold;
 
-
-
-
-
-
         Double value_of_stock = standardized_unitcost*items_in_stock;
 
 
@@ -133,22 +120,12 @@ public class ItemDetail extends BaseActivity{
         quantityInStock.setText(String.format("%s Items in stock",
                 items_in_stock));
 
-
-
-
         if(item != null){
-
-
             actionBar.setTitle (item.getName ());
             if(item.getImage() != null) {
                 Glide.with(ItemDetail.this).load(new File(Uri.parse(item.getImage()).getPath())).placeholder(new ColorDrawable(Color.GRAY)).into(itemImage);
             }
         }
-
-
-
-
-
 
     }
 
@@ -183,7 +160,7 @@ public class ItemDetail extends BaseActivity{
     public void edit_product()
     {
         Intent intent = new Intent(getApplicationContext(), AddItemActivity.class);
-        intent.putExtra("item",item.getId ());
+        intent.putExtra("name",item.getName());
         intent.putExtra("edit",true);
         intent.putExtra("add",false);
         startActivity (intent);
@@ -195,7 +172,7 @@ public class ItemDetail extends BaseActivity{
 
 
         Intent intent = new Intent(getApplicationContext(), AddItemActivity.class);
-        intent.putExtra("item",item.getId ());
+        intent.putExtra("name",item.getName ());
         intent.putExtra("add",true);
         intent.putExtra("edit",false);
         startActivity (intent);
