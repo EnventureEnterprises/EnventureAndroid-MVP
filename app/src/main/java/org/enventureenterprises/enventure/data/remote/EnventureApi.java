@@ -1,7 +1,11 @@
 package org.enventureenterprises.enventure.data.remote;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -13,6 +17,8 @@ import org.enventureenterprises.enventure.util.PrefUtils;
 import org.enventureenterprises.enventure.util.rx.ApiErrorOperator;
 import org.enventureenterprises.enventure.util.rx.Operators;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.List;
 
 import io.realm.Realm;
@@ -115,11 +121,48 @@ public class EnventureApi  {
                         MediaType.parse ("multipart/form-data"), mobile_t);
         if(item.getImage() != null) {
 
-            RequestBody requestFile =
-                    RequestBody.create(MediaType.parse("multipart/form-data"), item.getImage());
+
+
+            int compressionRatio = 4; //1 == originalImage, 2 = 50% compression, 4=25% compress
+            File file = new File (item.getImage());
+            RequestBody requestFile;
+            Bitmap bitmap;
+            BitmapFactory.Options options;
+            try {
+                options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+
+
+		/* Figure out which way needs to be reduced less */
+                int scaleFactor = 1;
+
+
+		/* Set bitmap options to scale the image decode target */
+                options.inSampleSize = scaleFactor;
+                options.inPurgeable = true;
+
+                bitmap = BitmapFactory.decodeStream(mContext.getContentResolver().openInputStream(Uri.parse(file.getPath())));
+
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG,compressionRatio, stream);
+                byte[] byteArray = stream.toByteArray();
+                requestFile =
+                        RequestBody.create(MediaType.parse("multipart/form-data"), byteArray);
+
+
+            }
+            catch (Throwable t) {
+                Log.e("ERROR", "Error compressing file." + t.toString ());
+                t.printStackTrace ();
+                requestFile =
+                        RequestBody.create(MediaType.parse("multipart/form-data"), item.getImage());
+            }
 
             photo_file =
-                    MultipartBody.Part.createFormData ("picture", "img", requestFile);
+                    MultipartBody.Part.createFormData ("picture", item.getName()+".jpg", requestFile);
+
+
 
             return service
                     .createItem(name, total_cost, quantity, mobile,created,photo_file)

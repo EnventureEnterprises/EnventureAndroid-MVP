@@ -599,7 +599,8 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
                                    public void call(List<Entry> entries) {
 
 
-                                       realm.executeTransactionAsync (new Realm.Transaction () {
+
+                                      realm.executeTransactionAsync (new Realm.Transaction () {
                                                                           @Override
                                                                           public void execute(Realm realm) {
                                                                               for (Entry entry : entries) {

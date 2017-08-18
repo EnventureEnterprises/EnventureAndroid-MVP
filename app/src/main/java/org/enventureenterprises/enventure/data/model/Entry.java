@@ -220,7 +220,7 @@ public class Entry extends RealmObject {
 
     public static void  newEntry(Entry entry){
         Realm realm = Realm.getDefaultInstance();
-        if (entry.getTransactionType() == "sale") {
+        if (entry.getType() == "sale") {
             Item item = realm.where(Item.class).equalTo("name",entry.getItem().getName()).findFirst();
             newSale(item,new DateTime(entry.getCreated()),entry.getType(),entry.getQuantity(),entry.getAmount(),entry.getCustomerMobile(),entry.getTotalPrice(),entry.getAmountPaid(),realm);
         }
@@ -249,13 +249,9 @@ public class Entry extends RealmObject {
             realm.commitTransaction();
         }
     }
-
     public static Entry newSale(Item item, DateTime d, String paymentType,Integer quantity,Double amount,String customer_mobile,Double total_price,Double amount_paid,Realm realm) {
         Entry toret;
         realm.beginTransaction();
-
-
-
 
         DateTimeFormatter fmt = DateTimeFormat.forPattern("EEEE");
         Entry entry =  realm.createObject(Entry.class, d.getMillis());
