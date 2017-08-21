@@ -46,8 +46,8 @@ public class BaseApplication extends MultiDexApplication {
     public final static String EVENTURE_PIC_DIR = "enventure";
 
     private String TASK_TAG ="periodic_task3";
-    //private Integer SYNC_INTERVAL = 86400;
-    private Integer SYNC_INTERVAL = 100;
+    private Integer SYNC_INTERVAL = 86400;
+    //private Integer SYNC_INTERVAL = 100;
 
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
 

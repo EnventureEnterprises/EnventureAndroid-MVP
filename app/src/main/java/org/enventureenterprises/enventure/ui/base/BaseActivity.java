@@ -115,7 +115,7 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
         super.onCreate(savedInstanceState);
         lifecycleSubject.onNext(ActivityEvent.CREATE);
         getActivityComponent().inject(this);
-        
+
         String mobile = PrefUtils.getMobile(getApplicationContext());
 
         if (mobile != null) {
