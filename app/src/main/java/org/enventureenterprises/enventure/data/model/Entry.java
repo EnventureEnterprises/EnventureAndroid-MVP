@@ -220,7 +220,7 @@ public class Entry extends RealmObject {
 
     public static void  newEntry(Entry entry){
         Realm realm = Realm.getDefaultInstance();
-        if (entry.getType() == "sale") {
+        if (entry.getTransactionType() != null  && entry.getTransactionType().toString().equals("sale")) {
             Item item = realm.where(Item.class).equalTo("name",entry.getItem().getName()).findFirst();
             newSale(item,new DateTime(entry.getCreated()),entry.getType(),entry.getQuantity(),entry.getAmount(),entry.getCustomerMobile(),entry.getTotalPrice(),entry.getAmountPaid(),realm);
         }
@@ -254,7 +254,7 @@ public class Entry extends RealmObject {
         realm.beginTransaction();
 
         DateTimeFormatter fmt = DateTimeFormat.forPattern("EEEE");
-        Entry entry =  realm.createObject(Entry.class, d.getMillis());
+        Entry entry =  Entry.getOrCreate(realm, d.getMillis());
 
         String day_name = d.toString(DateTimeFormat.mediumDate().withLocale(Locale.getDefault()).withZoneUTC());
         String week_name =  WeeklyReport.getWeekName(d);
@@ -326,22 +326,6 @@ public class Entry extends RealmObject {
                 break;
         }
 
-
-            Integer current_quantity = item.getQuantity();
-            Double current_total_stock = item.getTotalCost();
-
-            Double unit_cost  =  current_total_stock/current_quantity;
-
-            Double current_value_minus = (quantity*unit_cost);
-
-            Double  current_value = item.getTotalCost() - current_value_minus;
-
-            item.setTotalCost(current_value);
-            item.setQuantity(current_quantity-quantity);
-
-            entry.setSaleValue(current_value_minus);
-
-            Double items_in_stock = item.getInventories().where().sum("quantity").doubleValue();
             entry.setQuantity(quantity);
             entry.setAmount(amount);
             toret = entry;
@@ -466,6 +450,24 @@ public class Entry extends RealmObject {
         realm.close();
 
     }
+
+
+
+    public static Entry byId(Realm realm, Long created_ts) {
+        return realm.where(Entry.class).equalTo("created_ts", created_ts).findFirst();
+    }
+
+    public static Entry getOrCreate(Realm realm,Long created_ts){
+        Entry entry = Entry.byId(realm,created_ts);
+        if (entry == null){
+            entry =  realm.createObject(Entry.class, created_ts);
+
+        }
+        return entry;
+
+
+    }
+
 
 
 

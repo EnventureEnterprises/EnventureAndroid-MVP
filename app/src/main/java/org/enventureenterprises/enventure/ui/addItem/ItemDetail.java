@@ -3,7 +3,6 @@ package org.enventureenterprises.enventure.ui.addItem;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -19,7 +18,6 @@ import org.enventureenterprises.enventure.ui.base.BaseActivity;
 import org.enventureenterprises.enventure.ui.general.HomeActivity;
 import org.enventureenterprises.enventure.util.GeneralUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -91,7 +89,7 @@ public class ItemDetail extends BaseActivity{
 
         productName.setText(item.getName());
 
-        Double value_in_stock=0.0;
+
 
         Long items_stocked = item.getInventories().where().sum("quantity").longValue();
         Long items_sold  = item.getSales().where().sum("quantity").longValue();
@@ -100,12 +98,7 @@ public class ItemDetail extends BaseActivity{
 
        RealmResults<Entry> purchases = item.getInventories().where().findAll();
         ArrayList<Double> costPrices = new ArrayList<Double>();
-        Double sum = 0.0;
 
-        for (Entry purchase : purchases) {
-            Double unitcost = purchase.getAmount()/purchase.getQuantity();
-            sum+=unitcost;
-        }
         Double standardized_unitcost =  value_of_purchase/items_stocked;
 
         Long items_in_stock = items_stocked - items_sold;
@@ -123,7 +116,7 @@ public class ItemDetail extends BaseActivity{
         if(item != null){
             actionBar.setTitle (item.getName ());
             if(item.getImage() != null) {
-                Glide.with(ItemDetail.this).load(new File(Uri.parse(item.getImage()).getPath())).placeholder(new ColorDrawable(Color.GRAY)).into(itemImage);
+                Glide.with(ItemDetail.this).load(item.getImage()).placeholder(new ColorDrawable(Color.GRAY)).into(itemImage);
             }
         }
 

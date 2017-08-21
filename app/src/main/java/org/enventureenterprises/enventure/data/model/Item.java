@@ -132,8 +132,8 @@ public class Item extends RealmObject {
     public static Item getOrCreate(Realm realm,String name){
          Item item = Item.byName(realm,name);
         if (item == null){
-            item = new Item();
-            item.setName(name);
+            item =  realm.createObject(Item.class, name);
+
         }
         return item;
 
@@ -156,7 +156,7 @@ public class Item extends RealmObject {
 
     public void addInventoryUpdate(Entry inventory)
     {
-        this.inventory_updates.add(inventory);
+
         if (this.inventory_updates == null)
         {
             this.inventory_updates = new RealmList<Entry>();

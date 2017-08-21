@@ -50,15 +50,12 @@ import org.enventureenterprises.enventure.data.local.SectionsPagerAdapter;
 import org.enventureenterprises.enventure.data.model.Account;
 import org.enventureenterprises.enventure.data.model.Entry;
 import org.enventureenterprises.enventure.data.model.Item;
-import org.enventureenterprises.enventure.data.model.WeeklyReport;
 import org.enventureenterprises.enventure.data.remote.EnventureApi;
 import org.enventureenterprises.enventure.ui.general.HomeActivity;
 import org.enventureenterprises.enventure.util.PrefUtils;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
 
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -118,12 +115,7 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
         super.onCreate(savedInstanceState);
         lifecycleSubject.onNext(ActivityEvent.CREATE);
         getActivityComponent().inject(this);
-        PrefUtils.setBoolean(getApplicationContext(), "sync", true);
-
-
-
-
-
+        
         String mobile = PrefUtils.getMobile(getApplicationContext());
 
         if (mobile != null) {
@@ -140,7 +132,9 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
             entries.addChangeListener(new RealmChangeListener<RealmResults<Entry>>() {
                 @Override
                 public void onChange(RealmResults<Entry> entries) {
-                    Entry.updateReports(new DateTime());
+                    for (Entry entry: entries) {
+                        Entry.updateReports(new DateTime(entry.getCreated()));
+                    }
                 }
             });
 
@@ -148,7 +142,9 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
             items.addChangeListener(new RealmChangeListener<RealmResults<Item>>() {
                 @Override
                 public void onChange(RealmResults<Item> items) {
-                    Entry.updateReports(new DateTime());
+                    for (Item item: items) {
+                        Entry.updateReports(new DateTime(item.getCreated()));
+                    }
                 }
             });
         }
@@ -534,54 +530,25 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
 
         realm.commitTransaction();
 
-
-
     }
 
 
     public void getitems() {
-        Realm realm = getRealm();
         if( PrefUtils.getBoolean(getApplicationContext(),"sync")) {
             client.getItems(PrefUtils.getMobile(getApplicationContext()))
                     .subscribe(new Action1<List<Item>>() {
                                    @Override
                                    public void call(List<Item> items) {
-                                       realm.executeTransactionAsync (new Realm.Transaction () {
-                                                                          @Override
-                                                                          public void execute(Realm realm) {
-                                                                              for (Item item : items) {
-                                                                                  realm.beginTransaction();
-                                                                                  DateTime d = new DateTime(item.getCreated());
-                                                                                  Entry nEntry = realm.createObject(Entry.class, d.getMillis());
-                                                                                  String day_name = d.toString(DateTimeFormat.mediumDate().withLocale(Locale.getDefault()).withZoneUTC());
-                                                                                  String week_name =  WeeklyReport.getWeekName(d);
-                                                                                  String month_name = d.toString("MMM-Y");
+                                       Realm realm = Realm.getDefaultInstance();
+                                       for (Item item : items) {
+                                           realm.beginTransaction();
+
+                                           realm.copyToRealmOrUpdate(item);
+                                           realm.commitTransaction();
+
+                                       }
 
 
-                                                                                  nEntry.setQuantity(item.getQuantity());
-                                                                                  nEntry.setAmount(item.getAmount());
-                                                                                  nEntry.setSynced(false);
-                                                                                  nEntry.setCreated(d.toDateTime().toDate());
-                                                                                  nEntry.setEntryMonth(month_name);
-                                                                                  nEntry.setEntryWeek(week_name);
-                                                                                  nEntry.setEntryDay(day_name);
-                                                                                  nEntry.setCreated(item.getCreated());
-                                                                                  nEntry.setTransactionType("inventory");
-                                                                                  item.addInventoryUpdate(nEntry);
-                                                                                  realm.copyToRealmOrUpdate(nEntry);
-
-                                                                                  realm.copyToRealmOrUpdate(item);
-                                                                                  realm.commitTransaction();
-                                                                              }
-                                                                          }
-                                                                      },
-                                               new Realm.Transaction.OnError () {
-                                                   @Override
-                                                   public void onError(Throwable throwable) {
-                                                       Timber.e (throwable, "Could not save data");
-                                                   }
-                                               }
-                                       );
 
                                    }
                                },
@@ -597,25 +564,11 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
                     .subscribe(new Action1<List<Entry>>() {
                                    @Override
                                    public void call(List<Entry> entries) {
+                                       Realm realm = Realm.getDefaultInstance();
+                                       for (Entry entry : entries) {
 
-
-
-                                      realm.executeTransactionAsync (new Realm.Transaction () {
-                                                                          @Override
-                                                                          public void execute(Realm realm) {
-                                                                              for (Entry entry : entries) {
-
-                                                                                  Entry.newEntry(entry);
-                                                                              }
-                                                                          }
-                                                                      },
-                                               new Realm.Transaction.OnError () {
-                                                   @Override
-                                                   public void onError(Throwable throwable) {
-                                                       Timber.e (throwable, "Could not save data");
-                                                   }
-                                               }
-                                       );
+                                           Entry.newEntry(entry);
+                                       }
 
                                    }
                                },
@@ -625,7 +578,7 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
                                     Timber.d("Failure: Entries  Data not loaded:- %s", throwable.toString());
                                 }
                             });
-            //PrefUtils.setBoolean(getApplicationContext(), "sync", false);
+            PrefUtils.setBoolean(getApplicationContext(), "sync", false);
         }
 }
 }

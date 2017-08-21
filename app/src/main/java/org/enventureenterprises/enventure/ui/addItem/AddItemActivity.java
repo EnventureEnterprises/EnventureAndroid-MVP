@@ -229,7 +229,7 @@ public class AddItemActivity extends BaseActivity {
 
                 entry_to_edit = item.getInventories().where().findAllSorted("created", Sort.DESCENDING).first();
                 if(item.getImage() != null) {
-                    Glide.with(AddItemActivity.this).load(new File(Uri.parse(item.getImage()).getPath())).placeholder(new ColorDrawable(Color.GRAY)).into(imageView);
+                    Glide.with(AddItemActivity.this).load(item.getImage()).placeholder(new ColorDrawable(Color.GRAY)).into(imageView);
                 }
             }
         }
@@ -478,7 +478,7 @@ public class AddItemActivity extends BaseActivity {
                 if (is_edit == true)
                 {
                     realm.beginTransaction();
-                    Entry nEntry = realm.createObject(Entry.class, d.getMillis());
+                    Entry nEntry = Entry.getOrCreate(realm, d.getMillis());
 
 
                     nEntry.setQuantity(Integer.parseInt(quantityEditText.getText().toString())  - current_quantity);
