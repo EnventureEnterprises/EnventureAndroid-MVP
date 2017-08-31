@@ -51,15 +51,15 @@ public class DispatchActivity extends BaseActivity {
 
     public void goToLogin() {
         final Intent loginIntent = new Intent(DispatchActivity.this, LoginActivity.class);
-
-
         startActivityWithTransition(loginIntent, R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
+        finish();
 
     }
 
     public void goToHome() {
         final Intent intent = new Intent(DispatchActivity.this, HomeActivity.class);
         startActivityWithTransition(intent, R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
+        finish();
     }
 }
 
