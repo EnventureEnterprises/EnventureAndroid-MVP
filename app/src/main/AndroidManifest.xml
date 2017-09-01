@@ -118,8 +118,16 @@
                 android:resource="@xml/searchable" />
         </activity>
 
-
-
+        <!-- fileprovider component for sharing content uri's in our case screenshots-->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="org.enventureenterprises.enventure.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
 
 
     </application>
