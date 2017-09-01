@@ -526,14 +526,14 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                 error_message = "Invalid entry. Enter numbers only";
 
 
-            } else {
+            }/* else {
                 if (_parseDouble(totalcost) < 100){
                     error=true;
                     error_message = "Price has to be greater than 100";
 
                 }
 
-            }
+            }*/
 
 
 
