@@ -155,5 +155,6 @@
     <dimen name="corner_radius">8dp</dimen>
     <dimen name="tap_target_menu_max_width">350dp</dimen>
     <dimen name="load_more_item_height">50dp</dimen>
+    <dimen name="text_input_size">24sp</dimen>
 
 </resources>

@@ -70,6 +70,10 @@
     </style>
 
 
+    <style name="TextAppearance.App.TextInputLayout" parent="Widget.Design.TextInputLayout">
+        <item name="colorAccent">@color/black_overlay</item>
+    </style>
+
 
 
 

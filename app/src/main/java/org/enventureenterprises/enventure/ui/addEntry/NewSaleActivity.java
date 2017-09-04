@@ -146,9 +146,9 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
 
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.entry_array, android.R.layout.simple_spinner_item);
+                R.array.entry_array, R.layout.spinner_payment_item);
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.spinner_payment_dropdown_item);
 
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(NewSaleActivity.this);
