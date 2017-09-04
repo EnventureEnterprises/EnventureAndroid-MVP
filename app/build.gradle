@@ -30,8 +30,8 @@ android {
         applicationId "org.enventureenterprises.enventure"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.0.0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -95,7 +95,7 @@ android {
 
 dependencies {
     final PLAY_SERVICES_VERSION = '11.0.2'
-    final SUPPORT_LIBRARY_VERSION = '25.1.0'
+    final SUPPORT_LIBRARY_VERSION = '25.3.1'
     final RETROFIT_VERSION = '2.1.0'
     final DAGGER_VERSION = '2.9'
     final DEXMAKER_VERSION = '1.4'
@@ -168,7 +168,6 @@ dependencies {
     compile 'com.facebook.android:account-kit-sdk:4.24.0'
     compile 'com.jonathanfinerty.once:once:1.2.2'
     compile 'com.reginald:editspinner:1.0.0'
-    compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:2.0.1-rc1'
     testCompile 'junit:junit:4.12'
 }
@@ -176,9 +175,9 @@ dependencies {
 
 configurations.all {
     resolutionStrategy {
-        force "com.android.support:appcompat-v7:25.1.0"
-        force "com.android.support:design:25.1.0"
-        force "com.android.support:recyclerview-v7:25.1.0"
+        force "com.android.support:appcompat-v7:25.3.1"
+        force "com.android.support:design:25.3.1"
+        force "com.android.support:recyclerview-v7:25.3.1"
         force "com.google.code.findbugs:jsr305:3.0.1"
         force "com.squareup.okhttp3:okhttp:3.3.0"
         force 'com.google.android.gms:play-services-gcm:11.0.2'

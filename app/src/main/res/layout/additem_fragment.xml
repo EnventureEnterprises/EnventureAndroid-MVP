@@ -78,7 +78,10 @@
                 android:inputType="numberDecimal"
                 android:maxLines="1"
                 android:nextFocusDown="@+id/type_layout"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="33dp" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -88,9 +91,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-
             android:layout_marginTop="25dip"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_product_image"
+                android:layout_marginBottom="16dp"
+                android:textSize="24sp" />
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -109,8 +119,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/selected_photo"
-
-
                     android:layout_alignEnd="@+id/selected_photo"
                     android:layout_alignLeft="@+id/selected_photo"
                     android:layout_alignRight="@+id/selected_photo"
@@ -121,12 +129,7 @@
 
             </RelativeLayout>
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/add_product_image"
-                android:textSize="20sp" />
+
 
             <LinearLayout
                 android:id="@+id/gallery_container"
@@ -139,7 +142,7 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/gallery"
-                    android:layout_width="41dp"
+                    android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"

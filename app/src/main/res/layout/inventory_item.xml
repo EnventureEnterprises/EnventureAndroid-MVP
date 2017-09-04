@@ -29,8 +29,7 @@
             android:layout_height="64dp"
             android:adjustViewBounds="true"
             android:layout_marginStart="10dp"
-            tools:src="@color/colorPrimary"
-            android:scaleType="fitCenter" />
+            android:scaleType="centerCrop" />
 
         <RelativeLayout
             android:layout_width="wrap_content"

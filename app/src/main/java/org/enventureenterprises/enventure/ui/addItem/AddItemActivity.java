@@ -49,6 +49,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -116,15 +117,10 @@ public class AddItemActivity extends BaseActivity {
     TextInputLayout totalcostLayout;
 
 
-
-
     @BindView(R.id.camera_container)
     LinearLayout cameraLayout;
     @BindView(R.id.no_photo)
     TextView noPhoto;
-
-
-
 
 
     private Bitmap mImageBitmap;
@@ -155,9 +151,7 @@ public class AddItemActivity extends BaseActivity {
         ButterKnife.bind(this);
 
 
-
-        realm = Realm.getDefaultInstance ();
-
+        realm = Realm.getDefaultInstance();
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -167,10 +161,10 @@ public class AddItemActivity extends BaseActivity {
 
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
-        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
-            mAlbumStorageDirFactory = new FroyoAlbumDirFactory ();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+            mAlbumStorageDirFactory = new FroyoAlbumDirFactory();
         } else {
-            mAlbumStorageDirFactory = new BaseAlbumDirFactory ();
+            mAlbumStorageDirFactory = new BaseAlbumDirFactory();
         }
 
         if (savedInstanceState == null) {
@@ -190,24 +184,23 @@ public class AddItemActivity extends BaseActivity {
             is_add = savedInstanceState.getBoolean("add");
         }
 
-        item = realm.where(Item.class).equalTo ("name",item_name).findFirst ();
-        if(item != null) {
+        item = realm.where(Item.class).equalTo("name", item_name).findFirst();
+        if (item != null) {
 
             nameEditText.setText(item.getName());
 
 
-            if(is_add == true){
+            if (is_add == true) {
                 nameEditText.setEnabled(false);
-                getSupportActionBar().setTitle(String.format("Add Inventory to %s",item.getName()));
+                getSupportActionBar().setTitle(String.format("Add Inventory to %s", item.getName()));
             }
 
-            if (is_edit == true)
-            {
+            if (is_edit == true) {
                 nameEditText.setEnabled(false);
                 //get last entry
 
                 int items_stocked = item.getInventories().where().sum("quantity").intValue();
-                int items_sold  = item.getSales().where().sum("quantity").intValue();
+                int items_sold = item.getSales().where().sum("quantity").intValue();
 
                 Double value_of_purchase = item.getInventories().where().sum("amount").doubleValue();
 
@@ -216,23 +209,24 @@ public class AddItemActivity extends BaseActivity {
                 Double sum = 0.0;
 
 
-                Double standardized_unitcost =  value_of_purchase/items_stocked;
+                Double standardized_unitcost = value_of_purchase / items_stocked;
 
                 int items_in_stock = items_stocked - items_sold;
-                Double value_of_stock = standardized_unitcost*items_in_stock;
+                Double value_of_stock = standardized_unitcost * items_in_stock;
                 current_quantity = items_in_stock;
                 current_stock_value = value_of_stock;
 
 
                 cameraLayout.setEnabled(false);
-                getSupportActionBar().setTitle(String.format("Editing Item  %s",item.getName()));
-                quantityEditText.setText(String.format("%s",items_in_stock));
+                getSupportActionBar().setTitle(String.format("Editing Item  %s", item.getName()));
+                quantityEditText.setText(String.format("%s", items_in_stock));
                 totalCostEditText.setText(value_of_stock.toString());
 
 
                 entry_to_edit = item.getInventories().where().findAllSorted("created", Sort.DESCENDING).first();
-                if(item.getImage() != null) {
-                    Glide.with(AddItemActivity.this).load(item.getImage()).placeholder(new ColorDrawable(Color.GRAY)).into(imageView);
+                if (item.getImage() != null) {
+                    Glide.with(AddItemActivity.this).load(item.getImage()).centerCrop().placeholder(new ColorDrawable(Color.GRAY)).into(imageView);
+                    noPhoto.setVisibility(View.GONE);
                 }
             }
         }
@@ -275,14 +269,12 @@ public class AddItemActivity extends BaseActivity {
     }
 
 
-
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(BITMAP_STORAGE_KEY, mImageBitmap);
         if (mCurrentPhotoPath != null) {
 
-            outState.putString ("mCurrentPhotoPath", mCurrentPhotoPath);
+            outState.putString("mCurrentPhotoPath", mCurrentPhotoPath);
         }
 
         super.onSaveInstanceState(outState);
@@ -307,8 +299,8 @@ public class AddItemActivity extends BaseActivity {
             storageDir = mAlbumStorageDirFactory.getAlbumStorageDir("Enventure");
 
             if (storageDir != null) {
-                if (! storageDir.mkdirs()) {
-                    if (! storageDir.exists()){
+                if (!storageDir.mkdirs()) {
+                    if (!storageDir.exists()) {
                         Timber.d("failed to create directory");
                         return null;
                     }
@@ -357,16 +349,16 @@ public class AddItemActivity extends BaseActivity {
     // Returns the Uri for a photo stored on disk given the fileName
     public Uri getPhotoFileUri() {
         // Only continue if the SD Card is mounted
-        String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())+".jpg";
+        String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".jpg";
         if (isExternalStorageAvailable()) {
             // Get safe storage directory for photos
             // Use `getExternalFilesDir` on Context to access package-specific directories.
             // This way, we don't need to request external read/write runtime permissions.
             File mediaStorageDir = new File(
-                   getExternalFilesDir(Environment.DIRECTORY_PICTURES), "org.enventureenterprises.enventure");
+                    getExternalFilesDir(Environment.DIRECTORY_PICTURES), "org.enventureenterprises.enventure");
 
             // Create the storage directory if it does not exist
-            if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
+            if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
 
             }
 
@@ -377,32 +369,32 @@ public class AddItemActivity extends BaseActivity {
     }
 
 
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        switch(requestCode){
+        switch (requestCode) {
             case Config.REQUEST_TAKE_PHOTO:
                 if (resultCode == Activity.RESULT_OK) {
 
                     handleCameraPhoto();
-                    noPhoto.setVisibility(View.INVISIBLE);
+                    noPhoto.setVisibility(View.GONE);
 
-                }
-                else{
-                    Toast.makeText(AddItemActivity.this,"Unable to get camera image. Please select from gallery",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(AddItemActivity.this, "Unable to get camera image. Please select from gallery", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case Config.ACTIVITY_SELECT_IMAGE:
                 if (resultCode == Activity.RESULT_OK) {
+                    if (data != null) {
+                        photo = data.getData();
+//                            Bitmap bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+                        Glide.with(this).load(photo).centerCrop().into(imageView);
+//                            imageView.setImageBitmap(bm);
+                        Timber.d("Image selected: " + data.getData());
+                        noPhoto.setVisibility(View.GONE);
+                        //noPhoto.setVisibility(View.INVISIBLE);
 
-                    photo = data.getData();
-                    Bitmap img= GeneralUtils.getThumbnail(AddItemActivity.this,data.getData(),GeneralUtils.MIME_TYPE_IMAGE );
-                    imageView.setImageBitmap(img);
-                    Timber.d("Image selected: "+data.getData());
-                    //noPhoto.setVisibility(View.INVISIBLE);
-
+                    }
                 }
                 break;
             default:
@@ -415,21 +407,20 @@ public class AddItemActivity extends BaseActivity {
     }
 
     @OnClick(R.id.gallery_container)
-    public void chooseGallery(){
-        Intent intent=new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+    public void chooseGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, Config.ACTIVITY_SELECT_IMAGE);
 
     }
 
     @OnClick(R.id.camera_container)
-    public void takePhoto(){
+    public void takePhoto() {
 
         int hasPermission = ActivityCompat.checkSelfPermission(AddItemActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
         if (android.content.pm.PackageManager.PERMISSION_GRANTED == hasPermission) {
             dispatchTakePictureIntent();
-        }
-        else {
+        } else {
             ActivityCompat.requestPermissions(AddItemActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE);
         }
 
@@ -443,7 +434,6 @@ public class AddItemActivity extends BaseActivity {
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem itm) {
         // Handle action bar item clicks here. The action bar will
@@ -452,15 +442,14 @@ public class AddItemActivity extends BaseActivity {
         int id = itm.getItemId();
 
         //noinspection SimplifiableIfStatement
-        switch(id){
+        switch (id) {
             case R.id.save:
 
-               if(item == null)
-               {
-                   if (!validateName()) {
-                       return false;
-                   }
-               }
+                if (item == null) {
+                    if (!validateName()) {
+                        return false;
+                    }
+                }
 
 
                 if (!validateQuantity()) {
@@ -475,19 +464,17 @@ public class AddItemActivity extends BaseActivity {
 
                 DateTime d = new DateTime();
                 String day_name = d.toString(DateTimeFormat.mediumDate().withLocale(Locale.getDefault()).withZoneUTC());
-                String week_name =  WeeklyReport.getWeekName(d);
+                String week_name = WeeklyReport.getWeekName(d);
                 String month_name = d.toString("MMM-Y");
 
 
-
-                if (is_edit == true)
-                {
+                if (is_edit == true) {
                     realm.beginTransaction();
                     Entry nEntry = Entry.getOrCreate(realm, d.getMillis());
 
 
-                    nEntry.setQuantity(Integer.parseInt(quantityEditText.getText().toString())  - current_quantity);
-                    nEntry.setAmount(Double.parseDouble(totalCostEditText.getText().toString())-current_stock_value);
+                    nEntry.setQuantity(Integer.parseInt(quantityEditText.getText().toString()) - current_quantity);
+                    nEntry.setAmount(Double.parseDouble(totalCostEditText.getText().toString()) - current_stock_value);
                     nEntry.setSynced(false);
                     nEntry.setCreated(d.toDateTime().toDate());
                     nEntry.setEntryMonth(month_name);
@@ -500,9 +487,7 @@ public class AddItemActivity extends BaseActivity {
                     realm.commitTransaction();
 
 
-                }
-                else if (is_add == true)
-                {
+                } else if (is_add == true) {
                     realm.beginTransaction();
                     Entry entry = realm.createObject(Entry.class, d.getMillis());
 
@@ -520,10 +505,7 @@ public class AddItemActivity extends BaseActivity {
                     realm.commitTransaction();
 
 
-                }
-
-
-                else {
+                } else {
 
 
                     realm = getRealm();
@@ -572,12 +554,10 @@ public class AddItemActivity extends BaseActivity {
                 }
 
 
+                Intent intent = new Intent(AddItemActivity.this, ItemDetail.class);
 
-
-                    Intent intent = new Intent(AddItemActivity.this, ItemDetail.class);
-
-                    intent.putExtra("name", toret.getName());
-                    startActivityWithTransition(intent, R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
+                intent.putExtra("name", toret.getName());
+                startActivityWithTransition(intent, R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
 
 
                 break;
@@ -594,7 +574,6 @@ public class AddItemActivity extends BaseActivity {
     }
 
 
-
     private boolean validateName() {
         if (nameEditText.getText().toString().trim().isEmpty()) {
             nameLayout.setErrorEnabled(true);
@@ -602,19 +581,13 @@ public class AddItemActivity extends BaseActivity {
             requestFocus(nameEditText);
             return false;
 
-        }
-        else if(Item.byName(getRealm(),nameEditText.getText().toString()) !=null)
-        {
+        } else if (Item.byName(getRealm(), nameEditText.getText().toString()) != null) {
             //nameLayout.setErrorEnabled(true);
             nameEditText.setError("A Product with a similar name already exists");
             requestFocus(nameEditText);
             return false;
-        }
-
-
-        else
-        {
-            nameLayout.setErrorEnabled (false);
+        } else {
+            nameLayout.setErrorEnabled(false);
         }
 
         return true;
@@ -627,17 +600,13 @@ public class AddItemActivity extends BaseActivity {
             quantityEditText.setError("Quantity is a required Field");
             requestFocus(quantityEditText);
             return false;
-        }
-
-        else if(Double.parseDouble(quantity) == Double.NaN)
-        {
+        } else if (Double.parseDouble(quantity) == Double.NaN) {
             quantityLayout.setErrorEnabled(true);
             quantityEditText.setError("Invalid entry. Enter numbers only");
             requestFocus(quantityEditText);
             return false;
-        }
-        else {
-            quantityLayout.setErrorEnabled (false);
+        } else {
+            quantityLayout.setErrorEnabled(false);
         }
 
         return true;
@@ -650,17 +619,14 @@ public class AddItemActivity extends BaseActivity {
             totalCostEditText.setError("Total Cost is a required Field");
             requestFocus(totalCostEditText);
             return false;
-        }
-        else if(Double.parseDouble(totalcost) == Double.NaN)
-        {
+        } else if (Double.parseDouble(totalcost) == Double.NaN) {
             totalcostLayout.setErrorEnabled(true);
             totalCostEditText.setError("Invalid entry. Enter numbers only");
             requestFocus(totalCostEditText);
             return false;
 
-        }
-        else {
-            totalcostLayout.setErrorEnabled (false);
+        } else {
+            totalcostLayout.setErrorEnabled(false);
         }
 
         return true;
@@ -690,13 +656,13 @@ public class AddItemActivity extends BaseActivity {
         public void afterTextChanged(Editable editable) {
             switch (view.getId()) {
                 case R.id.name:
-                    validateName ();
+                    validateName();
                     break;
                 case R.id.quantity:
-                    validateQuantity ();
+                    validateQuantity();
                     break;
                 case R.id.totalcost:
-                    validateTotalCost ();
+                    validateTotalCost();
                     break;
 
             }
@@ -704,7 +670,7 @@ public class AddItemActivity extends BaseActivity {
     }
 
     private void startProgress() {
-        progressFragment= ProgressDialogFragment.newInstance ("creating post");
+        progressFragment = ProgressDialogFragment.newInstance("creating post");
         progressFragment.show(getSupportFragmentManager(), "progress");
     }
 
@@ -713,11 +679,10 @@ public class AddItemActivity extends BaseActivity {
     }
 
 
-
     private void setPic() {
 
 		/* There isn't enough memory to open up more than a couple camera photos */
-		/* So pre-scale the target bitmap into which the file is decoded */
+        /* So pre-scale the target bitmap into which the file is decoded */
 
 		/* Get the size of the ImageView */
         int targetW = imageView.getWidth();
@@ -734,7 +699,7 @@ public class AddItemActivity extends BaseActivity {
 		/* Figure out which way needs to be reduced less */
         int scaleFactor = 1;
         if ((targetW > 0) || (targetH > 0)) {
-            scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+            scaleFactor = Math.min(photoW / targetW, photoH / targetH);
         }
 
 		/* Set bitmap options to scale the image decode target */
@@ -747,16 +712,10 @@ public class AddItemActivity extends BaseActivity {
 
 		/* Associate the Bitmap to the ImageView */
         imageView.setImageBitmap(bitmap);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         imageView.setVisibility(View.VISIBLE);
 
     }
-
-
-
-
-
-
-
 
 
 }

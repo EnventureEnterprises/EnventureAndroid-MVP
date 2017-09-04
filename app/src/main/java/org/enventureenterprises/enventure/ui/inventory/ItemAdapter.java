@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.bumptech.glide.Glide;
 import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.data.model.Item;
 import org.enventureenterprises.enventure.data.remote.EnventureApi;
+import org.enventureenterprises.enventure.injection.qualifier.ActivityContext;
 import org.enventureenterprises.enventure.injection.qualifier.ApplicationContext;
 import org.enventureenterprises.enventure.ui.addEntry.NewSaleActivity;
 import org.enventureenterprises.enventure.ui.addItem.ItemDetail;
@@ -52,7 +54,7 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
 
 
     @Inject
-    public ItemAdapter(@ApplicationContext Activity context,
+    public ItemAdapter(@ActivityContext Activity context,
                         RealmResults<Item> realmResults,
                         boolean automaticUpdate,
                         boolean animateIdType
@@ -92,9 +94,6 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
 
         holder.itemTextView.setText(String.format("%s",
                 item.getName()));
-
-
-
 
 
         holder.quantityTextView.setText(String.format("%s Products",
@@ -141,6 +140,11 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
                 }
         );
 
+
+
+        if(item.getImage() != null) {
+            Glide.with(mContext.getApplicationContext()).load(Uri.decode(item.getImage())).placeholder(new ColorDrawable(Color.GRAY)).into(holder.itemImage);
+        }
         holder.itemImage.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -155,8 +159,6 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
                     }
                 }
         );
-
-        Glide.with(mContext).load(item.getImage()).asBitmap().placeholder(new ColorDrawable(Color.GRAY)).transform(new CircleTransform(mContext)).into(holder.itemImage);
 //        Glide.with(mContext).load(item.getImage()).asBitmap().placeholder(new ColorDrawable(Color.GRAY)).into(holder.itemImage);
 
 
@@ -188,10 +190,6 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
         TextView itemTextView;
 
 
-
-
-
-
         @BindView(R.id.quantity)
         TextView quantityTextView;
 
@@ -210,7 +208,6 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
                         @Override
                         public void onClick(View v) {
                             final Item item = realmResults.get(getPosition());
-
                             Intent intent = new Intent(v.getContext (), ItemDetail.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.putExtra("name",item.getName());
