@@ -39,7 +39,7 @@
                             android:gravity="center"
                             android:keepScreenOn="true"
                             android:textColor="@color/white"
-                            android:textSize="30sp"
+                            android:textSize="24sp"
                             android:textStyle="bold"
                             android:text="Today"
                             android:layout_marginTop="10dp"
