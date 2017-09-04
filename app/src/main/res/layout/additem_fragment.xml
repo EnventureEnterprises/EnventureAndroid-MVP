@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/post_form"
-    android:layout_marginTop="@dimen/grid_5"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
-    >
+    android:layout_marginTop="@dimen/grid_5">
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
         android:layout_width="match_parent"
@@ -32,10 +32,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/product_name"
-                android:textSize="24sp"
                 android:inputType="text"
+                android:maxLines="1"
                 android:nextFocusDown="@+id/quantity"
-                android:maxLines="1" />
+                android:textSize="24sp" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -54,10 +54,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/quantity"
-                android:textSize="24sp"
                 android:inputType="number"
+                android:maxLines="1"
                 android:nextFocusDown="@+id/type_layout"
-                android:maxLines="1" />
+                android:textSize="24sp" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -75,121 +75,126 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/total_cost"
-                android:textSize="24sp"
                 android:inputType="numberDecimal"
+                android:maxLines="1"
                 android:nextFocusDown="@+id/type_layout"
-                android:maxLines="1" />
+                android:textSize="24sp" />
 
         </android.support.design.widget.TextInputLayout>
 
 
+        <LinearLayout
+            android:id="@+id/top_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+
+            android:layout_marginTop="25dip"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/selected_photo"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@color/grey_background"
+
+                    />
+
+                <TextView
+                    android:id="@+id/no_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/selected_photo"
 
 
-    <LinearLayout android:id="@+id/top_row"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical"
+                    android:layout_alignEnd="@+id/selected_photo"
+                    android:layout_alignLeft="@+id/selected_photo"
+                    android:layout_alignRight="@+id/selected_photo"
+                    android:layout_alignStart="@+id/selected_photo"
+                    android:layout_alignTop="@+id/selected_photo"
+                    android:gravity="center"
+                    android:text="No Picture Selected" />
 
-        android:layout_width="match_parent"
-        android:layout_marginTop="25dip">
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/selected_photo"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:background="@color/grey_background"
-
-                />
+            </RelativeLayout>
 
             <TextView
-                android:id="@+id/no_photo"
+                android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No Picture Selected"
-
-
-                android:layout_alignTop="@+id/selected_photo"
-                android:layout_alignBottom="@+id/selected_photo"
-                android:layout_alignEnd="@+id/selected_photo"
-                android:layout_alignRight="@+id/selected_photo"
-                android:layout_alignLeft="@+id/selected_photo"
-                android:layout_alignStart="@+id/selected_photo"
-                android:gravity="center"
-                />
-
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add_product_image"
-            android:textSize="20sp" />
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="4">
-            <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/gallery"
-                android:layout_weight="1"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                app:srcCompat="@drawable/ic_view_module_black_24dp"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                />
-            <TextView
-                android:id="@+id/text_list"
-                android:text="@string/choose_from_gallery"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="3"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_centerVertical="true"
+                android:text="@string/add_product_image"
                 android:textSize="20sp" />
 
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:id="@+id/camera_container"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="4">
-            <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/camera"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/ic_add_a_photo_black_24dp"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-
-
-                />
-
-
-            <TextView
-                android:id="@+id/text_cam"
-                android:text="@string/use_camera"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
+            <LinearLayout
+                android:id="@+id/gallery_container"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="3"
-                android:layout_centerVertical="true"
-                android:textSize="20sp" />
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:background="?android:attr/selectableItemBackground"
+                android:weightSum="4">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/gallery"
+                    android:layout_width="41dp"
+                    android:layout_height="50dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/ic_view_module_black_24dp" />
+
+                <TextView
+                    android:id="@+id/text_list"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="3"
+                    android:text="@string/choose_from_gallery"
+                    android:textSize="20sp" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/camera_container"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:background="?android:attr/selectableItemBackground"
+                android:weightSum="4">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/camera"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/ic_add_a_photo_black_24dp"
+
+
+                    />
+
+
+                <TextView
+                    android:id="@+id/text_cam"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="3"
+                    android:text="@string/use_camera"
+                    android:textSize="20sp" />
+            </LinearLayout>
 
         </LinearLayout>
 
-        </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
+</ScrollView>

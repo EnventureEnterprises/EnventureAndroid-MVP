@@ -17,6 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.AppCompatImageView;
@@ -83,9 +84,11 @@ public class AddItemActivity extends BaseActivity {
 
     private Item item;
 
-
     @BindView(R.id.camera)
     AppCompatImageView cameraImageView;
+
+    @BindView(R.id.gallery_container)
+    LinearLayout galleryContainer;
 
     @BindView(R.id.gallery)
     AppCompatImageView galleryImageView;
@@ -247,14 +250,16 @@ public class AddItemActivity extends BaseActivity {
         try {
             f = setUpPhotoFile();
             mCurrentPhotoPath = f.getAbsolutePath();
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+            Uri uri = FileProvider.getUriForFile(
+                    getApplicationContext(),
+                    "org.enventureenterprises.enventure.fileprovider", new File(mCurrentPhotoPath));
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
             photo = Uri.fromFile(f);
         } catch (IOException e) {
             e.printStackTrace();
             f = null;
             mCurrentPhotoPath = null;
         }
-
         startActivityForResult(takePictureIntent, Config.REQUEST_TAKE_PHOTO);
 
     }
@@ -409,14 +414,14 @@ public class AddItemActivity extends BaseActivity {
 
     }
 
-    @OnClick(R.id.gallery)
+    @OnClick(R.id.gallery_container)
     public void chooseGallery(){
         Intent intent=new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, Config.ACTIVITY_SELECT_IMAGE);
 
     }
 
-    @OnClick(R.id.camera)
+    @OnClick(R.id.camera_container)
     public void takePhoto(){
 
         int hasPermission = ActivityCompat.checkSelfPermission(AddItemActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
