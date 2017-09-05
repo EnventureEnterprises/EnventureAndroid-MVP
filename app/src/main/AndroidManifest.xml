@@ -14,6 +14,7 @@
         android:name="android.hardware.camera"
         android:required="true" />
 
+    <uses-feature android:name="android.hardware.screen.portrait" />
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.RECEIVE_SMS"/>
@@ -42,6 +43,7 @@
             android:name="com.facebook.accountkit.ui.AccountKitActivity" />
 
         <activity android:name=".ui.general.SplashActivity"
+            android:screenOrientation="portrait"
 
             >
             <intent-filter>
@@ -58,15 +60,19 @@
         <activity
             android:theme="@style/SplashTheme"
             android:name=".ui.signin.LoginActivity"
+            android:screenOrientation="portrait"
             />
 
 
         <activity
             android:name=".ui.general.DispatchActivity"
-            android:label="dispatch" />
+            android:label="dispatch"
+            android:screenOrientation="portrait"
+            />
 
         <activity
             android:name=".ui.general.HomeActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name" />
 
 
@@ -74,18 +80,24 @@
         <activity
             android:name=".ui.addItem.ItemDetail"
             android:parentActivityName=".ui.general.HomeActivity"
-            android:label="@string/product_detail" />
+            android:label="@string/product_detail"
+            android:screenOrientation="portrait"
+            />
 
         <activity
             android:name=".ui.addEntry.NewSaleActivity"
             android:windowSoftInputMode="stateHidden"
-            android:label="@string/add_sale" />
+            android:label="@string/add_sale"
+            android:screenOrientation="portrait"
+            />
 
 
 
         <activity
             android:name=".ui.addItem.AddItemActivity"
-            android:label="@string/add_product" />
+            android:label="@string/add_product"
+            android:screenOrientation="portrait"
+            />
 
 
         <service android:name=".service.SyncService"
@@ -104,6 +116,8 @@
             android:exported="false"
             android:launchMode="singleTop"
             android:parentActivityName=".ui.general.HomeActivity"
+            android:screenOrientation="portrait"
+
             >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
