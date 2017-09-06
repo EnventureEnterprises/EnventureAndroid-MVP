@@ -2,6 +2,8 @@ package org.enventureenterprises.enventure.ui.inventory;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,10 +30,10 @@ import io.realm.Sort;
 public class InventoryFragment extends BaseFragment {
     public static final String TAG = "inventory_fragment";
     Realm realm;
-    ItemAdapter  mInventoryAdapter;
+    ItemAdapter mInventoryAdapter;
 
     @BindView(R.id.recycler_view)
-    RealmRecyclerView mRecyclerView;
+    RecyclerView mRecyclerView;
 
     public static InventoryFragment newInstance() {
         InventoryFragment fragment = new InventoryFragment();
@@ -49,12 +51,11 @@ public class InventoryFragment extends BaseFragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu,MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.home2, menu);
-        super.onCreateOptionsMenu(menu,inflater);
+        super.onCreateOptionsMenu(menu, inflater);
 
     }
-
 
 
     @Override
@@ -64,14 +65,14 @@ public class InventoryFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.inventory_fragment, container, false);
         ButterKnife.bind(this, view);
 
-        realm = Realm.getDefaultInstance ();
+        realm = Realm.getDefaultInstance();
         RealmResults<Item> mItems =
-                realm.where(Item.class).equalTo("enabled",true).findAllSorted("created", Sort.DESCENDING);
+                realm.where(Item.class).equalTo("enabled", true).findAllSorted("created", Sort.DESCENDING);
 
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         mInventoryAdapter = new ItemAdapter(getActivity(), mItems, true, true);
 
         mRecyclerView.setAdapter(mInventoryAdapter);
-
 
 
         return view;
@@ -86,13 +87,12 @@ public class InventoryFragment extends BaseFragment {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        switch(id){
+        switch (id) {
             case R.id.add_entry:
 
                 startActivity(new Intent(getContext(), AddItemActivity.class));
                 getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
                 break;
-
 
 
         }
