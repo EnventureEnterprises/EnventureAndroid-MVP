@@ -31,7 +31,7 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
     @BindView(R.id.bottomNavigation)
     BottomNavigationViewEx bottomNavigation;
     public static final int SALES = 1;
-    public static final int INVENTORY =0;
+    public static final int INVENTORY = 0;
     public static final int REPORTS = 2;
     public static final int PROFILE = 3;
     private int navTab;
@@ -69,9 +69,6 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
         }
 
 
-
-
-
         bottomNavigation.setOnNavigationItemSelectedListener(this);
         bottomNavigation.enableAnimation(false);
         bottomNavigation.enableShiftingMode(false);
@@ -79,14 +76,14 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
         if (savedInstanceState == null) {
 
 
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.home_container, InventoryFragment.newInstance(), InventoryFragment.TAG)
-                        .commit();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.home_container, InventoryFragment.newInstance(), InventoryFragment.TAG)
+                    .commit();
 
         }
 
-        if (navTab == SALES){
+        if (navTab == SALES) {
             Menu menu = bottomNavigation.getMenu();
             menu.findItem(R.id.sales).setChecked(true);
             getSupportFragmentManager()
@@ -97,8 +94,6 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
 
 
         }
-
-
 
 
     }
@@ -155,16 +150,16 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
 
     public void onModuleChanged(@NonNull FragmentManager fragmentManager, int type) {
         Fragment currentVisible = getVisibleFragment(fragmentManager);
-        SalesFragment salesFrag = (SalesFragment)fragmentManager.findFragmentByTag(SalesFragment.TAG);
-        InventoryFragment inventoryFrag = (InventoryFragment)fragmentManager.findFragmentByTag(InventoryFragment.TAG);
-        ReportsFragment reportsFrag = (ReportsFragment)fragmentManager.findFragmentByTag(ReportsFragment.TAG);
-        ProfileFragment profileFrag = (ProfileFragment)fragmentManager.findFragmentByTag(ProfileFragment.TAG);
+        SalesFragment salesFrag = (SalesFragment) fragmentManager.findFragmentByTag(SalesFragment.TAG);
+        InventoryFragment inventoryFrag = (InventoryFragment) fragmentManager.findFragmentByTag(InventoryFragment.TAG);
+        ReportsFragment reportsFrag = (ReportsFragment) fragmentManager.findFragmentByTag(ReportsFragment.TAG);
+        ProfileFragment profileFrag = (ProfileFragment) fragmentManager.findFragmentByTag(ProfileFragment.TAG);
 
         switch (type) {
             case SALES:
-                currentSelected =SALES;
+                currentSelected = SALES;
 
-                if (salesFrag== null) {
+                if (salesFrag == null) {
                     onAddAndHide(fragmentManager, SalesFragment.newInstance(), currentVisible);
                 } else {
                     onShowHideFragment(fragmentManager, salesFrag, currentVisible);
@@ -189,7 +184,6 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
 
             case PROFILE:
                 currentSelected = PROFILE;
-
 
 
                 if (profileFrag == null) {
@@ -222,10 +216,12 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
     }
 
 
-
-
-
-
-
-
+    @Override
+    public void onBackPressed() {
+        if (bottomNavigation.getCurrentItem() != 0) {
+            bottomNavigation.setCurrentItem(0);
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

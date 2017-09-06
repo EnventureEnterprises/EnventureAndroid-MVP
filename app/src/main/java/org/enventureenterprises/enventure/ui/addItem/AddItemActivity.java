@@ -558,7 +558,7 @@ public class AddItemActivity extends BaseActivity {
 
                 intent.putExtra("name", toret.getName());
                 startActivityWithTransition(intent, R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
-
+                finish();
 
                 break;
             case android.R.id.home:
