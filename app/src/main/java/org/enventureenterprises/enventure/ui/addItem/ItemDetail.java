@@ -51,9 +51,6 @@ public class ItemDetail extends BaseActivity{
     @BindView(items_in_stock)
     TextView quantityInStock;
 
-    @BindView(R.id.fab)
-    FloatingActionButton addItem;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +59,7 @@ public class ItemDetail extends BaseActivity{
 
 
 
-        setContentView(R.layout.itemdetails_activity);
+        setContentView(R.layout.activity_item_details);
         ButterKnife.bind(this);
 
 
@@ -70,6 +67,7 @@ public class ItemDetail extends BaseActivity{
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(R.string.product_details);
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -114,7 +112,7 @@ public class ItemDetail extends BaseActivity{
                 items_in_stock));
 
         if(item != null){
-            actionBar.setTitle (item.getName ());
+            // actionBar.setTitle (item.getName ());
             if(item.getImage() != null) {
                 Glide.with(ItemDetail.this).load(item.getImage()).placeholder(new ColorDrawable(Color.GRAY)).into(itemImage);
             }
@@ -160,7 +158,7 @@ public class ItemDetail extends BaseActivity{
 
     }
 
-    @OnClick(R.id.fab)
+    @OnClick(R.id.add_product)
     public void addItem(){
 
 

@@ -96,7 +96,7 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
                 item.getName()));
 
 
-        holder.quantityTextView.setText(String.format("%s Products",
+        holder.quantityTextView.setText(String.format("%s Items",
                 items_in_stock));
 
         holder.itemView.setOnClickListener(
