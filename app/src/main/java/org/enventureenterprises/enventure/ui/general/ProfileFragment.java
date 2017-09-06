@@ -57,21 +57,20 @@ public class ProfileFragment extends BaseFragment {
         usernumber.setText(PrefUtils.getMobile(getContext()));
 
 
-
         return view;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.empty, menu);
-        super.onCreateOptionsMenu(menu,inflater);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @OnClick(R.id.sign_out_user)
-    public void signOut(){
+    public void signOut() {
         logout.execute();
         final Intent intent = new Intent(getContext(), DispatchActivity.class);
-
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         getActivity().startActivity(intent);
 
     }
