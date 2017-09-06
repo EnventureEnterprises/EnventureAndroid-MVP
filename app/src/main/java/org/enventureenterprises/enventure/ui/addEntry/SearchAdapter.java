@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 import io.realm.Realm;
 
 
-public class SearchAdapter extends RealmSearchAdapter<Item, SearchAdapter.ViewHolder> implements AdapterView.OnItemClickListener {
+public class SearchAdapter extends RealmSearchAdapter<Item, SearchAdapter.ViewHolder> {
 
     private @ApplicationContext
     Context mContext;
@@ -97,17 +97,5 @@ public class SearchAdapter extends RealmSearchAdapter<Item, SearchAdapter.ViewHo
     public Item getItem(Integer position) {
         return realmResults.get(position);
     }
-
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        final Item item = realmResults.get(position);
-        Intent intent = new Intent(getContext(), NewSaleActivity.class);
-        intent.putExtra("name", item.getName());
-        mContext.startActivity(intent);
-
-
-    }
-
 
 }

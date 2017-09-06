@@ -76,8 +76,8 @@ public class SearchItemActivity extends BaseActivity implements SearchView.OnQue
 
     @Override
     public void onBackPressed() {
-        dismiss(null);
         super.onBackPressed();
+        dismiss(null);
     }
 
     public void dismiss(View view) {
