@@ -67,7 +67,7 @@ public class ItemView extends RelativeLayout
 
 
 //        Glide.with(this.getContext()).load(item.getImage()).placeholder(new ColorDrawable(Color.GRAY)).fitCenter().crossFade().into(itemImage);
-        Glide.with(this.getContext()).load(item.getImage()).placeholder(new ColorDrawable(Color.GRAY)).transform(new CircleTransform(this.getContext())).into(itemImage);
+        Glide.with(this.getContext()).load(item.getImage()).placeholder(new ColorDrawable(Color.GRAY)).into(itemImage);
 //        Glide.with(mContext).load(item.getImage()).asBitmap().placeholder(new ColorDrawable(Color.GRAY)).transform(new CircleTransform(mContext)).into(holder.itemImage);
 
 

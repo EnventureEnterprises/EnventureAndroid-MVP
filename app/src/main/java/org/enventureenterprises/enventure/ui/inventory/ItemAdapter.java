@@ -142,6 +142,7 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
 
 
 
+
         if(item.getImage() != null) {
             Glide.with(mContext.getApplicationContext()).load(Uri.decode(item.getImage())).placeholder(new ColorDrawable(Color.GRAY)).into(holder.itemImage);
         }
@@ -207,7 +208,7 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            final Item item = realmResults.get(getPosition());
+                            final Item item = realmResults.get(getAdapterPosition());
                             Intent intent = new Intent(v.getContext (), ItemDetail.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.putExtra("name",item.getName());
