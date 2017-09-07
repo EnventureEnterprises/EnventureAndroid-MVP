@@ -637,7 +637,8 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                     Phonenumber.PhoneNumber ugNumberProto = phoneUtil.parse(phone, "UG");
                     if (Long.toString(ugNumberProto.getNationalNumber()).length() >= 9) {
 
-                        if (phoneUtil.isValidNumber(ugNumberProto)) {
+                        // if (phoneUtil.isValidNumber(ugNumberProto)) {
+                        if (android.util.Patterns.PHONE.matcher(phone).matches()) {
                             phoneLayout.setErrorEnabled(false);
                             return true;
                         } else {
