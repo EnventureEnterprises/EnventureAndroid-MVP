@@ -87,6 +87,33 @@
                 android:maxLines="1" />
 
         </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/phone_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:theme="@style/TextAppearance.App.TextInputLayout"
+            tools:hintTextAppearance="@style/TextAppearance.AppCompat">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Mobile"
+                android:inputType="phone"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:textSize="@dimen/text_input_size"
+                android:nextFocusDown="@+id/type_layout"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
         <android.support.design.widget.TextInputLayout
             android:id="@+id/total_price_layout"
             android:layout_width="match_parent"
@@ -94,6 +121,7 @@
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
             android:visibility="gone"
+            tools:visibility="visible"
             android:theme="@style/TextAppearance.App.TextInputLayout"
             tools:hintTextAppearance="@style/TextAppearance.AppCompat">
 
@@ -104,6 +132,7 @@
                 android:hint="Total Price"
                 android:inputType="numberDecimal"
                 android:visibility="gone"
+                tools:visibility="visible"
                 android:textSize="@dimen/text_input_size"
                 android:nextFocusDown="@+id/type_layout"
                 android:maxLines="1" />
@@ -117,6 +146,7 @@
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
             android:visibility="gone"
+            tools:visibility="visible"
             android:theme="@style/TextAppearance.App.TextInputLayout"
             tools:hintTextAppearance="@style/TextAppearance.AppCompat">
 
@@ -127,34 +157,13 @@
                 android:hint="Amount Paid"
                 android:inputType="numberDecimal"
                 android:visibility="gone"
+                tools:visibility="visible"
                 android:textSize="@dimen/text_input_size"
                 android:nextFocusDown="@+id/type_layout"
                 android:maxLines="1" />
 
         </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/phone_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:visibility="gone"
-            android:theme="@style/TextAppearance.App.TextInputLayout"
-            tools:hintTextAppearance="@style/TextAppearance.AppCompat">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Mobile"
-                android:inputType="phone"
-                android:visibility="gone"
-                android:textSize="@dimen/text_input_size"
-                android:nextFocusDown="@+id/type_layout"
-                android:maxLines="1" />
-
-        </android.support.design.widget.TextInputLayout>
 
 
         <android.support.design.widget.TextInputLayout
@@ -165,7 +174,8 @@
             android:layout_marginTop="8dp"
             android:visibility="gone"
             android:theme="@style/TextAppearance.App.TextInputLayout"
-            tools:hintTextAppearance="@style/TextAppearance.AppCompat">
+            tools:hintTextAppearance="@style/TextAppearance.AppCompat"
+            tools:visibility="visible">
         <com.reginald.editspinner.EditSpinner
             android:id="@+id/installment_mobile"
             android:layout_width="match_parent"

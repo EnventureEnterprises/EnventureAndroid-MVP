@@ -421,10 +421,6 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
     public void isInstallment() {
         quantityEditText.setVisibility(View.VISIBLE);
         quantityLayout.setVisibility(View.VISIBLE);
-        totalPriceLayout.setVisibility(View.VISIBLE);
-        totalPriceEditText.setVisibility(View.VISIBLE);
-        amountPaidLayout.setVisibility(View.VISIBLE);
-        amountPaidEditText.setVisibility(View.VISIBLE);
         amountPayingEditText.setVisibility(View.GONE);
         amountRemainingEditText.setVisibility(View.GONE);
         phoneEditText.setVisibility(View.VISIBLE);
@@ -640,19 +636,36 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                         // if (phoneUtil.isValidNumber(ugNumberProto)) {
                         if (android.util.Patterns.PHONE.matcher(phone).matches()) {
                             phoneLayout.setErrorEnabled(false);
+                            totalPriceLayout.setVisibility(View.VISIBLE);
+                            totalPriceEditText.setVisibility(View.VISIBLE);
+                            amountPaidLayout.setVisibility(View.VISIBLE);
+                            amountPaidEditText.setVisibility(View.VISIBLE);
                             return true;
                         } else {
                             phoneLayout.setErrorEnabled(true);
                             phoneEditText.setError("Please enter a valid phone number");
                             requestFocus(phoneEditText);
+                            totalPriceLayout.setVisibility(View.GONE);
+                            totalPriceEditText.setVisibility(View.GONE);
+                            amountPaidLayout.setVisibility(View.GONE);
+                            amountPaidEditText.setVisibility(View.GONE);
                             return false;
 
                         }
+                    } else {
+                        totalPriceLayout.setVisibility(View.GONE);
+                        totalPriceEditText.setVisibility(View.GONE);
+                        amountPaidLayout.setVisibility(View.GONE);
+                        amountPaidEditText.setVisibility(View.GONE);
                     }
                 } catch (Exception e) {
 
                     phoneLayout.setErrorEnabled(true);
                     phoneEditText.setError("Please enter a valid phone number");
+                    totalPriceLayout.setVisibility(View.GONE);
+                    totalPriceEditText.setVisibility(View.GONE);
+                    amountPaidLayout.setVisibility(View.GONE);
+                    amountPaidEditText.setVisibility(View.GONE);
                     requestFocus(phoneEditText);
                     return false;
                 }
