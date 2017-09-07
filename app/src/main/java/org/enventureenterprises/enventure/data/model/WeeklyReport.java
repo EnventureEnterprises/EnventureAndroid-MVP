@@ -1,6 +1,7 @@
 package org.enventureenterprises.enventure.data.model;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
@@ -117,8 +118,8 @@ public class WeeklyReport extends RealmObject {
 
 
     public static String getWeekName(DateTime d){
-        DateTime start  = new DateTime().withWeekOfWeekyear(d.getWeekOfWeekyear());
-        DateTime end  = new DateTime().withWeekOfWeekyear(d.getWeekOfWeekyear() + 1);
+        DateTime start  = d.withDayOfWeek(DateTimeConstants.MONDAY);
+        DateTime end  = d.withDayOfWeek(DateTimeConstants.SUNDAY);
         return String.format("%s to %s",DailyReport.mediumDate(start),DailyReport.mediumDate(end));
 
     }

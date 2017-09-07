@@ -20,6 +20,7 @@ import org.enventureenterprises.enventure.ui.reports.BaseFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
@@ -34,6 +35,9 @@ public class InventoryFragment extends BaseFragment {
 
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
+
+    @BindView(R.id.empty_inventory_layout)
+    View mEmptyInventoryLayout;
 
     public static InventoryFragment newInstance() {
         InventoryFragment fragment = new InventoryFragment();
@@ -69,12 +73,23 @@ public class InventoryFragment extends BaseFragment {
         RealmResults<Item> mItems =
                 realm.where(Item.class).equalTo("enabled", true).findAllSorted("created", Sort.DESCENDING);
 
+        if (mItems.isEmpty()) {
+            mEmptyInventoryLayout.setVisibility(View.VISIBLE);
+        } else {
+            mEmptyInventoryLayout.setVisibility(View.GONE);
+        }
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         mInventoryAdapter = new ItemAdapter(getActivity(), mItems, true, true);
-
         mRecyclerView.setAdapter(mInventoryAdapter);
-
-
+        realm.addChangeListener(realm -> {
+            RealmResults<Item> items =
+                    realm.where(Item.class).equalTo("enabled", true).findAllSorted("created", Sort.DESCENDING);
+            if (items.isEmpty()) {
+                mEmptyInventoryLayout.setVisibility(View.VISIBLE);
+            } else {
+                mEmptyInventoryLayout.setVisibility(View.GONE);
+            }
+        });
         return view;
     }
 

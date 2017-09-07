@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.data.model.Entry;
+import org.enventureenterprises.enventure.data.model.Item;
 import org.enventureenterprises.enventure.lib.RealmRecyclerView;
 import org.enventureenterprises.enventure.ui.addEntry.SearchItemActivity;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
@@ -36,6 +37,9 @@ public class SalesFragment extends BaseFragment {
 
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
+
+    @BindView(R.id.empty_sales_layout)
+    View mEmptySalesLayout;
 
     public static SalesFragment newInstance() {
         SalesFragment fragment = new SalesFragment();
@@ -64,11 +68,26 @@ public class SalesFragment extends BaseFragment {
         realm = Realm.getDefaultInstance();
         RealmResults<Entry> mEntries =
                 realm.where(Entry.class).equalTo("transaction_type", "sale").findAllSorted("created", Sort.DESCENDING);
+
+        if (mEntries.isEmpty()) {
+            mEmptySalesLayout.setVisibility(View.VISIBLE);
+        } else {
+            mEmptySalesLayout.setVisibility(View.GONE);
+        }
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         mSalesAdapter = new SalesAdapter(getActivity(), mEntries, true, true);
 
         mRecyclerView.setAdapter(mSalesAdapter);
-
+        realm.addChangeListener(realm -> {
+            RealmResults<Entry> entries =
+                    realm.where(Entry.class).equalTo("transaction_type", "sale").findAllSorted("created", Sort.DESCENDING);
+            if (entries.isEmpty()) {
+                mEmptySalesLayout.setVisibility(View.VISIBLE);
+            } else {
+                mEmptySalesLayout.setVisibility(View.GONE);
+            }
+        });
 
         return view;
     }
