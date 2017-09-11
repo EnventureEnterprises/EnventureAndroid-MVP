@@ -463,7 +463,7 @@ public class AddItemActivity extends BaseActivity {
                 Item toret = item;
 
                 DateTime d = new DateTime();
-                String day_name = d.toString(DateTimeFormat.mediumDate().withLocale(Locale.getDefault()).withZoneUTC());
+                String day_name = d.toString(DateTimeFormat.mediumDate().withLocale(Locale.getDefault()));
                 String week_name = WeeklyReport.getWeekName(d);
                 String month_name = d.toString("MMM-Y");
 

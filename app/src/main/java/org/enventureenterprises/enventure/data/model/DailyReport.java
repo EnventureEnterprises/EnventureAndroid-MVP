@@ -102,7 +102,7 @@ public class DailyReport extends RealmObject {
      */
     public static @NonNull String fullDate(final @NonNull DateTime dateTime, final @NonNull Locale locale) {
         try {
-            return dateTime.toString(DateTimeFormat.fullDate().withLocale(locale).withZoneUTC());
+            return dateTime.toString(DateTimeFormat.fullDate().withLocale(locale));
         } catch (final IllegalArgumentException e) {
             // JodaTime doesn't support the 'cccc' pattern, triggered by fullDate and fullDateTime. See: https://github.com/dlew/joda-time-android/issues/30
             // Instead just return a medium date.
@@ -121,7 +121,7 @@ public class DailyReport extends RealmObject {
      * e.g.: Dec 17, 2015.
      */
     public static @NonNull String mediumDate(final @NonNull DateTime dateTime, final @NonNull Locale locale) {
-        return dateTime.toString(DateTimeFormat.mediumDate().withLocale(locale).withZoneUTC());
+        return dateTime.toString(DateTimeFormat.mediumDate().withLocale(locale));
     }
 
     public static DailyReport getOrCreate(Realm realm,String name){

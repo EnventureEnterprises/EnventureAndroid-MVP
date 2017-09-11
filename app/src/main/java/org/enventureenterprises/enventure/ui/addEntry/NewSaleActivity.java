@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -104,10 +105,10 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
     TextInputLayout totalcostLayout;
 
     @BindView(R.id.installment_mobile)
-    EditSpinner mobileNumbers;
+    AutoCompleteTextView mobileNumbers;
 
-    @BindView(R.id.installment_mobile_layout)
-    TextInputLayout mobileNumbersLayout;
+    /*@BindView(R.id.installment_mobile_layout)
+    TextInputLayout mobileNumbersLayout;*/
 
 
     @Override
@@ -295,7 +296,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                         try {
 
                             Phonenumber.PhoneNumber ugNumberProto = phoneUtil.parse(phoneEditText.getText().toString(), "UG");
-                            customer_mobile = "0" + ugNumberProto.getNationalNumber();
+                            customer_mobile = String.valueOf(ugNumberProto.getNationalNumber());
                         } catch (Exception e) {
                             return false;
                         }
@@ -386,7 +387,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
         quantityLayout.setVisibility(View.GONE);
         totalcostLayout.setVisibility(View.GONE);
         mobileNumbers.setVisibility(View.VISIBLE);
-        mobileNumbersLayout.setVisibility(View.VISIBLE);
+        //mobileNumbersLayout.setVisibility(View.VISIBLE);
         amountRemainingEditText.setVisibility(View.VISIBLE);
 
         ArrayList<String> mobiles = item.getCustomerNumbers();
