@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -52,6 +53,7 @@ public class InventoryFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -70,6 +72,9 @@ public class InventoryFragment extends BaseFragment {
         ButterKnife.bind(this, view);
 
         realm = Realm.getDefaultInstance();
+        Log.d("", "realm path: " + realm.getPath());
+
+
         RealmResults<Item> mItems =
                 realm.where(Item.class).equalTo("enabled", true).findAllSorted("created", Sort.DESCENDING);
 

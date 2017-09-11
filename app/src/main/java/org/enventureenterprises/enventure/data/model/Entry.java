@@ -465,7 +465,7 @@ public class Entry extends RealmObject {
             total_spent_today += totalSpentForItem;
             total_spent_today += purchaseCostToday;
 
-            
+
 
             double earnedWeeklyForItem = item.getSales().where().equalTo("entry_week", week_name).sum("amount").doubleValue();
             total_earned_thisweek += earnedWeeklyForItem;
@@ -523,6 +523,4 @@ public class Entry extends RealmObject {
 
 
     }
-
-
 }
