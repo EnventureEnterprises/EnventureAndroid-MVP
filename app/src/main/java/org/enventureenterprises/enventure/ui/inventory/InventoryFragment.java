@@ -114,4 +114,18 @@ public class InventoryFragment extends BaseFragment {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void refreshAdapter() {
+        RealmResults<Item> items =
+                realm.where(Item.class).equalTo("enabled", true).findAllSorted("created", Sort.DESCENDING);
+        if (items.isEmpty()) {
+            mEmptyInventoryLayout.setVisibility(View.VISIBLE);
+        } else {
+            mInventoryAdapter = new ItemAdapter(getActivity(), items, true, true);
+            mInventoryAdapter = new ItemAdapter(getActivity(), items, true, true);
+            mRecyclerView.setAdapter(mInventoryAdapter);
+            mEmptyInventoryLayout.setVisibility(View.GONE);
+        }
+        mInventoryAdapter.notifyDataSetChanged();
+    }
 }

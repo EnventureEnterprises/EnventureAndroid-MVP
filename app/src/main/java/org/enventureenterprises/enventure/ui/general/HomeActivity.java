@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import org.enventureenterprises.enventure.R;
+import org.enventureenterprises.enventure.data.model.Inventory;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
 import org.enventureenterprises.enventure.ui.inventory.InventoryFragment;
 import org.enventureenterprises.enventure.ui.reports.ReportsFragment;
@@ -132,6 +133,15 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
                 return false;
         }
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.home_container);
+        if (fragment instanceof InventoryFragment && fragment != null) {
+            ((InventoryFragment) fragment).refreshAdapter();
+        }
     }
 
     @Nullable

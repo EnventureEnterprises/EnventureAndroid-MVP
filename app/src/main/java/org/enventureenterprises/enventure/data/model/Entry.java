@@ -11,6 +11,7 @@ import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 import io.realm.annotations.PrimaryKey;
+import retrofit2.http.PUT;
 
 /**
  * Created by mossplix on 7/6/17.
@@ -448,20 +449,23 @@ public class Entry extends RealmObject {
             total_earned_today += earnedTodayForItem;
 
             //second find the cost of inventory left till today
-            long inventoryStockedForItem = item.getInventories().where().equalTo("entry_day", previousDayName).sum("quantity").longValue();
-            long inventorySoldForItem = item.getSales().where().equalTo("entry_day", previousDayName).sum("quantity").longValue();
+            long iSt = item.getInventories().where().lessThan("created", d.toDate()).sum("quantity").longValue();
+            long iSt1 = item.getSales().where().lessThan("created", d.toDate()).sum("quantity").longValue();
 
-            //unitary cost for the item
-            long totalInventoryStockedForItem = item.getInventories().where().equalTo("entry_day", day_name).sum("quantity").longValue();
+            // cost of all inventory purchases till yesterday = all purchase cost - purchase cost today
             RealmResults<Entry> purchases = item.getInventories().where().findAll();
-            double unitCostForItem = purchases.where().sum("amount").doubleValue() / totalInventoryStockedForItem;
-
-            //total cost for inventory left = inventory left * unitary cost
-            double totalSpentForItem = (inventoryStockedForItem - inventorySoldForItem) * unitCostForItem;
+            double purchaseCostToday = purchases.where().equalTo("entry_day", day_name).sum("amount").doubleValue();
+            double cSt = purchases.where().lessThan("created", d.toDate()).sum("amount").doubleValue();
+            long val = iSt - iSt1;
+            double totalSpentForItem = 0.0;
+            if (val != 0) {
+                double unitcost = cSt / (iSt * 1.0);
+                totalSpentForItem += val * unitcost;
+            }
             total_spent_today += totalSpentForItem;
-            double amount_spent_today = item.getInventories().where().equalTo("entry_day", day_name).sum("amount").doubleValue();
-            total_spent_today += amount_spent_today;
+            total_spent_today += purchaseCostToday;
 
+            
 
             double earnedWeeklyForItem = item.getSales().where().equalTo("entry_week", week_name).sum("amount").doubleValue();
             total_earned_thisweek += earnedWeeklyForItem;
