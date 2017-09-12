@@ -90,7 +90,7 @@ public class SearchAdapter extends RealmSearchAdapter<Item, SearchAdapter.ViewHo
         viewHolder.nameTextView.setText(String.format("%s",
                 item.getName()));
         if (item.getImage() != null) {
-            Glide.with(mContext).load(item.getImage()).placeholder(new ColorDrawable(Color.GRAY)).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(viewHolder.itemImage);
+            Glide.with(mContext).load(item.getImage()).centerCrop().placeholder(new ColorDrawable(Color.GRAY)).into(viewHolder.itemImage);
         }
     }
 

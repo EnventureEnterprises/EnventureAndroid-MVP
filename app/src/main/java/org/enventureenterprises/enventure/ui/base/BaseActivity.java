@@ -129,14 +129,14 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
             items = realm.where(Item.class).findAllAsync();
             entries = realm.where(Entry.class).findAllAsync();
 
-//            entries.addChangeListener(new RealmChangeListener<RealmResults<Entry>>() {
-//                @Override
-//                public void onChange(RealmResults<Entry> entries) {
-//                    for (Entry entry: entries) {
-//                        Entry.updateReports(new DateTime(entry.getCreated()));
-//                    }
-//                }
-//            });
+            entries.addChangeListener(new RealmChangeListener<RealmResults<Entry>>() {
+                @Override
+                public void onChange(RealmResults<Entry> entries) {
+                    for (Entry entry : entries) {
+                        Entry.updateReports(new DateTime(entry.getCreated()));
+                    }
+                }
+            });
 
 
             items.addChangeListener(new RealmChangeListener<RealmResults<Item>>() {

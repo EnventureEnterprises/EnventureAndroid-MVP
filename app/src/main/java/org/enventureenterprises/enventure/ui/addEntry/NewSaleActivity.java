@@ -479,10 +479,8 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                 quantityEditText.setError(error_message);
                 requestFocus(quantityEditText);
 
-
+                return false;
             }
-            quantityLayout.setErrorEnabled(false);
-            return true;
         } else {
             return true;
         }
