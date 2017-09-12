@@ -52,12 +52,11 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
     View itemView;
 
 
-
     @Inject
     public ItemAdapter(@ActivityContext Activity context,
-                        RealmResults<Item> realmResults,
-                        boolean automaticUpdate,
-                        boolean animateIdType
+                       RealmResults<Item> realmResults,
+                       boolean automaticUpdate,
+                       boolean animateIdType
 
 
     ) {
@@ -86,10 +85,9 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
 
 
         Long items_stocked = item.getInventories().where().sum("quantity").longValue();
-        Long items_sold  = item.getSales().where().sum("quantity").longValue();
+        Long items_sold = item.getSales().where().sum("quantity").longValue();
 
         Long items_in_stock = items_stocked - items_sold;
-
 
 
         holder.itemTextView.setText(String.format("%s",
@@ -104,9 +102,9 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
                     @Override
                     public void onClick(View v) {
 
-                        Intent intent = new Intent(v.getContext (), ItemDetail.class);
-                        intent.putExtra("name",item.getName());
-                        v.getContext ().startActivity (intent);
+                        Intent intent = new Intent(v.getContext(), ItemDetail.class);
+                        intent.putExtra("name", item.getName());
+                        v.getContext().startActivity(intent);
 
 
                     }
@@ -118,9 +116,9 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
                     @Override
                     public void onClick(View v) {
 
-                        Intent intent = new Intent(v.getContext (), ItemDetail.class);
-                        intent.putExtra("name",item.getName());
-                        v.getContext ().startActivity (intent);
+                        Intent intent = new Intent(v.getContext(), ItemDetail.class);
+                        intent.putExtra("name", item.getName());
+                        v.getContext().startActivity(intent);
 
 
                     }
@@ -132,29 +130,27 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
                     @Override
                     public void onClick(View v) {
 
-                        Intent intent = new Intent(v.getContext (), ItemDetail.class);
-                        intent.putExtra("name",item.getName());
-                        v.getContext ().startActivity (intent);
+                        Intent intent = new Intent(v.getContext(), ItemDetail.class);
+                        intent.putExtra("name", item.getName());
+                        v.getContext().startActivity(intent);
 
                     }
                 }
         );
 
 
-
-
-        if(item.getImage() != null) {
-            Glide.with(mContext.getApplicationContext()).load(Uri.decode(item.getImage())).placeholder(new ColorDrawable(Color.GRAY)).into(holder.itemImage);
+        if (item.getImage() != null) {
+            Glide.with(mContext.getApplicationContext()).load(item.getImage()).centerCrop().placeholder(new ColorDrawable(Color.GRAY)).into(holder.itemImage);
         }
         holder.itemImage.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        Intent intent = new Intent(v.getContext (), ItemDetail.class);
+                        Intent intent = new Intent(v.getContext(), ItemDetail.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("name",item.getName());
-                        v.getContext ().startActivity (intent);
+                        intent.putExtra("name", item.getName());
+                        v.getContext().startActivity(intent);
 
 
                     }
@@ -169,19 +165,12 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         final Item item = realmResults.get(position);
-        Intent intent = new Intent(getContext (), NewSaleActivity.class);
-        intent.putExtra("name",item.getName());
-        getContext().startActivity (intent);
-
+        Intent intent = new Intent(getContext(), NewSaleActivity.class);
+        intent.putExtra("name", item.getName());
+        getContext().startActivity(intent);
 
 
     }
-
-
-
-
-
-
 
 
     public class ItemViewHolder extends RealmViewHolder {
@@ -198,8 +187,6 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
         ImageView itemImage;
 
 
-
-
         public ItemViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -209,24 +196,19 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
                         @Override
                         public void onClick(View v) {
                             final Item item = realmResults.get(getAdapterPosition());
-                            Intent intent = new Intent(v.getContext (), ItemDetail.class);
+                            Intent intent = new Intent(v.getContext(), ItemDetail.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra("name",item.getName());
-                            v.getContext ().startActivity (intent);
+                            intent.putExtra("name", item.getName());
+                            v.getContext().startActivity(intent);
                         }
                     }
             );
-
-
-
 
 
         }
 
 
     }
-
-
 
 
 }

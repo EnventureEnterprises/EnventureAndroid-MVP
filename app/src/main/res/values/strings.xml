@@ -56,5 +56,6 @@
     <string name="sign_out">sign_out</string>
     <string name="validationErrors">Validation Error</string>
     <string name="product_details">Product Details</string>
+    <string name="error_file_not_created">File couldn\'t be created</string>
 
 </resources>

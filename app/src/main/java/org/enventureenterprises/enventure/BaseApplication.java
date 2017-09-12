@@ -28,6 +28,7 @@ import javax.inject.Inject;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import jonathanfinerty.once.Once;
+import pl.aprilapps.easyphotopicker.EasyImage;
 import rx.plugins.RxJavaErrorHandler;
 import rx.plugins.RxJavaPlugins;
 import timber.log.Timber;
@@ -45,7 +46,7 @@ public class BaseApplication extends MultiDexApplication {
 
     public final static String EVENTURE_PIC_DIR = "enventure";
 
-    private String TASK_TAG ="periodic_task3";
+    private String TASK_TAG = "periodic_task3";
     private Integer SYNC_INTERVAL = 86400;
     //private Integer SYNC_INTERVAL = 100;
 
@@ -55,7 +56,7 @@ public class BaseApplication extends MultiDexApplication {
     private Typeface walshFont;
 
 
-    public static AccessToken accessToken ;
+    public static AccessToken accessToken;
     public static final String PREF_FILE_NAME = "org.enventureenterprises.enventure";
 
     public static Context context;
@@ -65,11 +66,8 @@ public class BaseApplication extends MultiDexApplication {
     private GcmNetworkManager mGcmNetworkManager;
 
 
-
-
     @Inject
     EnventureApi mEnventureApi;
-
 
 
     @Override
@@ -102,8 +100,6 @@ public class BaseApplication extends MultiDexApplication {
         );
 
 
-
-
         RxJavaPlugins.getInstance().registerErrorHandler(new RxJavaErrorHandler() {
             @Override
             public void handleError(Throwable e) {
@@ -116,13 +112,12 @@ public class BaseApplication extends MultiDexApplication {
         Once.initialise(this);
         Realm.init(this);
         AccountKit.initialize(this);
-
         String mobile = PrefUtils.getMobile(getApplicationContext());
 
         if (mobile != null) { //only init realm when you have a mobile number
 
             RealmConfiguration realmConfig = new RealmConfiguration.Builder()
-                    .name(mobile+"lk6.realm")
+                    .name(mobile + "lk6.realm")
                     .schemaVersion(0)
                     .build();
 
@@ -138,14 +133,13 @@ public class BaseApplication extends MultiDexApplication {
         }
 
 
-
         //Realm.deleteRealm(config);
         //Realm.setDefaultConfiguration(config);
 
 
         //GeneralUtils.setupTwitterSession(getApplicationContext(),model);
 
-        if ( BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
             //Fabric.with(this, new Crashlytics());
         }
@@ -174,8 +168,6 @@ public class BaseApplication extends MultiDexApplication {
     public ApplicationComponent getActivityComponent() {
         return mApplicationComponent;
     }
-
-
 
 
     public static BaseApplication get(Context context) {
@@ -221,7 +213,6 @@ public class BaseApplication extends MultiDexApplication {
     }
 
 
-
     public Typeface getTypeface() {
         if (walshFont == null) {
             extractWalsh();
@@ -233,7 +224,6 @@ public class BaseApplication extends MultiDexApplication {
     public void setComponent(ApplicationComponent applicationComponent) {
         mApplicationComponent = applicationComponent;
     }
-
 
 
     public void setCrashesStatus(boolean status) {
@@ -256,23 +246,13 @@ public class BaseApplication extends MultiDexApplication {
                     .setPeriod(SYNC_INTERVAL)
                     .setPersisted(true)
                     .setUpdateCurrent(true)
-                    .setRequiredNetwork(PeriodicTask.NETWORK_STATE_CONNECTED )
+                    .setRequiredNetwork(PeriodicTask.NETWORK_STATE_CONNECTED)
                     .build();
 
             mGcmNetworkManager.schedule(task);
             Once.markDone(INIT_SYNC_ON_INSTALL);
         }
     }
-
-
-
-
-
-
-
-
-
-
 
 
 }

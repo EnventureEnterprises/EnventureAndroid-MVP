@@ -23,6 +23,7 @@ import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.AppCompatImageView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -42,18 +43,16 @@ import org.enventureenterprises.enventure.data.model.WeeklyReport;
 import org.enventureenterprises.enventure.data.remote.EnventureApi;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
 import org.enventureenterprises.enventure.ui.general.ProgressDialogFragment;
-import org.enventureenterprises.enventure.util.Config;
-import org.enventureenterprises.enventure.util.GeneralUtils;
 import org.enventureenterprises.enventure.util.rx.Transformers;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
@@ -64,6 +63,8 @@ import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import pl.aprilapps.easyphotopicker.DefaultCallback;
+import pl.aprilapps.easyphotopicker.EasyImage;
 import timber.log.Timber;
 
 /**
@@ -76,6 +77,9 @@ public class AddItemActivity extends BaseActivity {
     private String item_name;
     private ActionBar actionBar;
     private ProgressDialogFragment progressFragment;
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    static Uri photoURI;
 
     Double current_stock_value;
     int current_quantity;
@@ -193,6 +197,10 @@ public class AddItemActivity extends BaseActivity {
             if (is_add == true) {
                 nameEditText.setEnabled(false);
                 getSupportActionBar().setTitle(String.format("Add Inventory to %s", item.getName()));
+                if (item.getImage() != null) {
+                    Glide.with(AddItemActivity.this).load(item.getImage()).centerCrop().placeholder(new ColorDrawable(Color.GRAY)).into(imageView);
+                    noPhoto.setVisibility(View.GONE);
+                }
             }
 
             if (is_edit == true) {
@@ -238,193 +246,6 @@ public class AddItemActivity extends BaseActivity {
         totalCostEditText.addTextChangedListener(new FormTextWatcher(totalCostEditText));
     }
 
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File f = null;
-        try {
-            f = setUpPhotoFile();
-            mCurrentPhotoPath = f.getAbsolutePath();
-            Uri uri = FileProvider.getUriForFile(
-                    getApplicationContext(),
-                    "org.enventureenterprises.enventure.fileprovider", new File(mCurrentPhotoPath));
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-            photo = Uri.fromFile(f);
-        } catch (IOException e) {
-            e.printStackTrace();
-            f = null;
-            mCurrentPhotoPath = null;
-        }
-        startActivityForResult(takePictureIntent, Config.REQUEST_TAKE_PHOTO);
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == REQUEST_STORAGE)
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                dispatchTakePictureIntent();
-            }
-    }
-
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(BITMAP_STORAGE_KEY, mImageBitmap);
-        if (mCurrentPhotoPath != null) {
-
-            outState.putString("mCurrentPhotoPath", mCurrentPhotoPath);
-        }
-
-        super.onSaveInstanceState(outState);
-    }
-
-
-    private void handleCameraPhoto() {
-
-        if (mCurrentPhotoPath != null) {
-            setPic();
-            galleryAddPic();
-            mCurrentPhotoPath = null;
-        }
-
-    }
-
-    private File getAlbumDir() {
-        File storageDir = null;
-
-        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-
-            storageDir = mAlbumStorageDirFactory.getAlbumStorageDir("Enventure");
-
-            if (storageDir != null) {
-                if (!storageDir.mkdirs()) {
-                    if (!storageDir.exists()) {
-                        Timber.d("failed to create directory");
-                        return null;
-                    }
-                }
-            }
-
-        } else {
-            Timber.e("External storage is not mounted READ/WRITE.");
-        }
-
-        return storageDir;
-    }
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = JPEG_FILE_PREFIX + timeStamp + "_";
-        File albumF = getAlbumDir();
-        File imageF = File.createTempFile(imageFileName, JPEG_FILE_SUFFIX, albumF);
-        return imageF;
-    }
-
-    private void galleryAddPic() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(mCurrentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        photo = contentUri;
-        mediaScanIntent.setData(contentUri);
-        sendBroadcast(mediaScanIntent);
-    }
-
-    // Returns true if external storage for photos is available
-    private boolean isExternalStorageAvailable() {
-        String state = Environment.getExternalStorageState();
-        return state.equals(Environment.MEDIA_MOUNTED);
-    }
-
-    private File setUpPhotoFile() throws IOException {
-
-        File f = createImageFile();
-        mCurrentPhotoPath = f.getAbsolutePath();
-
-        return f;
-    }
-
-    // Returns the Uri for a photo stored on disk given the fileName
-    public Uri getPhotoFileUri() {
-        // Only continue if the SD Card is mounted
-        String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".jpg";
-        if (isExternalStorageAvailable()) {
-            // Get safe storage directory for photos
-            // Use `getExternalFilesDir` on Context to access package-specific directories.
-            // This way, we don't need to request external read/write runtime permissions.
-            File mediaStorageDir = new File(
-                    getExternalFilesDir(Environment.DIRECTORY_PICTURES), "org.enventureenterprises.enventure");
-
-            // Create the storage directory if it does not exist
-            if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
-
-            }
-
-            // Return the file target for the photo based on filename
-            return Uri.fromFile(new File(mediaStorageDir.getPath() + File.separator + fileName));
-        }
-        return null;
-    }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        switch (requestCode) {
-            case Config.REQUEST_TAKE_PHOTO:
-                if (resultCode == Activity.RESULT_OK) {
-
-                    handleCameraPhoto();
-                    noPhoto.setVisibility(View.GONE);
-
-                } else {
-                    Toast.makeText(AddItemActivity.this, "Unable to get camera image. Please select from gallery", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case Config.ACTIVITY_SELECT_IMAGE:
-                if (resultCode == Activity.RESULT_OK) {
-                    if (data != null) {
-                        photo = data.getData();
-//                            Bitmap bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
-                        Glide.with(this).load(photo).centerCrop().into(imageView);
-//                            imageView.setImageBitmap(bm);
-                        Timber.d("Image selected: " + data.getData());
-                        noPhoto.setVisibility(View.GONE);
-                        //noPhoto.setVisibility(View.INVISIBLE);
-
-                    }
-                }
-                break;
-            default:
-                break;
-
-
-        }
-
-
-    }
-
-    @OnClick(R.id.gallery_container)
-    public void chooseGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, Config.ACTIVITY_SELECT_IMAGE);
-
-    }
-
-    @OnClick(R.id.camera_container)
-    public void takePhoto() {
-
-        int hasPermission = ActivityCompat.checkSelfPermission(AddItemActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (android.content.pm.PackageManager.PERMISSION_GRANTED == hasPermission) {
-            dispatchTakePictureIntent();
-        } else {
-            ActivityCompat.requestPermissions(AddItemActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE);
-        }
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -536,8 +357,8 @@ public class AddItemActivity extends BaseActivity {
 
                     entry.setTransactionType("inventory");
 
-                    if (photo != null) {
-                        inventoryItem.setImage(photo.toString());
+                    if (mCurrentPhotoPath != null) {
+                        inventoryItem.setImage(mCurrentPhotoPath);
                     }
                     inventoryItem.setSynced(false);
                     inventoryItem.setCreated(d.toDate());
@@ -715,6 +536,237 @@ public class AddItemActivity extends BaseActivity {
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         imageView.setVisibility(View.VISIBLE);
 
+    }
+
+//    private void dispatchTakePictureIntent() {
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        File f = null;
+//        try {
+//            f = setUpPhotoFile();
+//            mCurrentPhotoPath = f.getAbsolutePath();
+//            Uri uri = FileProvider.getUriForFile(
+//                    getApplicationContext(),
+//                    "org.enventureenterprises.enventure.fileprovider", new File(mCurrentPhotoPath));
+//            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+//            photo = Uri.fromFile(f);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            f = null;
+//            mCurrentPhotoPath = null;
+//        }
+//        startActivityForResult(takePictureIntent, Config.REQUEST_TAKE_PHOTO);
+//
+//    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
+            @Override
+            public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
+                //Some error handling
+                Toast.makeText(getApplicationContext(), R.string.error_file_not_created, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onImagePicked(File imageFile, EasyImage.ImageSource source, int type) {
+                Log.d("AddItemActivity", "onImagePicked: " + imageFile.getAbsolutePath());
+                Glide.with(AddItemActivity.this).load(imageFile.getAbsoluteFile()).centerCrop().into(imageView);
+                noPhoto.setVisibility(View.GONE);
+                mCurrentPhotoPath = imageFile.getAbsolutePath();
+                galleryAddPic();
+            }
+        });
+    }
+//        switch (requestCode) {
+//            case REQUEST_IMAGE_CAPTURE:
+//                if (resultCode == Activity.RESULT_OK) {
+//                    Bundle extras = data.getExtras();
+//                    galleryAddPic();
+//                    Glide.with(this).load(new File(photoURI.getPath())).centerCrop().into(imageView);
+//                    noPhoto.setVisibility(View.GONE);
+//                } else {
+//                    Toast.makeText(AddItemActivity.this, "Unable to get camera image. Please select from gallery", Toast.LENGTH_SHORT).show();
+//                }
+//                break;
+//            case Config.ACTIVITY_SELECT_IMAGE:
+//                if (resultCode == Activity.RESULT_OK) {
+//                    if (data != null) {
+//                        photo = data.getData();
+////                            Bitmap bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+//                        Glide.with(this).load(photo).centerCrop().into(imageView);
+////                            imageView.setImageBitmap(bm);
+//                        Timber.d("Image selected: " + data.getData());
+//                        noPhoto.setVisibility(View.GONE);
+//                        //noPhoto.setVisibility(View.INVISIBLE);
+//
+//                    }
+//                }
+//                break;
+//            default:
+//                break;
+
+
+    // Returns the Uri for a photo stored on disk given the fileName
+    public Uri getPhotoFileUri() {
+        // Only continue if the SD Card is mounted
+        String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".jpg";
+        if (isExternalStorageAvailable()) {
+            // Get safe storage directory for photos
+            // Use `getExternalFilesDir` on Context to access package-specific directories.
+            // This way, we don't need to request external read/write runtime permissions.
+            File mediaStorageDir = new File(
+                    getExternalFilesDir(Environment.DIRECTORY_PICTURES), "org.enventureenterprises.enventure");
+
+            // Create the storage directory if it does not exist
+            if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
+
+            }
+
+            // Return the file target for the photo based on filename
+            return Uri.fromFile(new File(mediaStorageDir.getPath() + File.separator + fileName));
+        }
+        return null;
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == REQUEST_STORAGE)
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                dispatchTakePictureIntent();
+            }
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(BITMAP_STORAGE_KEY, mImageBitmap);
+        if (mCurrentPhotoPath != null) {
+
+            outState.putString("mCurrentPhotoPath", mCurrentPhotoPath);
+        }
+
+        super.onSaveInstanceState(outState);
+    }
+
+    private File getAlbumDir() {
+        File storageDir = null;
+
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+
+            storageDir = mAlbumStorageDirFactory.getAlbumStorageDir("Enventure");
+
+            if (storageDir != null) {
+                if (!storageDir.mkdirs()) {
+                    if (!storageDir.exists()) {
+                        Timber.d("failed to create directory");
+                        return null;
+                    }
+                }
+            }
+
+        } else {
+            Timber.e("External storage is not mounted READ/WRITE.");
+        }
+
+        return storageDir;
+    }
+
+//    private File createImageFile() throws IOException {
+//        // Create an image file name
+//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//        String imageFileName = JPEG_FILE_PREFIX + timeStamp + "_";
+//        File albumF = getAlbumDir();
+//        File imageF = File.createTempFile(imageFileName, JPEG_FILE_SUFFIX, albumF);
+//        return imageF;
+//    }
+
+
+    // Returns true if external storage for photos is available
+    private boolean isExternalStorageAvailable() {
+        String state = Environment.getExternalStorageState();
+        return state.equals(Environment.MEDIA_MOUNTED);
+    }
+
+    private File setUpPhotoFile() throws IOException {
+
+        File f = createImageFile();
+        mCurrentPhotoPath = f.getAbsolutePath();
+
+        return f;
+    }
+
+
+    @OnClick(R.id.gallery_container)
+    public void chooseGallery() {
+//        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//        startActivityForResult(intent, Config.ACTIVITY_SELECT_IMAGE);
+        EasyImage.openGallery(this, 0);
+
+    }
+
+    @OnClick(R.id.camera_container)
+    public void takePhoto() {
+
+        EasyImage.openCamera(this, 0);
+//        int hasPermission = ActivityCompat.checkSelfPermission(AddItemActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//
+//        if (android.content.pm.PackageManager.PERMISSION_GRANTED == hasPermission) {
+//            dispatchTakePictureIntent();
+//        } else {
+//            ActivityCompat.requestPermissions(AddItemActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE);
+//        }
+
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                Toast.makeText(getApplicationContext(), R.string.error_file_not_created, Toast.LENGTH_SHORT).show();
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                photoURI = FileProvider.getUriForFile(this,
+                        "org.enventureenterprises.enventure.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI.toString());
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getAlbumDir();
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mCurrentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        photo = contentUri;
+        mediaScanIntent.setData(contentUri);
+        sendBroadcast(mediaScanIntent);
     }
 
 
