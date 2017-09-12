@@ -57,5 +57,6 @@
     <string name="validationErrors">Validation Error</string>
     <string name="product_details">Product Details</string>
     <string name="error_file_not_created">File couldn\'t be created</string>
+    <string name="exit_app_text">Are you sure you want to exit the app?</string>
 
 </resources>

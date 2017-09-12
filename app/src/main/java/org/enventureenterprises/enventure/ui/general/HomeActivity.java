@@ -1,14 +1,20 @@
 package org.enventureenterprises.enventure.ui.general;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
@@ -231,7 +237,27 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
         if (bottomNavigation.getCurrentItem() != 0) {
             bottomNavigation.setCurrentItem(0);
         } else {
-            super.onBackPressed();
+            AlertDialog alertDialog = new AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setMessage(R.string.exit_app_text)
+                    .setPositiveButton("Yes", (dialog, which) -> super.onBackPressed())
+                    .setNegativeButton("No", null)
+                    .create();
+            alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialog) {
+                    Button btnPositive = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                    btnPositive.setTextSize(18);
+                    btnPositive.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+                    Button btnNegative = alertDialog.getButton(Dialog.BUTTON_NEGATIVE);
+                    btnNegative.setTextSize(18);
+                    btnNegative.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+                }
+            });
+            alertDialog.show();
+            TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+            textView.setTextSize(24);
         }
     }
 }
