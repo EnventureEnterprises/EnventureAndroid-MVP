@@ -111,9 +111,7 @@ public class ItemDetail extends BaseActivity {
 
         if (item != null) {
             // actionBar.setTitle (item.getName ());
-            if (item.getImage() != null) {
-                Glide.with(ItemDetail.this).load(item.getImage()).centerCrop().placeholder(new ColorDrawable(Color.GRAY)).into(itemImage);
-            }
+            Glide.with(ItemDetail.this).load(item.getImage()).centerCrop().placeholder(R.drawable.ic_no_image_available).into(itemImage);
         }
 
     }

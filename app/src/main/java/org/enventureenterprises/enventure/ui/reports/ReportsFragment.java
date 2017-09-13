@@ -178,7 +178,7 @@ public class ReportsFragment extends BaseFragment {
             // image naming and path  to include sd card  appending name you choose for file
             // String mPath = Environment.getExternalStorageDirectory().toString() + "/" + fileName;
             // create bitmap screen capture
-            View v1 = getActivity().getWindow().getDecorView().getRootView();
+            View v1 = mViewPager;
             v1.setDrawingCacheEnabled(true);
             Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
             v1.setDrawingCacheEnabled(false);

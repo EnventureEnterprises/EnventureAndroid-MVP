@@ -9,7 +9,7 @@
     <string name="sales">Sales</string>
     <string name="add_sale">Add Sale</string>
     <string name="product_detail">Product Detail</string>
-    <string name="empty_sales">Currently, you do not have any sales.Please click the + button to add a sale</string>
+    <string name="empty_sales">Currently, you do not have any sales. Please click the + button to add a sale</string>
     <string name="inventory">Inventory</string>
     <string name="empty_inventory">There are currently no products in your inventory. Please click the + button to add a product</string>
     <string name="add_product_image">Add Product Image</string>
@@ -58,5 +58,6 @@
     <string name="product_details">Product Details</string>
     <string name="error_file_not_created">File couldn\'t be created</string>
     <string name="exit_app_text">Are you sure you want to exit the app?</string>
+    <string name="alert_sign_out">Are you sure you want to sign out?</string>
 
 </resources>

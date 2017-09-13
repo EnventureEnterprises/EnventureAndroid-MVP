@@ -85,10 +85,8 @@ public class SalesAdapter extends RealmBasedRecyclerViewAdapter<Entry, SalesAdap
 
         holder.amountTextView.setText(String.format("%s",
                 entry.getAmount()));
-        if (entry.getItem() != null && entry.getItem().getImage() != null) {
-
-
-            Glide.with(mContext).load(entry.getItem().getImage()).centerCrop().placeholder(new ColorDrawable(Color.GRAY)).into(holder.itemImage);
+        if (entry.getItem() != null) {
+            Glide.with(mContext).load(entry.getItem().getImage()).centerCrop().placeholder(R.drawable.ic_no_image_available).into(holder.itemImage);
         }
 
 

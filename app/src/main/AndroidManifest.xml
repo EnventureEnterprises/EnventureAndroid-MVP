@@ -133,16 +133,16 @@
                 android:resource="@xml/searchable" />
         </activity>
 
-        <!--&lt;!&ndash; fileprovider component for sharing content uri's in our case screenshots&ndash;&gt;-->
-        <!--<provider-->
-            <!--android:name="android.support.v4.content.FileProvider"-->
-            <!--android:authorities="org.enventureenterprises.enventure.fileprovider"-->
-            <!--android:grantUriPermissions="true"-->
-            <!--android:exported="false">-->
-            <!--<meta-data-->
-                <!--android:name="android.support.FILE_PROVIDER_PATHS"-->
-                <!--android:resource="@xml/filepaths" />-->
-        <!--</provider>-->
+        <!-- fileprovider component for sharing content uri's in our case screenshots-->
+        <provider
+            android:name="org.enventureenterprises.enventure.EnventureFileProvider"
+            android:authorities="org.enventureenterprises.enventure.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
 
 
     </application>

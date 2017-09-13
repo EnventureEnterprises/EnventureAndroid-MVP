@@ -118,7 +118,10 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
         switch (item.getItemId()) {
             case R.id.inventory:
                 onNavigationChanged(INVENTORY);
-
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.home_container);
+                if (fragment instanceof InventoryFragment && fragment != null) {
+                    ((InventoryFragment) fragment).refreshAdapter();
+                }
                 break;
             case R.id.sales:
 

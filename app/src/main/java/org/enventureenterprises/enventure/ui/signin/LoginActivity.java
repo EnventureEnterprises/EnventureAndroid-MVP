@@ -98,14 +98,11 @@ public class LoginActivity extends BaseActivity {
             } else if (loginResult.wasCancelled()) {
                 toastMessage = "Login Cancelled";
             } else {
-
-
-
                 if (loginResult.getAccessToken() != null) {
 
                     getMobile();
                     toastMessage = String.format(
-                            "Successfully Logged in with %s...",
+                            "Successfully Logged in",
                             PrefUtils.getMobile(getApplicationContext()));
                             PrefUtils.setBoolean(getApplicationContext(),"sync",true);
 

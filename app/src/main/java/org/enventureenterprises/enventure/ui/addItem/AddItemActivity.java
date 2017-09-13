@@ -198,7 +198,7 @@ public class AddItemActivity extends BaseActivity {
                 nameEditText.setEnabled(false);
                 getSupportActionBar().setTitle(String.format("Add Inventory to %s", item.getName()));
                 if (item.getImage() != null) {
-                    Glide.with(AddItemActivity.this).load(item.getImage()).centerCrop().placeholder(new ColorDrawable(Color.GRAY)).into(imageView);
+                    Glide.with(AddItemActivity.this).load(item.getImage()).centerCrop().placeholder(R.drawable.ic_no_image_available).into(imageView);
                     noPhoto.setVisibility(View.GONE);
                 }
             }
@@ -233,7 +233,7 @@ public class AddItemActivity extends BaseActivity {
 
                 entry_to_edit = item.getInventories().where().findAllSorted("created", Sort.DESCENDING).first();
                 if (item.getImage() != null) {
-                    Glide.with(AddItemActivity.this).load(item.getImage()).centerCrop().placeholder(new ColorDrawable(Color.GRAY)).into(imageView);
+                    Glide.with(AddItemActivity.this).load(item.getImage()).centerCrop().placeholder(R.drawable.ic_no_image_available).into(imageView);
                     noPhoto.setVisibility(View.GONE);
                 }
             }
@@ -440,14 +440,20 @@ public class AddItemActivity extends BaseActivity {
             totalCostEditText.setError("Total Cost is a required Field");
             requestFocus(totalCostEditText);
             return false;
-        } else if (Double.parseDouble(totalcost) == Double.NaN) {
-            totalcostLayout.setErrorEnabled(true);
-            totalCostEditText.setError("Invalid entry. Enter numbers only");
-            requestFocus(totalCostEditText);
-            return false;
-
         } else {
-            totalcostLayout.setErrorEnabled(false);
+            try {
+                if (Double.parseDouble(totalcost) == Double.NaN) {
+                    totalcostLayout.setErrorEnabled(true);
+                    totalCostEditText.setError("Invalid entry. Enter numbers only");
+                    requestFocus(totalCostEditText);
+                    return false;
+
+                } else {
+                    totalcostLayout.setErrorEnabled(false);
+                }
+            } catch (NumberFormatException e) {
+
+            }
         }
 
         return true;
@@ -571,7 +577,7 @@ public class AddItemActivity extends BaseActivity {
             @Override
             public void onImagePicked(File imageFile, EasyImage.ImageSource source, int type) {
                 Log.d("AddItemActivity", "onImagePicked: " + imageFile.getAbsolutePath());
-                Glide.with(AddItemActivity.this).load(imageFile.getAbsoluteFile()).centerCrop().into(imageView);
+                Glide.with(AddItemActivity.this).load(imageFile.getAbsoluteFile()).centerCrop().placeholder(R.drawable.ic_no_image_available).into(imageView);
                 noPhoto.setVisibility(View.GONE);
                 mCurrentPhotoPath = imageFile.getAbsolutePath();
                 galleryAddPic();

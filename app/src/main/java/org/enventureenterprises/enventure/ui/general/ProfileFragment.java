@@ -1,12 +1,17 @@
 package org.enventureenterprises.enventure.ui.general;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.enventureenterprises.enventure.R;
@@ -20,6 +25,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.facebook.accountkit.internal.AccountKitController.getApplicationContext;
 
 /**
  * Created by mossplix on 7/7/17.
@@ -68,10 +75,33 @@ public class ProfileFragment extends BaseFragment {
 
     @OnClick(R.id.sign_out_user)
     public void signOut() {
-        logout.execute();
-        final Intent intent = new Intent(getContext(), DispatchActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        getActivity().startActivity(intent);
+
+        AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setMessage(getString(R.string.alert_sign_out))
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    logout.execute();
+                    final Intent intent = new Intent(getContext(), DispatchActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    getActivity().startActivity(intent);
+                })
+                .setNegativeButton("No", null)
+                .create();
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                Button btnPositive = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                btnPositive.setTextSize(18);
+                btnPositive.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+                Button btnNegative = alertDialog.getButton(Dialog.BUTTON_NEGATIVE);
+                btnNegative.setTextSize(18);
+                btnNegative.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+            }
+        });
+        alertDialog.show();
+        TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+        textView.setTextSize(24);
 
     }
 

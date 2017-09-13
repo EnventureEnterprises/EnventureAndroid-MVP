@@ -89,9 +89,7 @@ public class SearchAdapter extends RealmSearchAdapter<Item, SearchAdapter.ViewHo
         Item item = realmResults.get(position);
         viewHolder.nameTextView.setText(String.format("%s",
                 item.getName()));
-        if (item.getImage() != null) {
-            Glide.with(mContext).load(item.getImage()).centerCrop().placeholder(new ColorDrawable(Color.GRAY)).into(viewHolder.itemImage);
-        }
+        Glide.with(mContext).load(item.getImage()).centerCrop().placeholder(R.drawable.ic_no_image_available).into(viewHolder.itemImage);
     }
 
     public Item getItem(Integer position) {

@@ -139,9 +139,7 @@ public class ItemAdapter extends RealmBasedRecyclerViewAdapter<Item, ItemAdapter
         );
 
 
-        if (item.getImage() != null) {
-            Glide.with(mContext.getApplicationContext()).load(item.getImage()).centerCrop().placeholder(new ColorDrawable(Color.GRAY)).into(holder.itemImage);
-        }
+        Glide.with(mContext.getApplicationContext()).load(item.getImage()).centerCrop().placeholder(R.drawable.ic_no_image_available).into(holder.itemImage);
         holder.itemImage.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
