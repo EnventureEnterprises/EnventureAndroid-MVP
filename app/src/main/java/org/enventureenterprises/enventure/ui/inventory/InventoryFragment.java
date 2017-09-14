@@ -2,6 +2,9 @@ package org.enventureenterprises.enventure.ui.inventory;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,6 +21,7 @@ import org.enventureenterprises.enventure.ui.reports.BaseFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
@@ -28,10 +32,13 @@ import io.realm.Sort;
 public class InventoryFragment extends BaseFragment {
     public static final String TAG = "inventory_fragment";
     Realm realm;
-    ItemAdapter  mInventoryAdapter;
+    ItemAdapter mInventoryAdapter;
 
     @BindView(R.id.recycler_view)
-    RealmRecyclerView mRecyclerView;
+    RecyclerView mRecyclerView;
+
+    @BindView(R.id.empty_inventory_layout)
+    View mEmptyInventoryLayout;
 
     public static InventoryFragment newInstance() {
         InventoryFragment fragment = new InventoryFragment();
@@ -46,15 +53,15 @@ public class InventoryFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu,MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.home2, menu);
-        super.onCreateOptionsMenu(menu,inflater);
+        super.onCreateOptionsMenu(menu, inflater);
 
     }
-
 
 
     @Override
@@ -64,16 +71,30 @@ public class InventoryFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.inventory_fragment, container, false);
         ButterKnife.bind(this, view);
 
-        realm = Realm.getDefaultInstance ();
+        realm = Realm.getDefaultInstance();
+        Log.d("", "realm path: " + realm.getPath());
+
+
         RealmResults<Item> mItems =
-                realm.where(Item.class).equalTo("enabled",true).findAllSorted("created", Sort.DESCENDING);
+                realm.where(Item.class).equalTo("enabled", true).findAllSorted("created", Sort.DESCENDING);
 
+        if (mItems.isEmpty()) {
+            mEmptyInventoryLayout.setVisibility(View.VISIBLE);
+        } else {
+            mEmptyInventoryLayout.setVisibility(View.GONE);
+        }
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         mInventoryAdapter = new ItemAdapter(getActivity(), mItems, true, true);
-
         mRecyclerView.setAdapter(mInventoryAdapter);
-
-
-
+        realm.addChangeListener(realm -> {
+            RealmResults<Item> items =
+                    realm.where(Item.class).equalTo("enabled", true).findAllSorted("created", Sort.DESCENDING);
+            if (items.isEmpty()) {
+                mEmptyInventoryLayout.setVisibility(View.VISIBLE);
+            } else {
+                mEmptyInventoryLayout.setVisibility(View.GONE);
+            }
+        });
         return view;
     }
 
@@ -86,7 +107,7 @@ public class InventoryFragment extends BaseFragment {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        switch(id){
+        switch (id) {
             case R.id.add_entry:
 
                 startActivity(new Intent(getContext(), AddItemActivity.class));
@@ -94,9 +115,22 @@ public class InventoryFragment extends BaseFragment {
                 break;
 
 
-
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void refreshAdapter() {
+        RealmResults<Item> items =
+                realm.where(Item.class).equalTo("enabled", true).findAllSorted("created", Sort.DESCENDING);
+        if (items.isEmpty()) {
+            mEmptyInventoryLayout.setVisibility(View.VISIBLE);
+        } else {
+            mInventoryAdapter = new ItemAdapter(getActivity(), items, true, true);
+            mInventoryAdapter = new ItemAdapter(getActivity(), items, true, true);
+            mRecyclerView.setAdapter(mInventoryAdapter);
+            mEmptyInventoryLayout.setVisibility(View.GONE);
+        }
+        mInventoryAdapter.notifyDataSetChanged();
     }
 }

@@ -1,18 +1,25 @@
 package org.enventureenterprises.enventure.ui.general;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import org.enventureenterprises.enventure.R;
+import org.enventureenterprises.enventure.data.model.Inventory;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
 import org.enventureenterprises.enventure.ui.inventory.InventoryFragment;
 import org.enventureenterprises.enventure.ui.reports.ReportsFragment;
@@ -31,7 +38,7 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
     @BindView(R.id.bottomNavigation)
     BottomNavigationViewEx bottomNavigation;
     public static final int SALES = 1;
-    public static final int INVENTORY =0;
+    public static final int INVENTORY = 0;
     public static final int REPORTS = 2;
     public static final int PROFILE = 3;
     private int navTab;
@@ -69,9 +76,6 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
         }
 
 
-
-
-
         bottomNavigation.setOnNavigationItemSelectedListener(this);
         bottomNavigation.enableAnimation(false);
         bottomNavigation.enableShiftingMode(false);
@@ -79,14 +83,14 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
         if (savedInstanceState == null) {
 
 
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.home_container, InventoryFragment.newInstance(), InventoryFragment.TAG)
-                        .commit();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.home_container, InventoryFragment.newInstance(), InventoryFragment.TAG)
+                    .commit();
 
         }
 
-        if (navTab == SALES){
+        if (navTab == SALES) {
             Menu menu = bottomNavigation.getMenu();
             menu.findItem(R.id.sales).setChecked(true);
             getSupportFragmentManager()
@@ -97,8 +101,6 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
 
 
         }
-
-
 
 
     }
@@ -116,7 +118,10 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
         switch (item.getItemId()) {
             case R.id.inventory:
                 onNavigationChanged(INVENTORY);
-
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.home_container);
+                if (fragment instanceof InventoryFragment && fragment != null) {
+                    ((InventoryFragment) fragment).refreshAdapter();
+                }
                 break;
             case R.id.sales:
 
@@ -139,6 +144,15 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
         return true;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.home_container);
+        if (fragment instanceof InventoryFragment && fragment != null) {
+            ((InventoryFragment) fragment).refreshAdapter();
+        }
+    }
+
     @Nullable
     public static Fragment getVisibleFragment(@NonNull FragmentManager manager) {
         List<Fragment> fragments = manager.getFragments();
@@ -155,16 +169,16 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
 
     public void onModuleChanged(@NonNull FragmentManager fragmentManager, int type) {
         Fragment currentVisible = getVisibleFragment(fragmentManager);
-        SalesFragment salesFrag = (SalesFragment)fragmentManager.findFragmentByTag(SalesFragment.TAG);
-        InventoryFragment inventoryFrag = (InventoryFragment)fragmentManager.findFragmentByTag(InventoryFragment.TAG);
-        ReportsFragment reportsFrag = (ReportsFragment)fragmentManager.findFragmentByTag(ReportsFragment.TAG);
-        ProfileFragment profileFrag = (ProfileFragment)fragmentManager.findFragmentByTag(ProfileFragment.TAG);
+        SalesFragment salesFrag = (SalesFragment) fragmentManager.findFragmentByTag(SalesFragment.TAG);
+        InventoryFragment inventoryFrag = (InventoryFragment) fragmentManager.findFragmentByTag(InventoryFragment.TAG);
+        ReportsFragment reportsFrag = (ReportsFragment) fragmentManager.findFragmentByTag(ReportsFragment.TAG);
+        ProfileFragment profileFrag = (ProfileFragment) fragmentManager.findFragmentByTag(ProfileFragment.TAG);
 
         switch (type) {
             case SALES:
-                currentSelected =SALES;
+                currentSelected = SALES;
 
-                if (salesFrag== null) {
+                if (salesFrag == null) {
                     onAddAndHide(fragmentManager, SalesFragment.newInstance(), currentVisible);
                 } else {
                     onShowHideFragment(fragmentManager, salesFrag, currentVisible);
@@ -189,7 +203,6 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
 
             case PROFILE:
                 currentSelected = PROFILE;
-
 
 
                 if (profileFrag == null) {
@@ -222,10 +235,32 @@ public class HomeActivity extends BaseActivity implements BottomNavigationViewEx
     }
 
 
+    @Override
+    public void onBackPressed() {
+        if (bottomNavigation.getCurrentItem() != 0) {
+            bottomNavigation.setCurrentItem(0);
+        } else {
+            AlertDialog alertDialog = new AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setMessage(R.string.exit_app_text)
+                    .setPositiveButton("Yes", (dialog, which) -> super.onBackPressed())
+                    .setNegativeButton("No", null)
+                    .create();
+            alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialog) {
+                    Button btnPositive = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                    btnPositive.setTextSize(18);
+                    btnPositive.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-
-
-
-
-
+                    Button btnNegative = alertDialog.getButton(Dialog.BUTTON_NEGATIVE);
+                    btnNegative.setTextSize(18);
+                    btnNegative.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+                }
+            });
+            alertDialog.show();
+            TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+            textView.setTextSize(24);
+        }
+    }
 }

@@ -18,6 +18,7 @@ import org.enventureenterprises.enventure.ui.base.BaseActivity;
 import org.enventureenterprises.enventure.ui.general.HomeActivity;
 import org.enventureenterprises.enventure.util.GeneralUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -32,7 +33,7 @@ import static org.enventureenterprises.enventure.R.id.items_in_stock;
  * Created by mossplix on 7/10/17.
  */
 
-public class ItemDetail extends BaseActivity{
+public class ItemDetail extends BaseActivity {
     private String item_name;
     Realm realm;
     private ActionBar actionBar;
@@ -51,9 +52,6 @@ public class ItemDetail extends BaseActivity{
     @BindView(items_in_stock)
     TextView quantityInStock;
 
-    @BindView(R.id.fab)
-    FloatingActionButton addItem;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +59,7 @@ public class ItemDetail extends BaseActivity{
         getActivityComponent().inject(this);
 
 
-
-        setContentView(R.layout.itemdetails_activity);
+        setContentView(R.layout.activity_item_details);
         ButterKnife.bind(this);
 
 
@@ -70,6 +67,7 @@ public class ItemDetail extends BaseActivity{
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(R.string.product_details);
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -82,29 +80,27 @@ public class ItemDetail extends BaseActivity{
             item_name = savedInstanceState.getString("name");
         }
 
-        realm = Realm.getDefaultInstance ();
-        actionBar = getSupportActionBar ();
+        realm = Realm.getDefaultInstance();
+        actionBar = getSupportActionBar();
 
-        item = realm.where(Item.class).equalTo ("name",item_name).findFirst ();
+        item = realm.where(Item.class).equalTo("name", item_name).findFirst();
 
         productName.setText(item.getName());
 
 
-
         Long items_stocked = item.getInventories().where().sum("quantity").longValue();
-        Long items_sold  = item.getSales().where().sum("quantity").longValue();
+        Long items_sold = item.getSales().where().sum("quantity").longValue();
 
         Double value_of_purchase = item.getInventories().where().sum("amount").doubleValue();
 
-       RealmResults<Entry> purchases = item.getInventories().where().findAll();
+        RealmResults<Entry> purchases = item.getInventories().where().findAll();
         ArrayList<Double> costPrices = new ArrayList<Double>();
 
-        Double standardized_unitcost =  value_of_purchase/items_stocked;
+        Double standardized_unitcost = value_of_purchase / items_stocked;
 
         Long items_in_stock = items_stocked - items_sold;
 
-        Double value_of_stock = standardized_unitcost*items_in_stock;
-
+        Double value_of_stock = standardized_unitcost * items_in_stock;
 
 
         totalStock.setText(GeneralUtils.round(value_of_stock).toString());
@@ -113,27 +109,23 @@ public class ItemDetail extends BaseActivity{
         quantityInStock.setText(String.format("%s Items in stock",
                 items_in_stock));
 
-        if(item != null){
-            actionBar.setTitle (item.getName ());
-            if(item.getImage() != null) {
-                Glide.with(ItemDetail.this).load(item.getImage()).placeholder(new ColorDrawable(Color.GRAY)).into(itemImage);
-            }
+        if (item != null) {
+            // actionBar.setTitle (item.getName ());
+            Glide.with(ItemDetail.this).load(item.getImage()).centerCrop().placeholder(R.drawable.ic_no_image_available).into(itemImage);
         }
 
     }
 
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         // code here to show dialog
         super.onBackPressed();  // optional depending on your needs
     }
 
 
     @OnClick(R.id.delete_product)
-    public void delete_product()
-    {
+    public void delete_product() {
         realm = getRealm();
 
 
@@ -150,25 +142,24 @@ public class ItemDetail extends BaseActivity{
     }
 
     @OnClick(R.id.edit_product)
-    public void edit_product()
-    {
+    public void edit_product() {
         Intent intent = new Intent(getApplicationContext(), AddItemActivity.class);
-        intent.putExtra("name",item.getName());
-        intent.putExtra("edit",true);
-        intent.putExtra("add",false);
-        startActivity (intent);
+        intent.putExtra("name", item.getName());
+        intent.putExtra("edit", true);
+        intent.putExtra("add", false);
+        startActivity(intent);
 
     }
 
-    @OnClick(R.id.fab)
-    public void addItem(){
+    @OnClick(R.id.add_product)
+    public void addItem() {
 
 
         Intent intent = new Intent(getApplicationContext(), AddItemActivity.class);
-        intent.putExtra("name",item.getName ());
-        intent.putExtra("add",true);
-        intent.putExtra("edit",false);
-        startActivity (intent);
+        intent.putExtra("name", item.getName());
+        intent.putExtra("add", true);
+        intent.putExtra("edit", false);
+        startActivity(intent);
 
     }
 }

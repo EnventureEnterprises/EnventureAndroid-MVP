@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -51,10 +52,10 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
     private String paymentType;
     private static Item item;
     private ProgressDialogFragment progressFragment;
-    private PhoneNumberUtil phoneUtil ;
+    private PhoneNumberUtil phoneUtil;
     @Inject
     EnventureApi client;
-    
+
 
     @BindView(R.id.quantity)
     EditText quantityEditText;
@@ -104,19 +105,16 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
     TextInputLayout totalcostLayout;
 
     @BindView(R.id.installment_mobile)
-    EditSpinner mobileNumbers;
+    AutoCompleteTextView mobileNumbers;
 
-    @BindView(R.id.installment_mobile_layout)
-    TextInputLayout mobileNumbersLayout;
-
-
+    /*@BindView(R.id.installment_mobile_layout)
+    TextInputLayout mobileNumbersLayout;*/
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActivityComponent().inject(this);
-
 
 
         setContentView(R.layout.new_sale_activity);
@@ -146,14 +144,14 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
 
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.entry_array, android.R.layout.simple_spinner_item);
+                R.array.entry_array, R.layout.spinner_payment_item);
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.spinner_payment_dropdown_item);
 
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(NewSaleActivity.this);
 
-        item = realm.where(Item.class).equalTo ("name",item_name).findFirst ();
+        item = realm.where(Item.class).equalTo("name", item_name).findFirst();
 
         quantityEditText.addTextChangedListener(new FormTextWatcher(quantityEditText));
         totalcostEditText.addTextChangedListener(new FormTextWatcher(totalcostEditText));
@@ -184,16 +182,16 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
         public void afterTextChanged(Editable editable) {
             switch (view.getId()) {
                 case R.id.quantity:
-                    validateQuantity ();
+                    validateQuantity();
                     break;
                 case R.id.total_cost:
-                    validateTotalCost ();
+                    validateTotalCost();
                     break;
                 case R.id.amount_paying:
-                    validateAmountPaying ();
+                    validateAmountPaying();
                     break;
                 case R.id.phone:
-                    validatePhone ();
+                    validatePhone();
                     break;
                 case R.id.amount_paid:
                     validateAmountPaid();
@@ -208,17 +206,13 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
 
 
     private void startProgress() {
-        progressFragment= ProgressDialogFragment.newInstance ("creating Sale");
+        progressFragment = ProgressDialogFragment.newInstance("creating Sale");
         progressFragment.show(getSupportFragmentManager(), "progress");
     }
 
     private void finishProgress() {
         progressFragment.dismiss();
     }
-
-
-
-
 
 
     @Override
@@ -229,7 +223,6 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem nItem) {
         // Handle action bar item clicks here. The action bar will
@@ -238,7 +231,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
         int id = nItem.getItemId();
 
         //noinspection SimplifiableIfStatement
-        switch(id){
+        switch (id) {
             case R.id.save:
 
                 if (!validateQuantity()) {
@@ -254,18 +247,16 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                     return false;
                 }
 
-                if (! validateTotalCost()) {
+                if (!validateTotalCost()) {
                     return false;
                 }
 
-                if (!validateTotalPrice())
-                {
+                if (!validateTotalPrice()) {
                     return false;
                 }
 
 
-                if(!validateAmountPaid())
-                {
+                if (!validateAmountPaid()) {
                     return false;
                 }
 
@@ -276,7 +267,6 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                 int quantity = 0;
 
 
-
                 switch (paymentType.toString()) {
 
                     case "Installment Addon":
@@ -285,7 +275,6 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                         total_cost = amount;
                         customer_mobile = mobileNumbers.getText().toString();
                         amount_paid = _parseDouble(amountPayingEditText.getText().toString());
-
 
 
                         break;
@@ -302,16 +291,15 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                         //amount = parseDouble(amountPaidEditText.getText().toString());
                         amount = _parseDouble(amountPaidEditText.getText().toString());
                         total_cost = _parseDouble(totalPriceEditText.getText().toString());
-                        amount_paid =  _parseDouble(amountPaidEditText.getText().toString());
+                        amount_paid = _parseDouble(amountPaidEditText.getText().toString());
                         quantity = Integer.parseInt(quantityEditText.getText().toString());
                         try {
 
                             Phonenumber.PhoneNumber ugNumberProto = phoneUtil.parse(phoneEditText.getText().toString(), "UG");
-                            customer_mobile = "0"+ugNumberProto.getNationalNumber();
-                        }   catch (Exception e) {
+                            customer_mobile = String.valueOf(ugNumberProto.getNationalNumber());
+                        } catch (Exception e) {
                             return false;
                         }
-
 
 
                         break;
@@ -328,9 +316,9 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                 String qty = quantityEditText.getText().toString().trim();
 
                 //Entry.newSale(item, d, paymentType,Integer.parseInt(quantityEditText.getText().toString()),amount,phoneEditText.getText().toString(),Double.parseDouble(totalcostEditText.getText().toString()),getRealm());
-                Entry entry = Entry.newSale(item, d, paymentType,quantity,amount,customer_mobile,total_cost,amount_paid,realm);
+                Entry entry = Entry.newSale(item, d, paymentType, quantity, amount, customer_mobile, total_cost, amount_paid, realm);
                 client.createEntry(entry)
-                    .compose(Transformers.neverError()).subscribe();
+                        .compose(Transformers.neverError()).subscribe();
 
 
                 final Intent intent = new Intent(NewSaleActivity.this, HomeActivity.class);
@@ -340,8 +328,9 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                         "Sale Added Successfully",
                         Toast.LENGTH_LONG)
                         .show();
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivityWithTransition(intent, R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
-
+                finish();
                 break;
             case android.R.id.home:
                 // this takes the user 'back', as if they pressed the left-facing triangle icon on the main android toolbar.
@@ -379,13 +368,10 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
         }
 
 
-
-
-
     }
 
 
-    public void isInstallmentAddon(){
+    public void isInstallmentAddon() {
         totalPriceLayout.setVisibility(View.GONE);
         totalPriceEditText.setVisibility(View.GONE);
         amountPaidLayout.setVisibility(View.GONE);
@@ -401,11 +387,10 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
         quantityLayout.setVisibility(View.GONE);
         totalcostLayout.setVisibility(View.GONE);
         mobileNumbers.setVisibility(View.VISIBLE);
-        mobileNumbersLayout.setVisibility(View.VISIBLE);
+        //mobileNumbersLayout.setVisibility(View.VISIBLE);
         amountRemainingEditText.setVisibility(View.VISIBLE);
 
         ArrayList<String> mobiles = item.getCustomerNumbers();
-
 
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
@@ -415,7 +400,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
 
     }
 
-    public void  isCash(){
+    public void isCash() {
         totalPriceLayout.setVisibility(View.GONE);
         totalPriceEditText.setVisibility(View.GONE);
         amountPaidLayout.setVisibility(View.GONE);
@@ -434,13 +419,9 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
 
     }
 
-    public void isInstallment(){
+    public void isInstallment() {
         quantityEditText.setVisibility(View.VISIBLE);
         quantityLayout.setVisibility(View.VISIBLE);
-        totalPriceLayout.setVisibility(View.VISIBLE);
-        totalPriceEditText.setVisibility(View.VISIBLE);
-        amountPaidLayout.setVisibility(View.VISIBLE);
-        amountPaidEditText.setVisibility(View.VISIBLE);
         amountPayingEditText.setVisibility(View.GONE);
         amountRemainingEditText.setVisibility(View.GONE);
         phoneEditText.setVisibility(View.VISIBLE);
@@ -459,11 +440,8 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
     }
 
 
-
-
-
     private boolean validateQuantity() {
-        if(paymentType.toString().equals("Cash") || paymentType.toString().equals("Installment")) {
+        if (paymentType.toString().equals("Cash") || paymentType.toString().equals("Installment")) {
             String quantity = quantityEditText.getText().toString();
             if (quantity.trim().isEmpty()) {
                 quantityLayout.setErrorEnabled(true);
@@ -479,22 +457,19 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
 
 
                 Long items_stocked = item.getInventories().where().sum("quantity").longValue();
-                Long items_sold  = item.getSales().where().sum("quantity").longValue();
-                Long quantity_in_stock =  items_stocked - items_sold;
+                Long items_sold = item.getSales().where().sum("quantity").longValue();
+                Long quantity_in_stock = items_stocked - items_sold;
                 Double val = _parseDouble(quantity);
 
                 String error_message = "";
 
-                if(val > quantity_in_stock){
+                if (val > quantity_in_stock) {
 
                     error_message = "You do not have enough items in stock";
-                }
-                else if(val <0 ) {
+                } else if (val < 0) {
                     error_message = "Enter a positive number";
 
-                }
-
-                else{
+                } else {
                     quantityLayout.setErrorEnabled(false);
                     return true;
 
@@ -504,19 +479,17 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                 quantityEditText.setError(error_message);
                 requestFocus(quantityEditText);
 
-
+                return false;
             }
-            quantityLayout.setErrorEnabled(false);
-            return true;
-        }else{
+        } else {
             return true;
         }
     }
 
     private boolean validateTotalCost() {
         Boolean error = false;
-        String error_message= "";
-        if(paymentType.toString().equals("Cash")) {
+        String error_message = "";
+        if (paymentType.toString().equals("Cash")) {
             String totalcost = totalcostEditText.getText().toString();
             if (totalcostEditText.getText().toString().trim().isEmpty()) {
                 error = true;
@@ -526,30 +499,27 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                 error_message = "Invalid entry. Enter numbers only";
 
 
-            } else {
+            }/* else {
                 if (_parseDouble(totalcost) < 100){
                     error=true;
                     error_message = "Price has to be greater than 100";
 
                 }
 
-            }
+            }*/
 
 
-
-        }
-        else{
+        } else {
             error = false;
         }
 
-        if (error == true){
+        if (error == true) {
             totalcostLayout.setErrorEnabled(true);
             totalcostEditText.setError(error_message);
             requestFocus(totalcostEditText);
             return false;
 
-        }
-        else{
+        } else {
             totalcostLayout.setErrorEnabled(false);
 
             return true;
@@ -558,9 +528,8 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
     }
 
 
-    private boolean validateTotalPrice()
-    {
-        if(paymentType.toString().equals("Installment")) {
+    private boolean validateTotalPrice() {
+        if (paymentType.toString().equals("Installment")) {
             String totalprice = totalPriceEditText.getText().toString();
             if (totalPriceEditText.getText().toString().trim().isEmpty()) {
                 totalPriceLayout.setErrorEnabled(true);
@@ -578,15 +547,15 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
             }
 
             return true;
-        }else{
+        } else {
             return true;
         }
 
     }
 
-    private boolean validateAmountPaid(){
+    private boolean validateAmountPaid() {
         String amuntPaid = amountPaidEditText.getText().toString().trim();
-        if(paymentType.toString().equals("Installment")) {
+        if (paymentType.toString().equals("Installment")) {
 
             if (amuntPaid.isEmpty()) {
                 amountPaidLayout.setErrorEnabled(true);
@@ -604,14 +573,14 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
             }
 
             return true;
-        }else{
+        } else {
             return true;
         }
 
     }
 
-    private boolean validateAmountPaying (){
-        if(paymentType.toString().equals("Installment Addon")) {
+    private boolean validateAmountPaying() {
+        if (paymentType.toString().equals("Installment Addon")) {
 
             String amountPaying = amountPayingEditText.getText().toString();
             if (amountPayingEditText.getText().toString().trim().isEmpty()) {
@@ -629,7 +598,7 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
                 amountPayingLayout.setErrorEnabled(false);
                 Double rt = 0.0;
                 String mobile = mobileNumbers.getText().toString();
-                if(!mobile.isEmpty()) {
+                if (!mobile.isEmpty()) {
                     Double balance = item.getDebtors().where().equalTo("name", mobile).findFirst().getBalance();
                     Double am = _parseDouble(amountPayingEditText.getText().toString());
                     rt = balance - am;
@@ -639,15 +608,15 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
             }
 
             return true;
-        }else{
+        } else {
             return true;
         }
 
     }
 
 
-    private boolean validatePhone (){
-        if( paymentType.toString().equals("Installment")) {
+    private boolean validatePhone() {
+        if (paymentType.toString().equals("Installment")) {
 
 
             String phone = phoneEditText.getText().toString();
@@ -661,30 +630,47 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
 
                 try {
                     Phonenumber.PhoneNumber ugNumberProto = phoneUtil.parse(phone, "UG");
-                    if (Long.toString(ugNumberProto.getNationalNumber()).length()>=9 ) {
+                    if (Long.toString(ugNumberProto.getNationalNumber()).length() >= 9) {
 
-                        if (phoneUtil.isValidNumber(ugNumberProto)) {
+                        // if (phoneUtil.isValidNumber(ugNumberProto)) {
+                        if (android.util.Patterns.PHONE.matcher(phone).matches()) {
                             phoneLayout.setErrorEnabled(false);
+                            totalPriceLayout.setVisibility(View.VISIBLE);
+                            totalPriceEditText.setVisibility(View.VISIBLE);
+                            amountPaidLayout.setVisibility(View.VISIBLE);
+                            amountPaidEditText.setVisibility(View.VISIBLE);
                             return true;
                         } else {
                             phoneLayout.setErrorEnabled(true);
                             phoneEditText.setError("Please enter a valid phone number");
                             requestFocus(phoneEditText);
+                            totalPriceLayout.setVisibility(View.GONE);
+                            totalPriceEditText.setVisibility(View.GONE);
+                            amountPaidLayout.setVisibility(View.GONE);
+                            amountPaidEditText.setVisibility(View.GONE);
                             return false;
 
                         }
+                    } else {
+                        totalPriceLayout.setVisibility(View.GONE);
+                        totalPriceEditText.setVisibility(View.GONE);
+                        amountPaidLayout.setVisibility(View.GONE);
+                        amountPaidEditText.setVisibility(View.GONE);
                     }
                 } catch (Exception e) {
 
                     phoneLayout.setErrorEnabled(true);
                     phoneEditText.setError("Please enter a valid phone number");
+                    totalPriceLayout.setVisibility(View.GONE);
+                    totalPriceEditText.setVisibility(View.GONE);
+                    amountPaidLayout.setVisibility(View.GONE);
+                    amountPaidEditText.setVisibility(View.GONE);
                     requestFocus(phoneEditText);
                     return false;
                 }
 
 
             }
-
 
 
         }
@@ -702,14 +688,12 @@ public class NewSaleActivity extends BaseActivity implements AdapterView.OnItemS
         }
     }
 
-    private Double _parseDouble(String value){
+    private Double _parseDouble(String value) {
         Double toret = 0.0;
-        if( value != null || !value.trim().isEmpty())
-        {
+        if (value != null || !value.trim().isEmpty()) {
             try {
                 toret = parseDouble(value);
-            }catch (Exception e)
-            {
+            } catch (Exception e) {
 
             }
         }

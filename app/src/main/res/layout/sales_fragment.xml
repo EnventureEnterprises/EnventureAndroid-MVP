@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content"
-    android:background="@color/windowBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/recycler_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/home_appbar">
+    android:clipToPadding="false"
+    android:paddingBottom="6dp"
+    android:paddingTop="6dp"
+    android:scrollbarStyle="outsideOverlay"
+    android:scrollbars="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-
-    <org.enventureenterprises.enventure.lib.RealmRecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        app:rrvLayoutType="LinearLayout"
-        app:rrvIsRefreshable="false"
-        app:rrvEmptyLayoutId="@layout/empty_sales"
-        android:paddingTop="6dp"
-        android:scrollbars="vertical" />
-
-
-
-
+    <include
+        android:id="@+id/empty_sales_layout"
+        layout="@layout/empty_sales" />
 </RelativeLayout>
+
+
+
+

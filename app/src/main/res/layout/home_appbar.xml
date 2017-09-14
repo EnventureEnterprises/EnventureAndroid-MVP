@@ -16,48 +16,42 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="58dp"
         android:orientation="vertical">
-    <!--    -->
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="false"
-        android:theme="@style/EnActionBar"
-      >
-
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <!--    -->
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbarLayout"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:theme="@style/EnActionBar"
-
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="false"
+            android:theme="@style/EnActionBar">
 
 
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                android:theme="@style/EnActionBar"
+
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
 
-    </android.support.design.widget.AppBarLayout>
+        </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/home_content" />
+        <include layout="@layout/home_content" />
     </LinearLayout>
 
-
-    <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
-        android:layout_alignParentBottom="true"
         android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        app:itemBackground="?attr/colorPrimary"
+        app:itemBackground="@color/white"
         app:itemIconTint="@drawable/bottom_nav_item"
         app:itemTextColor="@drawable/bottom_nav_item"
         app:menu="@menu/bottom_menu" />
-
 
 
 </android.support.design.widget.CoordinatorLayout>

@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
@@ -41,18 +42,14 @@ public class SearchItemActivity extends BaseActivity implements SearchView.OnQue
         setContentView(R.layout.search_item_activity);
         recyclerView = (RecyclerView) findViewById(R.id.search_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         realm = getRealm();
-
-
-        adapter = new SearchAdapter(SearchItemActivity.this, realm,"name");
+        adapter = new SearchAdapter(this, realm, "name");
         recyclerView.setAdapter(adapter);
         adapter.filter("");
 
-
-
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
 
     }
@@ -79,8 +76,8 @@ public class SearchItemActivity extends BaseActivity implements SearchView.OnQue
 
     @Override
     public void onBackPressed() {
-        dismiss(null);
         super.onBackPressed();
+        dismiss(null);
     }
 
     public void dismiss(View view) {
@@ -121,6 +118,17 @@ public class SearchItemActivity extends BaseActivity implements SearchView.OnQue
     public boolean onQueryTextChange(String newText) {
         searchFor(newText);
         return false;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 

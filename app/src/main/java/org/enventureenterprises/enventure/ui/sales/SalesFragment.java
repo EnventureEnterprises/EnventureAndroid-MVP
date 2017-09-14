@@ -2,6 +2,8 @@ package org.enventureenterprises.enventure.ui.sales;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 
 import org.enventureenterprises.enventure.R;
 import org.enventureenterprises.enventure.data.model.Entry;
+import org.enventureenterprises.enventure.data.model.Item;
 import org.enventureenterprises.enventure.lib.RealmRecyclerView;
 import org.enventureenterprises.enventure.ui.addEntry.SearchItemActivity;
 import org.enventureenterprises.enventure.ui.base.BaseActivity;
@@ -29,11 +32,14 @@ import io.realm.Sort;
 public class SalesFragment extends BaseFragment {
     public static final String TAG = "sales_fragment";
     Realm realm;
-    SalesAdapter  mSalesAdapter;
+    SalesAdapter mSalesAdapter;
 
 
     @BindView(R.id.recycler_view)
-    RealmRecyclerView mRecyclerView;
+    RecyclerView mRecyclerView;
+
+    @BindView(R.id.empty_sales_layout)
+    View mEmptySalesLayout;
 
     public static SalesFragment newInstance() {
         SalesFragment fragment = new SalesFragment();
@@ -59,15 +65,29 @@ public class SalesFragment extends BaseFragment {
         ButterKnife.bind(this, view);
         ((BaseActivity) getActivity()).getActivityComponent().inject(this);
 
-        realm = Realm.getDefaultInstance ();
+        realm = Realm.getDefaultInstance();
         RealmResults<Entry> mEntries =
-                realm.where(Entry.class).equalTo("transaction_type","sale").findAllSorted("created", Sort.DESCENDING);
+                realm.where(Entry.class).equalTo("transaction_type", "sale").findAllSorted("created", Sort.DESCENDING);
 
-       mSalesAdapter = new SalesAdapter(getActivity(), mEntries, true, true);
+        if (mEntries.isEmpty()) {
+            mEmptySalesLayout.setVisibility(View.VISIBLE);
+        } else {
+            mEmptySalesLayout.setVisibility(View.GONE);
+        }
 
-       mRecyclerView.setAdapter(mSalesAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+        mSalesAdapter = new SalesAdapter(getActivity(), mEntries, true, true);
 
-
+        mRecyclerView.setAdapter(mSalesAdapter);
+        realm.addChangeListener(realm -> {
+            RealmResults<Entry> entries =
+                    realm.where(Entry.class).equalTo("transaction_type", "sale").findAllSorted("created", Sort.DESCENDING);
+            if (entries.isEmpty()) {
+                mEmptySalesLayout.setVisibility(View.VISIBLE);
+            } else {
+                mEmptySalesLayout.setVisibility(View.GONE);
+            }
+        });
 
         return view;
     }
@@ -75,7 +95,7 @@ public class SalesFragment extends BaseFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.home2, menu);
-        super.onCreateOptionsMenu(menu,inflater);
+        super.onCreateOptionsMenu(menu, inflater);
 
     }
 
@@ -87,13 +107,12 @@ public class SalesFragment extends BaseFragment {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        switch(id){
+        switch (id) {
             case R.id.add_entry:
 
                 startActivity(new Intent(getContext(), SearchItemActivity.class));
                 getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
                 break;
-
 
 
         }

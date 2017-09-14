@@ -79,7 +79,7 @@ public class LoginActivity extends BaseActivity {
         setResult(Activity.RESULT_OK);
         final Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
         startActivityWithTransition(intent, R.anim.slide_in_right, R.anim.fade_out_slide_out_left);
-        //finish();
+        finish();
     }
 
 
@@ -98,14 +98,11 @@ public class LoginActivity extends BaseActivity {
             } else if (loginResult.wasCancelled()) {
                 toastMessage = "Login Cancelled";
             } else {
-
-
-
                 if (loginResult.getAccessToken() != null) {
 
                     getMobile();
                     toastMessage = String.format(
-                            "Successfully Logged in with %s...",
+                            "Successfully Logged in",
                             PrefUtils.getMobile(getApplicationContext()));
                             PrefUtils.setBoolean(getApplicationContext(),"sync",true);
 

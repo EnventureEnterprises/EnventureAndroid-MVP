@@ -43,12 +43,11 @@ public class SalesAdapter extends RealmBasedRecyclerViewAdapter<Entry, SalesAdap
     EnventureApi client;
 
 
-
     @Inject
     public SalesAdapter(@ApplicationContext Activity context,
-                         RealmResults<Entry> realmResults,
-                         boolean automaticUpdate,
-                         boolean animateIdType
+                        RealmResults<Entry> realmResults,
+                        boolean automaticUpdate,
+                        boolean animateIdType
 
 
     ) {
@@ -76,7 +75,7 @@ public class SalesAdapter extends RealmBasedRecyclerViewAdapter<Entry, SalesAdap
         //holder.hexColorView.setBackgroundColor(Color.parseColor(entry.profile.hexColor));
 
 
-        if(entry.getItem() != null) {
+        if (entry.getItem() != null) {
             holder.itemTextView.setText(String.format("%s",
                     entry.getItem().getName()));
         }
@@ -86,20 +85,12 @@ public class SalesAdapter extends RealmBasedRecyclerViewAdapter<Entry, SalesAdap
 
         holder.amountTextView.setText(String.format("%s",
                 entry.getAmount()));
-        if(entry.getItem() != null && entry.getItem().getImage() != null) {
-
-
-            Glide.with(mContext).load(entry.getItem().getImage()).asBitmap().placeholder(new ColorDrawable(Color.GRAY)).transform(new CircleTransform(mContext)).into(holder.itemImage);
+        if (entry.getItem() != null) {
+            Glide.with(mContext).load(entry.getItem().getImage()).centerCrop().placeholder(R.drawable.ic_no_image_available).into(holder.itemImage);
         }
 
 
     }
-
-
-
-
-
-
 
 
     public class EntryViewHolder extends RealmViewHolder {
@@ -119,8 +110,6 @@ public class SalesAdapter extends RealmBasedRecyclerViewAdapter<Entry, SalesAdap
         ImageView itemImage;
 
 
-
-
         public EntryViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -128,8 +117,6 @@ public class SalesAdapter extends RealmBasedRecyclerViewAdapter<Entry, SalesAdap
 
 
     }
-
-
 
 
 }

@@ -132,7 +132,7 @@ public class BaseActivity extends AppCompatActivity implements SharedPreferences
             entries.addChangeListener(new RealmChangeListener<RealmResults<Entry>>() {
                 @Override
                 public void onChange(RealmResults<Entry> entries) {
-                    for (Entry entry: entries) {
+                    for (Entry entry : entries) {
                         Entry.updateReports(new DateTime(entry.getCreated()));
                     }
                 }

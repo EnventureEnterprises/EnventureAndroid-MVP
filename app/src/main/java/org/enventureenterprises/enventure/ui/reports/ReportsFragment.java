@@ -1,14 +1,18 @@
 package org.enventureenterprises.enventure.ui.reports;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -25,6 +29,8 @@ import org.enventureenterprises.enventure.data.local.SectionsPagerAdapter;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,7 +43,7 @@ import butterknife.ButterKnife;
  * Created by mossplix on 7/7/17.
  */
 
-public class ReportsFragment extends BaseFragment{
+public class ReportsFragment extends BaseFragment {
     public static final String TAG = "reports_fragment";
     private int tabPosition = 0;
 
@@ -55,8 +61,7 @@ public class ReportsFragment extends BaseFragment{
 
     private ArrayList<String> frags = Lists.newArrayList("Daily", "Monthly", "Weekly");
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
-
+    private static final int REQUEST_STORAGE = 1;
 
     public static ReportsFragment newInstance() {
         ReportsFragment fragment = new ReportsFragment();
@@ -66,6 +71,7 @@ public class ReportsFragment extends BaseFragment{
     public ReportsFragment() {
         // Required empty public constructor
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,15 +84,8 @@ public class ReportsFragment extends BaseFragment{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.reports_fragment, container, false);
         ButterKnife.bind(this, view);
-
-
         setupViewPager(mViewPager);
-
         tabs.setupWithViewPager(mViewPager);
-
-
-
-
         return view;
     }
 
@@ -132,11 +131,9 @@ public class ReportsFragment extends BaseFragment{
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_share, menu);
-        super.onCreateOptionsMenu(menu,inflater);
     }
-
-
 
 
     @Override
@@ -147,12 +144,15 @@ public class ReportsFragment extends BaseFragment{
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        switch(id){
+        switch (id) {
             case R.id.share:
-
-                takeScreenshot();
-
-
+                // first check permission for write to external storage
+                int hasPermission = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                if (android.content.pm.PackageManager.PERMISSION_GRANTED == hasPermission) {
+                    takeScreenshot();
+                } else {
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE);
+                }
                 break;
             case android.R.id.home:
                 // this takes the user 'back', as if they pressed the left-facing triangle icon on the main android toolbar.
@@ -166,30 +166,34 @@ public class ReportsFragment extends BaseFragment{
         return super.onOptionsItemSelected(item);
     }
 
-
+    //TODO: refactor this code - currently very inefficient
     private void takeScreenshot() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
         Date now = new Date();
-        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
+        String fileDate = formatter.format(now);
+        StringBuffer stringBuffer = new StringBuffer();
 
         try {
+            String fileName = fileDate + ".jpg";
             // image naming and path  to include sd card  appending name you choose for file
-            String mPath = Environment.getExternalStorageDirectory().toString() + "/" + now + ".jpg";
-
+            // String mPath = Environment.getExternalStorageDirectory().toString() + "/" + fileName;
             // create bitmap screen capture
-            View v1 = getActivity().getWindow().getDecorView().getRootView();
+            View v1 = mViewPager;
             v1.setDrawingCacheEnabled(true);
             Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
             v1.setDrawingCacheEnabled(false);
 
-            File imageFile = new File(mPath);
+            stringBuffer.append(getContext().getFilesDir());
+            stringBuffer.append(File.separator);
+            stringBuffer.append(fileName);
+            String mPath = stringBuffer.toString();
 
-            FileOutputStream outputStream = new FileOutputStream(imageFile);
+            FileOutputStream outputStream = new FileOutputStream(mPath);
             int quality = 100;
             bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
             outputStream.flush();
             outputStream.close();
-
-            openScreenshot(imageFile);
+            openScreenshot(mPath);
         } catch (Throwable e) {
             // Several error may come out with file handling or OOM
             e.printStackTrace();
@@ -197,20 +201,24 @@ public class ReportsFragment extends BaseFragment{
     }
 
 
-    private void openScreenshot(File imageFile) {
+    private void openScreenshot(String fileName) {
         Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
-        Uri uri = Uri.fromFile(imageFile);
-        intent.setDataAndType(uri, "image/*");
+        intent.setAction(Intent.ACTION_SEND);
+        Uri uri = FileProvider.getUriForFile(
+                getActivity().getApplicationContext(),
+                "org.enventureenterprises.enventure.fileprovider", new File(fileName));
+        intent.setType("image/jpeg");
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
         startActivity(intent);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-
-
-
-
-
-
-
+        if (requestCode == REQUEST_STORAGE)
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                takeScreenshot();
+            }
+    }
 }
