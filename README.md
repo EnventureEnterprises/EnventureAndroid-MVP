@@ -1,6 +1,6 @@
 # Enventure Android App
 
-Welcome to Enventure's open source Android app! ENVision mobile is a simple accounting app for small businesses in emerging markets to use to track their inventory, input sales (including credit), track debts and expenses, and export ledgers and profit-loss statements. Help us innovate on supporting small businesses in emerging markets to keep better records on their businesses and thus access more opportunities as a result!
+Welcome to Enventure's open source Android app! ENVision mobile is a simple accounting app for small businesses in emerging markets to use to track their inventory, input sales (including credit), track debts and expenses, and export ledgers and profit-loss statements. Help us innovate on supporting small businesses in emerging markets to keep better records on their businesses and thus access more opportunities as a result! Watch: (https://www.youtube.com/watch?v=o8mG4ownxuo&t=4s)
 
 ## License
 MIT License
